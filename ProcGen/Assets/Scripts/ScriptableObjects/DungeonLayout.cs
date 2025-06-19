@@ -1,0 +1,159 @@
+using UnityEngine;
+using UnityEditor;
+using UnityEditor.Callbacks;
+using System.Collections;
+using UnityEngine.UIElements;
+using System.Collections.Generic;
+[CreateAssetMenu(fileName = "DungeonLayout", menuName = "Scriptable Objects/DungeonLayout")]
+public class DungeonLayout : ScriptableObject
+{
+    public List<DungeonRoom> dungeonRoomList = new List<DungeonRoom>();
+
+    public List<NodeConnection> nodeConnections = new List<NodeConnection>();
+    public List<NodeElement> nodeElements = new List<NodeElement>();
+    public RoomTypesList roomTypeList;
+    public int width = 100;
+    public int height = 100;
+    public int minGapBetweenRooms = 5;
+
+
+    public void UpdateConnection(NodeElement node) 
+    {
+        if (node == null || nodeConnections == null) return;
+
+        foreach (NodeConnection nodeConnection in nodeConnections)
+        {
+            if (nodeConnection.NodeInConnection(node))
+            {
+                nodeConnection.UpdateLine();
+            }
+        }
+    }
+
+    /// <summary>
+    /// Adds connections between two nodes into adjacency list
+    /// </summary>
+    /// <param name="room1"></param>
+    /// <param name="room2"></param>
+    public void AddConnection(DungeonRoom room1, DungeonRoom room2, NodeElement element1, NodeElement element2, NodeConnectionElement line)
+    {
+        if(room1 == null || room2 == null) return;
+
+        void Connect(DungeonRoom room1, DungeonRoom room2)
+        {
+            if (room1.connectionList.Contains(room2))
+                return;
+            room1.connectionList.Add(room2);
+
+            // to update the Scriptable Object so it persists
+            EditorUtility.SetDirty(room1);
+        }
+
+        // add the new connection for both room's perspective
+        Connect(room1, room2);
+        Connect(room2, room1);
+
+        // add to unique node connection list
+        if (nodeConnections == null)
+            return;
+        NodeConnection connection = new NodeConnection(element1, element2, line, this);
+        nodeConnections.Add(connection);
+    }
+
+    /// <summary>
+    /// Remove a connection in the node connection list
+    /// </summary>
+    /// <param name="nodeConnection"></param>
+    public void RemoveConnection(NodeElement node1, NodeElement node2)
+    {
+        if(nodeConnections == null) return;
+
+        NodeConnection connection = GetNodeConnection(node1, node2);
+        nodeConnections.Remove(connection);
+    }
+
+    public void RemoveConnection(NodeConnection connection)
+    {
+        if (nodeConnections == null || connection == null) return;
+
+        nodeConnections.Remove(connection);
+    }
+
+    /// <summary>
+    /// Gets the node connection that contains both node elements in nodeConnections list
+    /// </summary>
+    /// <param name="node1"></param>
+    /// <param name="node2"></param>
+    /// <returns></returns>
+    public NodeConnection GetNodeConnection(NodeElement node1, NodeElement node2)
+    {
+        if (nodeConnections != null)
+        {
+            foreach (NodeConnection nodeConnection in nodeConnections)
+            {
+                if (NodeConnection.CheckNodesInConnection(nodeConnection, node1, node2))
+                {
+                    return nodeConnection;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    /// Checks if a connection exists between both rooms
+    /// </summary>
+    /// <param name="room1"></param>
+    /// <param name="room2"></param>
+    /// <returns></returns>
+    public bool ConnectionExist(DungeonRoom room1, DungeonRoom room2)
+    {
+        if (room1 == null || room2 == null)
+            return false;
+
+        return room1.connectionList.Contains(room2);
+    }
+
+    /// <summary>
+    /// Check if connection exist in the node element list
+    /// </summary>
+    /// <param name="node1"></param>
+    /// <param name="node2"></param>
+    /// <returns></returns>
+    public bool NodeElementConnectionExist(NodeElement node1, NodeElement node2)
+    {
+        if(nodeConnections != null)
+        {
+            foreach (NodeConnection nodeConnection in nodeConnections)
+            {
+                if (NodeConnection.CheckNodesInConnection(nodeConnection, node1, node2))
+                    return true;
+            }
+        }
+
+        return false;
+    }
+
+    // this opens the layout editor with this scriptable object
+    //https://docs.unity3d.com/ScriptReference/Callbacks.OnOpenAssetAttribute.html
+    //https://discussions.unity.com/t/is-it-possible-to-open-scriptableobjects-in-custom-editor-cindows-with-double-click/813843/2
+    [OnOpenAssetAttribute(OnOpenAssetAttributeMode.Execute)]
+    public static bool OnOpenAsset(int instanceID)
+    {
+        DungeonLayout layout = EditorUtility.InstanceIDToObject(instanceID) as DungeonLayout;
+
+        if (layout != null)
+        {
+            DungeonLayoutEditor window = EditorWindow.GetWindow<DungeonLayoutEditor>();
+
+            window.rootVisualElement.Clear();
+            window.Init(layout);
+            window.Show();
+            return true;
+        }
+
+        return false;
+    }
+
+}
