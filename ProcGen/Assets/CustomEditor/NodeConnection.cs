@@ -23,6 +23,11 @@ public class NodeConnection
         return node == node1 || node == node2;
     }
 
+    public static bool CheckNodeInConnection(NodeConnection nodeConnection, NodeElement node)
+    {
+        return nodeConnection.node1 == node || nodeConnection.node2 == node;
+    }
+
     public static bool CheckNodesInConnection(NodeConnection connection, NodeElement node1, NodeElement node2)
     {
         if(connection == null || node1 == null || node2 == null)

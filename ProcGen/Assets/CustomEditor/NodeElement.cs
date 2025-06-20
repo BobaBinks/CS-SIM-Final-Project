@@ -9,13 +9,11 @@ public class NodeElement : VisualElement
     //DungeonLayout dungeonLayout;
     Box box;
     DropdownField dropDownField;
-    List<RoomTypes> roomTypes;
+    DungeonLayout layout;
 
     public NodeElement(DungeonLayout dungeonLayout, VisualElement root, Vector2 mousePosition, DungeonRoom room = null)
     {
-        //this.dungeonLayout = dungeonLayout;
-        this.roomTypes = dungeonLayout.roomTypeList.roomTypeList;
-
+        this.layout = dungeonLayout;
         // set the position of the node in the editor window
         this.style.position = Position.Absolute;
         this.style.left = mousePosition.x;
@@ -71,6 +69,13 @@ public class NodeElement : VisualElement
 
     DropdownField CreateDropDownMenuToNode(DungeonRoom room)
     {
+        // get room types
+        List<RoomTypes> roomTypes;
+        if (layout == null || layout.roomTypeList.roomTypeList == null)
+            roomTypes = new List<RoomTypes>();
+        else
+            roomTypes = layout.roomTypeList.roomTypeList;
+
         // choices for dropdown menu
         List<string> choices = new List<string>();
 
@@ -184,23 +189,45 @@ public class NodeElement : VisualElement
             }, DropdownMenuAction.AlwaysEnabled);
 
             evt.menu.AppendAction("Remove Node", (x) => {
-                // get layout
 
-                // use layout to get dungeonroom associated with this node element
-
-
-                // remove all connections that has this room
-
-                // remove node from layout
-
-                // destroy this game object and the scriptable object
-
-                //AssetDatabase.DeleteAsset("Assets/Rooms/{room.name}.asset");
-                //AssetDatabase.SaveAssets();
-
+                RemoveNode();
             }, DropdownMenuAction.AlwaysEnabled);
         }));
     }
 
+    /// <summary>
+    /// Removes and delete it's connections and dungeon room
+    /// </summary>
+    private void RemoveNode()
+    {
+        if (userData == null || layout == null) return;
+        // get layout
+
+        // get dungeon room from userdata
+
+
+        // remove all connections that has this room
+        layout.RemoveConnections(this);
+
+        // remove dungeon room from layout
+        DungeonRoom room = userData as DungeonRoom;
+        if (room == null)
+            return;
+
+        layout.dungeonRoomList.Remove(room);
+
+        // remove node element from layout
+        layout.nodeElements.Remove(this);
+
+        // destroy this game object and the scriptable object
+        string path = AssetDatabase.GetAssetPath(room);
+
+        if(string.IsNullOrEmpty(path)) return;
+
+        AssetDatabase.DeleteAsset($"Assets/Rooms/{room.name}.asset");
+        AssetDatabase.SaveAssets();
+
+        this.RemoveFromHierarchy();
+    }
     #endregion
 }

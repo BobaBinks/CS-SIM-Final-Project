@@ -58,7 +58,6 @@ public class DungeonLayoutEditor : EditorWindow
         // add canvas with context menu for adding nodes
         AddCanvas(root);
 
-
         // add style sheet to root element
         root.styleSheets.Add(styleSheet);
 

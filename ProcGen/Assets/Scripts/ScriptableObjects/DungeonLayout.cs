@@ -17,6 +17,10 @@ public class DungeonLayout : ScriptableObject
     public int minGapBetweenRooms = 5;
 
 
+    /// <summary>
+    /// Update the connection's line orientation
+    /// </summary>
+    /// <param name="node"></param>
     public void UpdateConnection(NodeElement node) 
     {
         if (node == null || nodeConnections == null) return;
@@ -80,6 +84,25 @@ public class DungeonLayout : ScriptableObject
     }
 
     /// <summary>
+    /// Remove all connections that the node is associated with.
+    /// </summary>
+    /// <param name="node"></param>
+    public void RemoveConnections(NodeElement node)
+    {
+        if (nodeConnections == null || node == null)
+            return;
+
+        // iterate through the connection list
+        foreach(NodeConnection connection in nodeConnections)
+        {
+            // check if the connection contains the node
+            if(NodeConnection.CheckNodeInConnection(connection, node))
+                RemoveConnection(connection);
+        }
+    }
+
+
+    /// <summary>
     /// Gets the node connection that contains both node elements in nodeConnections list
     /// </summary>
     /// <param name="node1"></param>
@@ -121,13 +144,16 @@ public class DungeonLayout : ScriptableObject
     /// <param name="node1"></param>
     /// <param name="node2"></param>
     /// <returns></returns>
-    public bool NodeElementConnectionExist(NodeElement node1, NodeElement node2)
+    public bool NodeElementConnectionExist(NodeElement node1, NodeElement node2 = null)
     {
         if(nodeConnections != null)
         {
             foreach (NodeConnection nodeConnection in nodeConnections)
             {
-                if (NodeConnection.CheckNodesInConnection(nodeConnection, node1, node2))
+                if (node2 != null && NodeConnection.CheckNodesInConnection(nodeConnection, node1, node2))
+                    return true;
+
+                if (NodeConnection.CheckNodeInConnection(nodeConnection, node1))
                     return true;
             }
         }
