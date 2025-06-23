@@ -38,10 +38,10 @@ public class DungeonGenerator : MonoBehaviour
         while(true)
         {
             // room generation
-            if (RandomRoomPlacement.GenerateRooms(layout, grid.transform, out rooms, maxPlacementFailCount: 3))
+            if (RandomRoomPlacement.GenerateRooms(layout, grid, out rooms, maxPlacementFailCount: 3))
             {
                 // corridor generation
-                RandomWalk.GenerateCorridors(layout, grid.transform, rooms, corridorTilemap);
+                RandomWalk.GenerateCorridors(layout, grid, rooms, corridorTilemap);
                 return;
             }
         }

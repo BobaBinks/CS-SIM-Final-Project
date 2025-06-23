@@ -5,7 +5,7 @@ using System.Linq;
 
 public class RandomRoomPlacement
 {
-    public static bool GenerateRooms(DungeonLayout layout, Transform grid, out Dictionary<DungeonRoom, Tilemap> placedRooms, int maxPlacementFailCount = 5, int maxPrefabFailCount = 5)
+    public static bool GenerateRooms(DungeonLayout layout, Grid grid, out Dictionary<DungeonRoom, Tilemap> placedRooms, int maxPlacementFailCount = 5, int maxPrefabFailCount = 5)
     {
         // to store placed rooms
         // List<Tilemap> placedRooms = new List<Tilemap>();
@@ -40,10 +40,10 @@ public class RandomRoomPlacement
                 if (prefabFailCounter > maxPrefabFailCount || prefabIndexList.Count == 0)
                 {
                     // remove all rooms
-                    int childCount = grid.childCount;
+                    int childCount = grid.transform.childCount;
                     for (int i = 0; i < childCount; ++i)
                     {
-                        Object.Destroy(grid.GetChild(i).gameObject);
+                        Object.Destroy(grid.transform.GetChild(i).gameObject);
                     }
                     Debug.Log("Room Generation Failed");
                     return false;
@@ -54,7 +54,7 @@ public class RandomRoomPlacement
         return true;
     }
 
-    public static bool PlaceRoom(GameObject prefab, Transform grid,DungeonLayout layout, DungeonRoom room, Dictionary<DungeonRoom, Tilemap> placedRooms, int maxFailCount)
+    public static bool PlaceRoom(GameObject prefab, Grid grid,DungeonLayout layout, DungeonRoom room, Dictionary<DungeonRoom, Tilemap> placedRooms, int maxFailCount)
     {
         // get the ground tilemap
         Transform groundT = prefab.transform.Find("Ground");
@@ -83,7 +83,10 @@ public class RandomRoomPlacement
             {
                 // instantiate in that position
                 Vector3 position = new Vector3(randomX, randomY, 0);
-                GameObject roomObject = GameObject.Instantiate(prefab, position, Quaternion.identity, grid);
+                Vector3Int cellPosition = grid.WorldToCell(position);
+                position = grid.CellToWorld(cellPosition);
+
+                GameObject roomObject = GameObject.Instantiate(prefab, position, Quaternion.identity, grid.transform);
 
                 // get the ground tilemap to add to existing room list
                 Transform roomT = roomObject.transform.Find("Ground");

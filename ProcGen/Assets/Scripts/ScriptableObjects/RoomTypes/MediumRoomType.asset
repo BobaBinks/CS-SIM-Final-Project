@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: MediumRoomType
   m_EditorClassIdentifier: 
   prefabs:
-  - {fileID: 6065708275270455990, guid: 6ebc937ace898424297ce1831e4897da, type: 3}
+  - {fileID: 4919706249774079086, guid: c415022d468830345af01ae08b46d056, type: 3}

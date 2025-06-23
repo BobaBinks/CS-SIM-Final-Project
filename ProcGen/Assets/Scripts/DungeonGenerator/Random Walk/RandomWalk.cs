@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class RandomWalk
 {
-    public static bool GenerateCorridors(DungeonLayout layout, Transform grid, Dictionary<DungeonRoom, Tilemap> placedRooms,Tilemap corridorTilemap, int maxPairFail = 5, int maxConnectionFail = 5)
+    public static bool GenerateCorridors(DungeonLayout layout, Grid grid, Dictionary<DungeonRoom, Tilemap> placedRooms,Tilemap corridorTilemap, int maxPairFail = 5, int maxConnectionFail = 5)
     {
         // option 1: place the walls on one tilemaps(room prefabs)
         // option 2: place the walls on both tilemaps(room prefabs)

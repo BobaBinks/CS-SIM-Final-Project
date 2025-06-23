@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEditor;
 
 public class NodeConnectionManipulator : PointerManipulator
 {
@@ -137,6 +138,7 @@ public class NodeConnectionManipulator : PointerManipulator
         if(room1 != null && room1.connectionList != null)
         {
             room1.connectionList.Remove(room2);
+            EditorUtility.SetDirty(room1);
             return true;
         }
         return false;

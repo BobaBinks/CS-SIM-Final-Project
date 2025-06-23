@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: BossRoomType
   m_EditorClassIdentifier: 
   prefabs:
-  - {fileID: 6065708275270455990, guid: 6d5f604a90e4d254692ce97712145ae1, type: 3}
+  - {fileID: 4919706249774079086, guid: c415022d468830345af01ae08b46d056, type: 3}

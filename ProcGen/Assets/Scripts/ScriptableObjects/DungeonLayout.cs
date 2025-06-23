@@ -64,40 +64,52 @@ public class DungeonLayout : ScriptableObject
         nodeConnections.Add(connection);
     }
 
-    /// <summary>
-    /// Remove a connection in the node connection list
-    /// </summary>
-    /// <param name="nodeConnection"></param>
-    public void RemoveConnection(NodeElement node1, NodeElement node2)
-    {
-        if(nodeConnections == null) return;
-
-        NodeConnection connection = GetNodeConnection(node1, node2);
-        nodeConnections.Remove(connection);
-    }
-
     public void RemoveConnection(NodeConnection connection)
     {
         if (nodeConnections == null || connection == null) return;
+        KeyValuePair<NodeElement, NodeElement> kvp = connection.GetNodeElements();
+
+        DungeonRoom room1 = kvp.Key.userData as DungeonRoom;
+        DungeonRoom room2 = kvp.Value.userData as DungeonRoom;
+
+        if (room1 != null && room1.connectionList != null)
+        {
+            room1.connectionList.Remove(room2);
+            EditorUtility.SetDirty(room1);
+        }
+
+        if (room2 != null && room2.connectionList != null)
+        {
+            room2.connectionList.Remove(room1);
+            EditorUtility.SetDirty(room2);
+        }
 
         nodeConnections.Remove(connection);
+        connection.GetLine().RemoveFromHierarchy();
     }
 
     /// <summary>
     /// Remove all connections that the node is associated with.
     /// </summary>
     /// <param name="node"></param>
-    public void RemoveConnections(NodeElement node)
+    public void RemoveAllConnections(NodeElement node)
     {
         if (nodeConnections == null || node == null)
             return;
+        List<NodeConnection> connectionsToRemove = new List<NodeConnection>();
 
         // iterate through the connection list
         foreach(NodeConnection connection in nodeConnections)
         {
             // check if the connection contains the node
             if(NodeConnection.CheckNodeInConnection(connection, node))
-                RemoveConnection(connection);
+                connectionsToRemove.Add(connection);
+                
+        }
+
+        foreach(NodeConnection connection in connectionsToRemove)
+        {
+            RemoveConnection(connection);
         }
     }
 

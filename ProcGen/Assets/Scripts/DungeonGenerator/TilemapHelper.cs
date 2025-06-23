@@ -132,4 +132,10 @@ public class TilemapHelper
             { "BOTTOM", (room2Position - room1EdgePositions["BOTTOM"]).magnitude },
         };
     }
+
+    public static Vector3 RealignPrefab(Vector3 position,Grid grid) 
+    {
+        Vector3Int cellPosition = grid.WorldToCell(position);
+        return grid.CellToWorld(cellPosition);
+    }
 }

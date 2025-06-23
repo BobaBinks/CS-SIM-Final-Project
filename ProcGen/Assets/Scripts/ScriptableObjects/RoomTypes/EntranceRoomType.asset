@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: EntranceRoomType
   m_EditorClassIdentifier: 
   prefabs:
-  - {fileID: 6065708275270455990, guid: 53bdb67710d40a9469d10a56596e02fc, type: 3}
+  - {fileID: 2676160786299312215, guid: c768599035c7a8440814bc4400f90735, type: 3}

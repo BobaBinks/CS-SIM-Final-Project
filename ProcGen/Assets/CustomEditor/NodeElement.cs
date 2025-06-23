@@ -163,7 +163,8 @@ public class NodeElement : VisualElement
 
 
         layout.dungeonRoomList.Add(room);
-
+        EditorUtility.SetDirty(layout);
+        EditorUtility.SetDirty(room);
         return room;
     }
 
@@ -204,10 +205,8 @@ public class NodeElement : VisualElement
         // get layout
 
         // get dungeon room from userdata
-
-
         // remove all connections that has this room
-        dungeonLayout.RemoveConnections(this);
+        dungeonLayout.RemoveAllConnections(this);
 
         // remove dungeon room from layout
         DungeonRoom room = userData as DungeonRoom;
@@ -226,6 +225,7 @@ public class NodeElement : VisualElement
 
         AssetDatabase.DeleteAsset($"Assets/Rooms/{room.name}.asset");
         AssetDatabase.SaveAssets();
+        EditorUtility.SetDirty(dungeonLayout);
 
         this.RemoveFromHierarchy();
     }
