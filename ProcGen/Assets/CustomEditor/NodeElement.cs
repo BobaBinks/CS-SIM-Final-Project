@@ -9,11 +9,11 @@ public class NodeElement : VisualElement
     //DungeonLayout dungeonLayout;
     Box box;
     DropdownField dropDownField;
-    DungeonLayout layout;
+    DungeonLayout dungeonLayout;
 
     public NodeElement(DungeonLayout dungeonLayout, VisualElement root, Vector2 mousePosition, DungeonRoom room = null)
     {
-        this.layout = dungeonLayout;
+        this.dungeonLayout = dungeonLayout;
         // set the position of the node in the editor window
         this.style.position = Position.Absolute;
         this.style.left = mousePosition.x;
@@ -71,10 +71,10 @@ public class NodeElement : VisualElement
     {
         // get room types
         List<RoomTypes> roomTypes;
-        if (layout == null || layout.roomTypeList.roomTypeList == null)
+        if (layout == null || dungeonLayout.roomTypeList.roomTypeList == null)
             roomTypes = new List<RoomTypes>();
         else
-            roomTypes = layout.roomTypeList.roomTypeList;
+            roomTypes = dungeonLayout.roomTypeList.roomTypeList;
 
         // choices for dropdown menu
         List<string> choices = new List<string>();
@@ -207,17 +207,17 @@ public class NodeElement : VisualElement
 
 
         // remove all connections that has this room
-        layout.RemoveConnections(this);
+        dungeonLayout.RemoveConnections(this);
 
         // remove dungeon room from layout
         DungeonRoom room = userData as DungeonRoom;
         if (room == null)
             return;
 
-        layout.dungeonRoomList.Remove(room);
+        dungeonLayout.dungeonRoomList.Remove(room);
 
         // remove node element from layout
-        layout.nodeElements.Remove(this);
+        dungeonLayout.nodeElements.Remove(this);
 
         // destroy this game object and the scriptable object
         string path = AssetDatabase.GetAssetPath(room);

@@ -5,10 +5,11 @@ using System.Linq;
 
 public class RandomRoomPlacement
 {
-    public static bool GenerateRooms(DungeonLayout layout, Transform grid, int maxPlacementFailCount = 5, int maxPrefabFailCount = 5)
+    public static bool GenerateRooms(DungeonLayout layout, Transform grid, out Dictionary<DungeonRoom, Tilemap> placedRooms, int maxPlacementFailCount = 5, int maxPrefabFailCount = 5)
     {
         // to store placed rooms
-        List<Tilemap> placedRooms = new List<Tilemap>();
+        // List<Tilemap> placedRooms = new List<Tilemap>();
+        placedRooms = new Dictionary<DungeonRoom, Tilemap>();
 
         foreach(DungeonRoom room in layout.dungeonRoomList)
         {
@@ -27,7 +28,7 @@ public class RandomRoomPlacement
                 GameObject prefab = room.roomType.prefabs[prefabIndexList[prefabIndex]];
 
                 // if room placed, stop loop, else increment fail counter
-                if (!PlaceRoom(prefab, grid, layout, placedRooms, maxPlacementFailCount))
+                if (!PlaceRoom(prefab, grid, layout, room, placedRooms, maxPlacementFailCount))
                 {
                     // remove prefab from list
                     prefabIndexList.Remove(prefabIndex);
@@ -53,14 +54,14 @@ public class RandomRoomPlacement
         return true;
     }
 
-    public static bool PlaceRoom(GameObject prefab, Transform grid,DungeonLayout layout, List<Tilemap> placedRooms, int maxFailCount)
+    public static bool PlaceRoom(GameObject prefab, Transform grid,DungeonLayout layout, DungeonRoom room, Dictionary<DungeonRoom, Tilemap> placedRooms, int maxFailCount)
     {
         // get the ground tilemap
         Transform groundT = prefab.transform.Find("Ground");
         Tilemap tMap = groundT.GetComponentInChildren<Tilemap>();
 
         // get width, height of prefab
-        Vector2 dimensions = GetDimensions(tMap);
+        Vector2 dimensions = TilemapHelper.GetDimensions(tMap);
 
         // move to next room if this prefab dimensions are zero
         if (dimensions == Vector2.zero)
@@ -78,7 +79,7 @@ public class RandomRoomPlacement
             int randomY = Random.Range(yOffset, layout.height - yOffset - 1);
 
             // check for overlap with existing rooms or border of dungeon
-            if (!CheckOverlap(new Vector2(randomX, randomY), dimensions, placedRooms, layout.minGapBetweenRooms))
+            if (!TilemapHelper.CheckOverlap(new Vector2(randomX, randomY), dimensions, placedRooms, layout.minGapBetweenRooms))
             {
                 // instantiate in that position
                 Vector3 position = new Vector3(randomX, randomY, 0);
@@ -87,7 +88,7 @@ public class RandomRoomPlacement
                 // get the ground tilemap to add to existing room list
                 Transform roomT = roomObject.transform.Find("Ground");
                 Tilemap roomMap = roomT.GetComponentInChildren<Tilemap>();
-                placedRooms.Add(roomMap);
+                placedRooms.Add(room, roomMap);
                 return true;
             }
             else
@@ -102,64 +103,5 @@ public class RandomRoomPlacement
         }
     }
 
-    public static bool CheckOverlap(Vector2 roomPosition, Vector2 room1Dimensions, List<Tilemap> tileMaps, int minGapBetweenRooms)
-    {
-        if (tileMaps == null || room1Dimensions == null || room1Dimensions == Vector2.zero)
-            return false;
 
-        foreach(Tilemap map in tileMaps)
-        {
-            // get the bound width and height
-            Vector2 room2Dimensions = GetDimensions(map);
-
-            if(room2Dimensions == Vector2.zero)
-                continue;
-
-            // check if position overlaps a room
-            if (InRange(roomPosition, map.transform, room1Dimensions , room2Dimensions, minGapBetweenRooms))
-                return true;
-        }
-        return false;
-    }
-
-    /// <summary>
-    /// Checks if a position is overlapping with a room
-    /// </summary>
-    /// <param name="xPos"></param>
-    /// <param name="yPos"></param>
-    /// <param name="room"></param>
-    /// <param name="dimension"></param>
-    /// <returns></returns>
-    public static bool InRange(Vector2 room1, Transform room2, Vector2 room1Dimension , Vector2 room2Dimension, int minGapBetweenRooms)
-    {
-        if (room1 == null || room2 == null ||room2Dimension == null || room2Dimension == Vector2.zero)
-            return true;
-
-        // left box
-        Vector2 position1 = room1.x < room2.position.x ? room1 : room2.position;
-
-        // right box
-        Vector2 position2 = room1.x > room2.position.x ? room1 : room2.position;
-
-        // divides the dimension into half to calculate the range that the room occupies based off it's center position
-        Vector2 offset1 = position1 == room1 ? room1Dimension / 2 : room2Dimension / 2;
-
-        Vector2 offset2 = position2 == room1 ? room1Dimension / 2 : room2Dimension / 2;
-
-        offset1 += Vector2.one * minGapBetweenRooms;
-        offset2 += Vector2.one * minGapBetweenRooms;
-
-
-        return position1.x - offset1.x <= position2.x + offset2.x &&
-           position1.x + offset1.x >= position2.x - offset2.x &&
-           position1.y - offset1.y <= position2.y + offset2.y &&
-           position1.y + offset1.y >= position2.y - offset2.y;
-    }
-
-    public static Vector2 GetDimensions(Tilemap map)
-    {
-        if (map == null) return Vector2.zero;
-        map.CompressBounds();
-        return new Vector2(map.cellBounds.size.x, map.cellBounds.size.y);
-    }
 }
