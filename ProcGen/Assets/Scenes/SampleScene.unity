@@ -540,9 +540,14 @@ MonoBehaviour:
   layout: {fileID: 11400000, guid: 2a5de2c73b17cb5498de4a7383aa46db, type: 2}
   grid: {fileID: 441024815}
   corridorTilemap: {fileID: 578893325}
-  corridorFloor: {fileID: 11400000, guid: b86ed1cf049070f47bb6ff964b1d299a, type: 2}
-  corridorWallHorizontal: {fileID: 11400000, guid: 2d481ae8d55b6f54687963424046b17a, type: 2}
-  corridorWallVertical: {fileID: 11400000, guid: 491a3f4bfc4489a4dbf02e9d314334d7, type: 2}
+  corridorTiles:
+    corridorFloor: {fileID: 11400000, guid: fb1c1179b2973504492d792b752d4424, type: 2}
+    TopHorizontalWall: {fileID: 11400000, guid: 719fe10114eb1b84e8e7fa676863ba28, type: 2}
+    BottomHorizontalWall: {fileID: 11400000, guid: cdd4476423274eb4f8210285384cd01a, type: 2}
+    LeftVerticalWall: {fileID: 11400000, guid: 8d75ea3f6bf9a9d4ea9f2028a64b0f9e, type: 2}
+    RightVerticalWall: {fileID: 11400000, guid: 8a9b950e7ec60cf4f9997df0309f2533, type: 2}
+    TopLeftCornerWall: {fileID: 11400000, guid: 83880ab8eda73984fbb2b6b7639bdcb1, type: 2}
+    TopRightCornerWall: {fileID: 11400000, guid: b43cfea76c75b7345bf7d37273c588d6, type: 2}
 --- !u!4 &2021771425
 Transform:
   m_ObjectHideFlags: 0

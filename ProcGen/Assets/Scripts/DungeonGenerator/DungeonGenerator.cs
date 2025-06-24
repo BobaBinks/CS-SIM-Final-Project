@@ -12,16 +12,12 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField]
     private Tilemap corridorTilemap;
 
-    [SerializeField]
-    private Tile corridorFloor;
-
-    [SerializeField]
-    private Tile corridorWallHorizontal;
-
-    [SerializeField]
-    private Tile corridorWallVertical;
+    // [Header("Corridor Tiles")]
+    public CorridorTiles corridorTiles;
 
     private Dictionary<DungeonRoom, Tilemap> rooms;
+
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -34,16 +30,31 @@ public class DungeonGenerator : MonoBehaviour
     void GenerateDungeon()
     {
         if (layout == null) return;
-
-        while(true)
+        //RandomRoomPlacement.GenerateRooms(layout, grid, out rooms, maxPlacementFailCount: 3);
+        while (true)
         {
             // room generation
             if (RandomRoomPlacement.GenerateRooms(layout, grid, out rooms, maxPlacementFailCount: 3))
             {
                 // corridor generation
-                RandomWalk.GenerateCorridors(layout, grid, rooms, corridorTilemap);
+                RandomWalk.GenerateCorridors(layout, grid, rooms, corridorTilemap, corridorTiles);
                 return;
             }
         }
     }
+}
+
+[System.Serializable]
+public class CorridorTiles
+{
+    public Tile corridorFloor;
+    public Tile TopHorizontalWall;
+    public Tile BottomHorizontalWall;
+
+    public Tile LeftVerticalWall;
+    public Tile RightVerticalWall;
+
+    public Tile TopLeftCornerWall;
+    public Tile TopRightCornerWall;
+
 }

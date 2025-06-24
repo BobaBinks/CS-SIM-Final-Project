@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class RandomWalk
 {
-    public static bool GenerateCorridors(DungeonLayout layout, Grid grid, Dictionary<DungeonRoom, Tilemap> placedRooms,Tilemap corridorTilemap, int maxPairFail = 5, int maxConnectionFail = 5)
+    public static bool GenerateCorridors(DungeonLayout layout, Grid grid, Dictionary<DungeonRoom, Tilemap> placedRooms,Tilemap corridorTilemap, CorridorTiles corridorTiles, int maxPairFail = 5, int maxConnectionFail = 5)
     {
         // option 1: place the walls on one tilemaps(room prefabs)
         // option 2: place the walls on both tilemaps(room prefabs)
@@ -47,7 +47,7 @@ public class RandomWalk
             Debug.Log("dir: " + dir);
 
             // find closest edges of room1 and room2
-            Vector2Int room1CorridorCell, room2CorridorCell;
+            Vector3Int room1CorridorCell, room2CorridorCell;
 
             bool room1CorridorPicked = PickCorridorCell(room1Map, room2Map, out room1CorridorCell);
             bool room2CorridorPicked = PickCorridorCell(room2Map, room1Map, out room2CorridorCell);
@@ -55,6 +55,29 @@ public class RandomWalk
             if(room1CorridorPicked && room2CorridorPicked)
             {
                 // execute random walk from room 1 towards room 2
+
+
+                // get the wall tilemap to replace the wall with the floor as the entrance
+
+                // room1
+                Transform room1WallsTransform = room1Map.transform.parent.Find("Walls");
+
+                if (room1WallsTransform == null) continue;
+
+                Tilemap room1WallMap = room1WallsTransform.GetComponent<Tilemap>();
+                room1WallMap.SetTile(room1CorridorCell,corridorTiles.corridorFloor);
+
+                // room2
+                Transform room2WallsTransform = room2Map.transform.parent.Find("Walls");
+
+                if (room2WallsTransform == null) continue;
+
+                Tilemap room2WallMap = room2WallsTransform.GetComponent<Tilemap>();
+                room2WallMap.SetTile(room2CorridorCell, corridorTiles.corridorFloor);
+
+                Debug.Log($"{room1Map.transform.parent.name} corridor cell: {room1CorridorCell}");
+                Debug.Log($"{room2Map.transform.parent.name} corridor cell: {room2CorridorCell}");
+
                 // place the tiles on the corridor tilemap
                 // corridor tilemap should be above the wall layer so it covers the walls in the room prefabs
             }
@@ -64,7 +87,7 @@ public class RandomWalk
         return true;
     }
 
-    private static bool PickCorridorCell(Tilemap room1Map, Tilemap room2Map, out Vector2Int room1CorridorCell)
+    private static bool PickCorridorCell(Tilemap room1Map, Tilemap room2Map, out Vector3Int room1CorridorCell)
     {
         // get the position of room1 edges
         Dictionary<string, Vector3> edgePositions = TilemapHelper.GetEdgePositions(room1Map);
@@ -75,13 +98,21 @@ public class RandomWalk
         // get the closest edge of room1 by comparing distances
         string closestEdge = edgeDistances.Aggregate((x, y) => x.Value < y.Value ? x : y).Key;
 
+        Debug.Log($"{room1Map.transform.parent.name} edge distances:");
+        foreach(var edgeDistance in edgeDistances)
+        {
+            Debug.Log($"{edgeDistance.Key}, {edgeDistance.Value}");
+        }
+
+        Debug.Log($"closestEdge: {closestEdge}");
+
         return PickEdgeCell(room1Map, closestEdge, out room1CorridorCell);
     }
 
-    private static bool PickEdgeCell(Tilemap map, string closestEdge, out Vector2Int cellPosition)
+    private static bool PickEdgeCell(Tilemap map, string closestEdge, out Vector3Int cellPosition)
     {
         string[] validEdges = { "LEFT", "RIGHT", "TOP", "BOTTOM" };
-        cellPosition = Vector2Int.zero;
+        cellPosition = Vector3Int.zero;
 
         if (map == null || !validEdges.Contains(closestEdge))
             return false;
@@ -92,29 +123,29 @@ public class RandomWalk
             case "LEFT":
                 {
                     // tilemap bounds will be 2 less cuz we using the ground tilemap so walls not included
-                    int y = Random.Range(map.cellBounds.yMin - 1, map.cellBounds.yMax + 1);
-                    cellPosition = new Vector2Int(map.cellBounds.xMin - 1, y);
+                    int y = Random.Range(map.cellBounds.yMin, map.cellBounds.yMax);
+                    cellPosition = new Vector3Int(map.cellBounds.xMin - 1, y);
                     return true;
                 }
             case "RIGHT":
                 {
                     // tilemap bounds will be 2 less cuz we using the ground tilemap so walls not included
-                    int y = Random.Range(map.cellBounds.yMin - 1, map.cellBounds.yMax + 1);
-                    cellPosition = new Vector2Int(map.cellBounds.xMax + 1, y);
+                    int y = Random.Range(map.cellBounds.yMin, map.cellBounds.yMax);
+                    cellPosition = new Vector3Int(map.cellBounds.xMax, y);
                     return true;
                 }
             case "TOP":
                 {
                     // tilemap bounds will be 2 less cuz we using the ground tilemap so walls not included
-                    int x = Random.Range(map.cellBounds.xMin - 1, map.cellBounds.xMax + 1);
-                    cellPosition = new Vector2Int(x, map.cellBounds.yMax + 1);
+                    int x = Random.Range(map.cellBounds.xMin, map.cellBounds.xMax);
+                    cellPosition = new Vector3Int(x, map.cellBounds.yMax);
                     return true;
                 }
             case "BOTTOM":
                 {
                     // tilemap bounds will be 2 less cuz we using the ground tilemap so walls not included
-                    int x = Random.Range(map.cellBounds.xMin - 1, map.cellBounds.xMax + 1);
-                    cellPosition = new Vector2Int(x, map.cellBounds.yMin - 1);
+                    int x = Random.Range(map.cellBounds.xMin, map.cellBounds.xMax);
+                    cellPosition = new Vector3Int(x, map.cellBounds.yMin - 1);
                     return true;
                 }
 

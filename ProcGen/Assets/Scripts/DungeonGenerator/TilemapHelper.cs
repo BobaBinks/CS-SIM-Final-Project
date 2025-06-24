@@ -5,21 +5,15 @@ using System.Linq;
 
 public class TilemapHelper
 {
-    public static bool CheckOverlap(Vector2 roomPosition, Vector2 room1Dimensions, Dictionary<DungeonRoom, Tilemap> tileMaps, int minGapBetweenRooms)
+    public static bool CheckOverlap(Tilemap room1Tilemap, Dictionary<DungeonRoom, Tilemap> otherTileMaps, int minGapBetweenRooms)
     {
-        if (tileMaps == null || room1Dimensions == null || room1Dimensions == Vector2.zero)
+        if (otherTileMaps == null || room1Tilemap == null)
             return false;
 
-        foreach (KeyValuePair<DungeonRoom, Tilemap> kvp in tileMaps)
+        foreach (KeyValuePair<DungeonRoom, Tilemap> kvp in otherTileMaps)
         {
-            // get the bound width and height
-            Vector2 room2Dimensions = GetDimensions(kvp.Value);
-
-            if (room2Dimensions == Vector2.zero)
-                continue;
-
             // check if position overlaps a room
-            if (InRange(roomPosition, kvp.Value.transform, room1Dimensions, room2Dimensions, minGapBetweenRooms))
+            if (InRange(room1Tilemap, kvp.Value, minGapBetweenRooms))
                 return true;
         }
         return false;
@@ -33,30 +27,41 @@ public class TilemapHelper
     /// <param name="room"></param>
     /// <param name="dimension"></param>
     /// <returns></returns>
-    public static bool InRange(Vector2 room1, Transform room2, Vector2 room1Dimension, Vector2 room2Dimension, int minGapBetweenRooms)
+    public static bool InRange(Tilemap room1Map, Tilemap room2Map, int minGapBetweenRooms)
     {
-        if (room1 == null || room2 == null || room2Dimension == null || room2Dimension == Vector2.zero)
+        if (room1Map == null || room2Map == null)
             return true;
 
-        // left box
-        Vector2 position1 = room1.x < room2.position.x ? room1 : room2.position;
+        // compress bounds
+        room1Map.CompressBounds();
+        room2Map.CompressBounds();
+            
+        // Get padded bounds
+        Bounds room1Bounds = GetRoomWorldBounds(room1Map, minGapBetweenRooms);
+        Bounds room2Bounds = GetRoomWorldBounds(room2Map, minGapBetweenRooms);
 
-        // right box
-        Vector2 position2 = room1.x > room2.position.x ? room1 : room2.position;
+        return room1Bounds.Intersects(room2Bounds);
+    }
 
-        // divides the dimension into half to calculate the range that the room occupies based off it's center position
-        Vector2 offset1 = position1 == room1 ? room1Dimension / 2 : room2Dimension / 2;
+    private static Bounds GetRoomWorldBounds(Tilemap map, int padding)
+    {
+        BoundsInt bounds = map.cellBounds;
 
-        Vector2 offset2 = position2 == room1 ? room1Dimension / 2 : room2Dimension / 2;
+        // Pad the bounds
+        bounds.xMin -= padding;
+        bounds.xMax += padding;
+        bounds.yMin -= padding;
+        bounds.yMax += padding;
 
-        offset1 += Vector2.one * minGapBetweenRooms;
-        offset2 += Vector2.one * minGapBetweenRooms;
+        // Convert to world positions
+        Vector3 worldBoundsMin = map.CellToWorld(bounds.min);
+        Vector3 worldBoundsMax = map.CellToWorld(bounds.max);
 
+        // Create a Unity Bounds object
+        Bounds worldBounds = new Bounds();
+        worldBounds.SetMinMax(worldBoundsMin, worldBoundsMax);
 
-        return position1.x - offset1.x <= position2.x + offset2.x &&
-           position1.x + offset1.x >= position2.x - offset2.x &&
-           position1.y - offset1.y <= position2.y + offset2.y &&
-           position1.y + offset1.y >= position2.y - offset2.y;
+        return worldBounds;
     }
 
     public static Vector2 GetDimensions(Tilemap map)
@@ -85,24 +90,27 @@ public class TilemapHelper
     /// <param name="roomPosition"></param>
     /// <param name="dimesions"></param>
     /// <returns></returns>
-    public static Dictionary<string, Vector3> GetEdgePositions(Tilemap tileMap/*Vector3 roomPosition, Vector3 dimesions*/)
+    public static Dictionary<string, Vector3> GetEdgePositions(Tilemap tileMap)
     {
-        //Vector3 leftEdgePosition = roomPosition - new Vector3(dimesions.x, 0, 0);
-        //Vector3 rightEdgePosition = roomPosition + new Vector3(dimesions.x, 0, 0);
-        //Vector3 topEdgePosition = roomPosition + new Vector3(0, dimesions.y, 0);
-        //Vector3 bottomEdgePosition = roomPosition - new Vector3(0, dimesions.y, 0);
-
         tileMap.CompressBounds();
 
         BoundsInt bounds = tileMap.cellBounds;
 
         return new Dictionary<string, Vector3>
         {
-            { "LEFT", new Vector3(bounds.xMin,bounds.center.y) },
-            { "RIGHT", new Vector3(bounds.xMax,bounds.center.y) },
-            { "TOP", new Vector3(bounds.center.x,bounds.yMax) },
-            { "BOTTOM", new Vector3(bounds.center.x,bounds.yMin) },
+            { "LEFT", tileMap.CellToWorld(new Vector3Int(bounds.xMin,0)) },
+            { "RIGHT", tileMap.CellToWorld(new Vector3Int(bounds.xMax,0)) },
+            { "TOP", tileMap.CellToWorld(new Vector3Int(0,bounds.yMax)) },
+            { "BOTTOM", tileMap.CellToWorld(new Vector3Int(0,bounds.yMin)) },
         };
+
+        //return new Dictionary<string, Vector3>
+        //{
+        //    { "LEFT", new Vector3(bounds.xMin,bounds.center.y) },
+        //    { "RIGHT", new Vector3(bounds.xMax,bounds.center.y) },
+        //    { "TOP", new Vector3(bounds.center.x,bounds.yMax) },
+        //    { "BOTTOM", new Vector3(bounds.center.x,bounds.yMin) },
+        //};
     }
 
     /// <summary>

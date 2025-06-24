@@ -78,24 +78,26 @@ public class RandomRoomPlacement
             int randomX = Random.Range(xOffset, layout.width - xOffset - 1);
             int randomY = Random.Range(yOffset, layout.height - yOffset - 1);
 
+            Vector3 position = grid.CellToWorld(new Vector3Int(randomX, randomY, 0));
+            GameObject roomObject = GameObject.Instantiate(prefab, position, Quaternion.identity, grid.transform);
+
+            // get the ground tilemap
+            Transform roomT = roomObject.transform.Find("Ground");
+            Tilemap roomMap = roomT.GetComponentInChildren<Tilemap>();
+
+
             // check for overlap with existing rooms or border of dungeon
-            if (!TilemapHelper.CheckOverlap(new Vector2(randomX, randomY), dimensions, placedRooms, layout.minGapBetweenRooms))
+            if (!TilemapHelper.CheckOverlap(roomMap, placedRooms, layout.minGapBetweenRooms))
             {
                 // instantiate in that position
-                Vector3 position = new Vector3(randomX, randomY, 0);
-                Vector3Int cellPosition = grid.WorldToCell(position);
-                position = grid.CellToWorld(cellPosition);
-
-                GameObject roomObject = GameObject.Instantiate(prefab, position, Quaternion.identity, grid.transform);
-
-                // get the ground tilemap to add to existing room list
-                Transform roomT = roomObject.transform.Find("Ground");
-                Tilemap roomMap = roomT.GetComponentInChildren<Tilemap>();
+                //Vector3 position = new Vector3(randomX, randomY, 0);
+                // Vector3Int cellPosition = grid.WorldToCell(position);
                 placedRooms.Add(room, roomMap);
                 return true;
             }
             else
             {
+                GameObject.Destroy(roomObject);
                 // if overlap, retry, after certain amount of fails, try different prefab
                 failCounter++;
             }
