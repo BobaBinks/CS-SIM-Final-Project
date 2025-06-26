@@ -5,11 +5,14 @@ using System.Collections.Generic;
 
 public class RandomWalk
 {
-    public static bool GenerateCorridors(DungeonLayout layout, Grid grid, Dictionary<DungeonRoom, Tilemap> placedRooms,Tilemap corridorTilemap, CorridorTiles corridorTiles, int maxPairFail = 5, int maxConnectionFail = 5)
+    private enum Axis 
+    { 
+        HORIZONTAL,
+        VERTICAL,
+        MAX_EXCLUSIVE,
+    }
+    public static bool GenerateCorridors(DungeonLayout layout, Grid grid, Dictionary<DungeonRoom, Tilemap> placedRooms, Tilemap corridorTilemap, CorridorTiles corridorTiles, int maxCorridorPathIterations = 50, int maxPairFail = 5, int maxConnectionFail = 5)
     {
-        // option 1: place the walls on one tilemaps(room prefabs)
-        // option 2: place the walls on both tilemaps(room prefabs)
-
         // list to contain unique connections
         List<RoomConnection> connections = new List<RoomConnection>();
 
@@ -25,7 +28,6 @@ public class RandomWalk
                     connections.Add(con);
             }
         }
-
 
         // iterate through each unique connection
         foreach(RoomConnection connection in connections)
@@ -54,37 +56,121 @@ public class RandomWalk
 
             if(room1CorridorPicked && room2CorridorPicked)
             {
-                // execute random walk from room 1 towards room 2
-
-
-                // get the wall tilemap to replace the wall with the floor as the entrance
-
-                // room1
-                Transform room1WallsTransform = room1Map.transform.parent.Find("Walls");
-
-                if (room1WallsTransform == null) continue;
-
-                Tilemap room1WallMap = room1WallsTransform.GetComponent<Tilemap>();
-                room1WallMap.SetTile(room1CorridorCell,corridorTiles.corridorFloor);
-
-                // room2
-                Transform room2WallsTransform = room2Map.transform.parent.Find("Walls");
-
-                if (room2WallsTransform == null) continue;
-
-                Tilemap room2WallMap = room2WallsTransform.GetComponent<Tilemap>();
-                room2WallMap.SetTile(room2CorridorCell, corridorTiles.corridorFloor);
-
-                Debug.Log($"{room1Map.transform.parent.name} corridor cell: {room1CorridorCell}");
-                Debug.Log($"{room2Map.transform.parent.name} corridor cell: {room2CorridorCell}");
-
-                // place the tiles on the corridor tilemap
-                // corridor tilemap should be above the wall layer so it covers the walls in the room prefabs
+                ConnectRooms(room1Map, room2Map, corridorTilemap, room1CorridorCell, room2CorridorCell, corridorTiles, maxCorridorPathIterations, maxConnectionFail);
             }
         }
 
 
         return true;
+    }
+
+    private static bool ConnectRooms(Tilemap room1Map, Tilemap room2Map, Tilemap corridorTilemap, Vector3Int room1CorridorCell, Vector3Int room2CorridorCell, CorridorTiles corridorTiles, int maxIterations = 50, int maxConnectionFail = 5)
+    {
+        // execute random walk from room 1 towards room 2
+
+
+        // get the wall tilemap to replace the wall with the floor as the entrance
+
+        // room1
+        Transform room1WallsTransform = room1Map.transform.parent.Find("Walls");
+
+        if (room1WallsTransform == null) return false;
+
+        Tilemap room1WallMap = room1WallsTransform.GetComponent<Tilemap>();
+        room1WallMap.SetTile(room1CorridorCell, corridorTiles.corridorFloor);
+
+        // room2
+        Transform room2WallsTransform = room2Map.transform.parent.Find("Walls");
+
+        if (room2WallsTransform == null) return false;
+
+        Tilemap room2WallMap = room2WallsTransform.GetComponent<Tilemap>();
+        room2WallMap.SetTile(room2CorridorCell, corridorTiles.corridorFloor);
+
+        // convert corridor cells to world position
+        Vector3 convertedRoom1Corridor = room1Map.CellToWorld(room1CorridorCell);
+        Vector3 convertedRoom2Corridor = room2Map.CellToWorld(room2CorridorCell);
+
+        // then convert back to cell position for corridorTilemap
+        room1CorridorCell = corridorTilemap.WorldToCell(convertedRoom1Corridor);
+        room2CorridorCell = corridorTilemap.WorldToCell(convertedRoom2Corridor);
+
+        Debug.Log($"room1CorridorCell Position: {room1CorridorCell}");
+        Debug.Log($"room2CorridorCell Position: {room2CorridorCell}");
+
+        // create path
+        List<Vector3Int> corridorFloorCells;
+        GetCorridorFloorCells(room1CorridorCell, room2CorridorCell, out corridorFloorCells);
+
+        Debug.Log($"corridorFloorCells: {corridorFloorCells.Count}");
+        // replace the tiles with corridor tiles
+        foreach (var cell in corridorFloorCells)
+        {
+            // Debug.Log($"Cell: {cell}");
+            corridorTilemap.SetTile(cell, corridorTiles.corridorFloor);
+        }
+        // prob need a prev tile tracker and next tile to figure out the orientation
+
+        return true;
+    }
+
+    private static bool GetCorridorFloorCells(Vector3Int room1CorridorCell, Vector3Int room2CorridorCell, out List<Vector3Int> corridorFloorCells, int maxIterations = 50, int maxConnectionFail = 5)
+    {
+        corridorFloorCells = new List<Vector3Int>();
+
+        Vector3Int currCell = room1CorridorCell;
+        int maxStepsExclusive = 6;
+        int minimumSteps = 2;
+
+        // stop loop if reach destination
+        int currIteration = 0;
+
+        // if destination not reached and not max iterations yet
+        while (true)
+        {
+            // pick a random number of steps
+            int steps = Random.Range(minimumSteps, maxStepsExclusive);
+
+            // pick horizontal or vertical direction
+            Axis axis = (Axis)Random.Range(0, (int)Axis.MAX_EXCLUSIVE);
+
+            Vector2Int dir;
+
+            if (axis == Axis.HORIZONTAL)
+            {
+                int xDir = room2CorridorCell.x > currCell.x ? 1 : -1;
+
+                // get direction towards room2
+                dir = new Vector2Int(xDir, 0);
+            }
+            else
+            {
+                int yDir = room2CorridorCell.y > currCell.y ? 1 : -1;
+
+                // get direction towards room2
+                dir = new Vector2Int(0, yDir);
+            }
+
+            // add new path and update currCell
+            for (int i = 0; i < steps; ++i)
+            {
+                currCell += new Vector3Int(dir.x, dir.y);
+                corridorFloorCells.Add(currCell);
+            }
+            currIteration++;
+
+            if (corridorFloorCells.Contains(room2CorridorCell))
+            {
+                Debug.Log("Hataraku Saibo");
+                return true;
+            }
+            
+            if(currIteration >= maxIterations)
+            {
+                Debug.Log($"Max Iteration reached: {currIteration} / {maxIterations}");
+                return false;
+            }
+        }
     }
 
     private static bool PickCorridorCell(Tilemap room1Map, Tilemap room2Map, out Vector3Int room1CorridorCell)

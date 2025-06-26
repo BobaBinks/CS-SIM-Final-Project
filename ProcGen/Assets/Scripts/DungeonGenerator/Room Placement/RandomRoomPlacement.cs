@@ -5,7 +5,7 @@ using System.Linq;
 
 public class RandomRoomPlacement
 {
-    public static bool GenerateRooms(DungeonLayout layout, Grid grid, out Dictionary<DungeonRoom, Tilemap> placedRooms, int maxPlacementFailCount = 5, int maxPrefabFailCount = 5)
+    public static bool GenerateRooms(DungeonLayout layout, Grid grid, GameObject roomsGO, out Dictionary<DungeonRoom, Tilemap> placedRooms, int maxPlacementFailCount = 5, int maxPrefabFailCount = 5)
     {
         // to store placed rooms
         // List<Tilemap> placedRooms = new List<Tilemap>();
@@ -28,7 +28,7 @@ public class RandomRoomPlacement
                 GameObject prefab = room.roomType.prefabs[prefabIndexList[prefabIndex]];
 
                 // if room placed, stop loop, else increment fail counter
-                if (!PlaceRoom(prefab, grid, layout, room, placedRooms, maxPlacementFailCount))
+                if (!PlaceRoom(prefab, grid, roomsGO, layout, room, placedRooms, maxPlacementFailCount))
                 {
                     // remove prefab from list
                     prefabIndexList.Remove(prefabIndex);
@@ -40,10 +40,10 @@ public class RandomRoomPlacement
                 if (prefabFailCounter > maxPrefabFailCount || prefabIndexList.Count == 0)
                 {
                     // remove all rooms
-                    int childCount = grid.transform.childCount;
+                    int childCount = roomsGO.transform.childCount;
                     for (int i = 0; i < childCount; ++i)
                     {
-                        Object.Destroy(grid.transform.GetChild(i).gameObject);
+                        Object.Destroy(roomsGO.transform.GetChild(i).gameObject);
                     }
                     Debug.Log("Room Generation Failed");
                     return false;
@@ -54,7 +54,7 @@ public class RandomRoomPlacement
         return true;
     }
 
-    public static bool PlaceRoom(GameObject prefab, Grid grid,DungeonLayout layout, DungeonRoom room, Dictionary<DungeonRoom, Tilemap> placedRooms, int maxFailCount)
+    public static bool PlaceRoom(GameObject prefab, Grid grid, GameObject roomsGO, DungeonLayout layout, DungeonRoom room, Dictionary<DungeonRoom, Tilemap> placedRooms, int maxFailCount)
     {
         // get the ground tilemap
         Transform groundT = prefab.transform.Find("Ground");
@@ -79,7 +79,7 @@ public class RandomRoomPlacement
             int randomY = Random.Range(yOffset, layout.height - yOffset - 1);
 
             Vector3 position = grid.CellToWorld(new Vector3Int(randomX, randomY, 0));
-            GameObject roomObject = GameObject.Instantiate(prefab, position, Quaternion.identity, grid.transform);
+            GameObject roomObject = GameObject.Instantiate(prefab, position, Quaternion.identity, roomsGO.transform);
 
             // get the ground tilemap
             Transform roomT = roomObject.transform.Find("Ground");
