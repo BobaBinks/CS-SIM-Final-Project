@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2481017141180372864}
   m_Layer: 0
   m_Name: PropsNoCollision
-  m_TagString: Untagged
+  m_TagString: PropsNoCollision
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -454,7 +454,7 @@ GameObject:
   - component: {fileID: 8398459056988550137}
   m_Layer: 0
   m_Name: Ground
-  m_TagString: Untagged
+  m_TagString: GroundTilemap
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4270,7 +4270,7 @@ GameObject:
   - component: {fileID: 7956130128402719692}
   m_Layer: 0
   m_Name: Walls
-  m_TagString: Untagged
+  m_TagString: WallTileMap
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

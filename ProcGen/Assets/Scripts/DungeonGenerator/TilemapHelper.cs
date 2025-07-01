@@ -5,6 +5,14 @@ using System.Linq;
 
 public class TilemapHelper
 {
+    public enum Edge
+    {
+        LEFT,
+        RIGHT,
+        TOP,
+        BOTTOM,
+    }
+
     public static bool CheckOverlap(Tilemap room1Tilemap, Dictionary<DungeonRoom, Tilemap> otherTileMaps, int minGapBetweenRooms)
     {
         if (otherTileMaps == null || room1Tilemap == null)
@@ -84,61 +92,50 @@ public class TilemapHelper
         return new Vector2(map.cellBounds.size.x, map.cellBounds.size.y);
     }
 
-    /// <summary>
-    /// Calculates the position of the edges of a room.
-    /// </summary>
-    /// <param name="roomPosition"></param>
-    /// <param name="dimesions"></param>
-    /// <returns></returns>
-    public static Dictionary<string, Vector3> GetEdgePositions(Tilemap tileMap)
+    public static bool PickEdgeCell(Tilemap map, Edge edge, out Vector3Int cellPosition)
     {
-        tileMap.CompressBounds();
+        Edge[] validEdges = { Edge.LEFT, Edge.RIGHT, Edge.BOTTOM, Edge.TOP };
+        cellPosition = Vector3Int.zero;
 
-        BoundsInt bounds = tileMap.cellBounds;
+        if (map == null || !validEdges.Contains(edge))
+            return false;
 
-        return new Dictionary<string, Vector3>
+        map.CompressBounds();
+
+        // pick a point at the edge of room
+        switch (edge)
         {
-            { "LEFT", tileMap.CellToWorld(new Vector3Int(bounds.xMin,0)) },
-            { "RIGHT", tileMap.CellToWorld(new Vector3Int(bounds.xMax,0)) },
-            { "TOP", tileMap.CellToWorld(new Vector3Int(0,bounds.yMax)) },
-            { "BOTTOM", tileMap.CellToWorld(new Vector3Int(0,bounds.yMin)) },
-        };
+            case Edge.LEFT:
+                {
+                    // tilemap bounds will be 2 less cuz we using the ground tilemap so walls not included
+                    int y = Random.Range(map.cellBounds.yMin, map.cellBounds.yMax);
+                    cellPosition = new Vector3Int(map.cellBounds.xMin - 1, y);
+                    return true;
+                }
+            case Edge.RIGHT:
+                {
+                    // tilemap bounds will be 2 less cuz we using the ground tilemap so walls not included
+                    int y = Random.Range(map.cellBounds.yMin, map.cellBounds.yMax);
+                    cellPosition = new Vector3Int(map.cellBounds.xMax, y);
+                    return true;
+                }
+            case Edge.TOP:
+                {
+                    // tilemap bounds will be 2 less cuz we using the ground tilemap so walls not included
+                    int x = Random.Range(map.cellBounds.xMin, map.cellBounds.xMax);
+                    cellPosition = new Vector3Int(x, map.cellBounds.yMax);
+                    return true;
+                }
+            case Edge.BOTTOM:
+                {
+                    // tilemap bounds will be 2 less cuz we using the ground tilemap so walls not included
+                    int x = Random.Range(map.cellBounds.xMin, map.cellBounds.xMax);
+                    cellPosition = new Vector3Int(x, map.cellBounds.yMin - 1);
+                    return true;
+                }
 
-        //return new Dictionary<string, Vector3>
-        //{
-        //    { "LEFT", new Vector3(bounds.xMin,bounds.center.y) },
-        //    { "RIGHT", new Vector3(bounds.xMax,bounds.center.y) },
-        //    { "TOP", new Vector3(bounds.center.x,bounds.yMax) },
-        //    { "BOTTOM", new Vector3(bounds.center.x,bounds.yMin) },
-        //};
-    }
-
-    /// <summary>
-    /// Calculates distances between edges of room1 and center of room2.
-    /// </summary>
-    /// <param name="room2Position"></param>
-    /// <param name="edgePositions"></param>
-    /// <returns></returns>
-    public static Dictionary<string,float> GetEdgeDistances(Vector3 room2Position, Dictionary<string, Vector3> room1EdgePositions)
-    {
-        string[] requiredKeys = { "LEFT", "RIGHT", "TOP", "BOTTOM" };
-
-        // https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.all?view=net-9.0
-        // iterates through each element in requiredKeys and tests if edgePosition contains it using the predicate provided.
-        // returns true if all elements passes the test
-        if (!requiredKeys.All(room1EdgePositions.ContainsKey))
-        {
-            return new Dictionary<string, float>();
+            default: return false;
         }
-
-        // a dictionary containing the edge and the distance between it and room2
-        return new Dictionary<string, float>
-        {
-            { "LEFT", (room2Position - room1EdgePositions["LEFT"]).magnitude },
-            { "RIGHT", (room2Position - room1EdgePositions["RIGHT"]).magnitude },
-            { "TOP", (room2Position - room1EdgePositions["TOP"]).magnitude },
-            { "BOTTOM", (room2Position - room1EdgePositions["BOTTOM"]).magnitude },
-        };
     }
 
     public static Vector3 RealignPrefab(Vector3 position,Grid grid) 

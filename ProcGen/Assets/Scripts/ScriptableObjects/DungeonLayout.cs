@@ -16,7 +16,6 @@ public class DungeonLayout : ScriptableObject
     public int height = 100;
     public int minGapBetweenRooms = 5;
 
-
     /// <summary>
     /// Update the connection's line orientation
     /// </summary>

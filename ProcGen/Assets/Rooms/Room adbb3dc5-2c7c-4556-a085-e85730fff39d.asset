@@ -10,12 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d5a2eaf5079873b488dbb64689f70336, type: 3}
-  m_Name: Room a3058c3d-437f-4fd4-85b1-33c54b50467d
+  m_Name: Room adbb3dc5-2c7c-4556-a085-e85730fff39d
   m_EditorClassIdentifier: 
-  roomType: {fileID: 11400000, guid: 693004aeac50d3649bcb7fc3f80f5674, type: 2}
-  styleLeft: 628
-  styleTop: 208
-  guid: a3058c3d-437f-4fd4-85b1-33c54b50467d
+  roomType: {fileID: 11400000, guid: f38a6bcc05b131247aab7819359c3ba7, type: 2}
+  styleLeft: 347
+  styleTop: 367
+  guid: adbb3dc5-2c7c-4556-a085-e85730fff39d
   connectionList:
-  - {fileID: 11400000, guid: 21427545ab6d95b478cd7b7645164f90, type: 2}
-  - {fileID: 11400000, guid: 15ac4cf51d0ab6a4fb16a49caebc0dc4, type: 2}
+  - {fileID: 11400000, guid: 089351c13777f3e4cb5885962717c771, type: 2}

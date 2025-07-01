@@ -13,10 +13,12 @@ MonoBehaviour:
   m_Name: TestLayout
   m_EditorClassIdentifier: 
   dungeonRoomList:
-  - {fileID: 11400000, guid: 21427545ab6d95b478cd7b7645164f90, type: 2}
-  - {fileID: 11400000, guid: a98a2cee398c02e44be5019897de3f7c, type: 2}
-  - {fileID: 11400000, guid: 15ac4cf51d0ab6a4fb16a49caebc0dc4, type: 2}
+  - {fileID: 11400000, guid: 3d69fd9eeb141e943bbad3f054321885, type: 2}
+  - {fileID: 11400000, guid: 5923110ab1d0e1c4081a365d0d2aec46, type: 2}
+  - {fileID: 11400000, guid: 6c7091291960f4d47aa7b1748fb7a578, type: 2}
+  - {fileID: 11400000, guid: f3e56a6028d81294eaa6943f3b835bd3, type: 2}
+  - {fileID: 11400000, guid: 089351c13777f3e4cb5885962717c771, type: 2}
   roomTypeList: {fileID: 11400000, guid: f0da55397f2229e498752a592243db28, type: 2}
-  width: 100
-  height: 100
+  width: 50
+  height: 50
   minGapBetweenRooms: 5

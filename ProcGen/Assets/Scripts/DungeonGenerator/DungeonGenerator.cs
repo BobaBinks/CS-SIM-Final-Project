@@ -1,6 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Tilemaps;
+using System.Collections;
+
 public class DungeonGenerator : MonoBehaviour
 {
     [SerializeField]
@@ -23,7 +25,8 @@ public class DungeonGenerator : MonoBehaviour
     // [Header("Corridor Tiles")]
     public CorridorTiles corridorTiles;
 
-    private Dictionary<DungeonRoom, Tilemap> roomsDict;
+    private Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -34,31 +37,33 @@ public class DungeonGenerator : MonoBehaviour
     void GenerateDungeon()
     {
         if (layout == null || corridorTilemap == null || roomsGO == null) return;
-        //RandomRoomPlacement.GenerateRooms(layout, grid, out rooms, maxPlacementFailCount: 3);
-        while (true)
-        {
-            // room generation
-            if (RandomRoomPlacement.GenerateRooms(layout, grid, roomsGO, out roomsDict, maxPlacementFailCount: 3))
-            {
-                // corridor generation
-                RandomWalk.GenerateCorridors(layout, grid, roomsDict, corridorTilemap, corridorTiles, maxCorridorPathIterations, maxPairFail, maxConnectionFail);
-                return;
-            }
-        }
+        //while (true)
+        //{
+        //    // room generation
+        //    if (RandomRoomPlacement.GenerateRooms(layout, grid, roomsGO, out roomsDict, maxPlacementFailCount: 3))
+        //    {
+        //        // corridor generation
+        //        RandomWalk.GenerateCorridors(layout, grid, roomsDict, corridorTilemap, corridorTiles, maxCorridorPathIterations, maxPairFail, maxConnectionFail);
+        //        return;
+        //    }
+        //}
+
+        GraphBasedGeneration.GenerateDungeon(layout, grid, roomsGO, corridorTilemap ,corridorTiles, out roomsDict, maxPlacementFailCount: 3);
     }
-}
-
-[System.Serializable]
-public class CorridorTiles
-{
-    public Tile corridorFloor;
-    public Tile TopHorizontalWall;
-    public Tile BottomHorizontalWall;
-
-    public Tile LeftVerticalWall;
-    public Tile RightVerticalWall;
-
-    public Tile TopLeftCornerWall;
-    public Tile TopRightCornerWall;
 
 }
+
+//[System.Serializable]
+//public class CorridorTiles
+//{
+//    public Tile corridorFloor;
+//    public Tile TopHorizontalWall;
+//    public Tile BottomHorizontalWall;
+
+//    public Tile LeftVerticalWall;
+//    public Tile RightVerticalWall;
+
+//    public Tile TopLeftCornerWall;
+//    public Tile TopRightCornerWall;
+
+//}
