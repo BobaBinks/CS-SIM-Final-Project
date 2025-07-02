@@ -26,7 +26,12 @@ public class GraphBasedGeneration
         // to keep track of which edge of the room already has a corridor
         Dictionary<DungeonRoom, Dictionary<TilemapHelper.Edge, bool>> roomEdgeOccupiedTracker = CreateEdgeTracker(layout);
 
+        // get a tracker for visited rooms to keep track of which room to enqueue
+        List<DungeonRoom> roomVisited = new List<DungeonRoom>();
+
         if (roomEdgeOccupiedTracker == null) return false;
+
+
 
         // enqueue entrance room
         childPlacementQueue.Enqueue(entranceRoom);
@@ -45,6 +50,7 @@ public class GraphBasedGeneration
         while(childPlacementQueue.Count > 0)
         {
             DungeonRoom currRoom = childPlacementQueue.Dequeue();
+            roomVisited.Add(currRoom);
 
             // get available edges of current room
             Dictionary<TilemapHelper.Edge, bool> roomEdges = roomEdgeOccupiedTracker[currRoom];
@@ -52,17 +58,17 @@ public class GraphBasedGeneration
             // https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.aggregate?view=net-9.0
             int availableEdgesCount = roomEdges.Aggregate(0, (count, edge) =>  edge.Value == false ? count + 1 : count );
 
-            // list of available edges currently
-            List<TilemapHelper.Edge> availableEdges = roomEdges.
-                Where(kvp => kvp.Value == false).
-                Select(kvp => kvp.Key).ToList();
-
             // check if there are enough available edges for the new connections
             if (currRoom.connectionList.Count > availableEdgesCount)
             {
                 Debug.Log("GraphBasedGeneration: Not enough available edges");
                 return false;
             }
+
+            // list of available edges currently
+            List<TilemapHelper.Edge> availableEdges = roomEdges.
+                Where(kvp => kvp.Value == false).
+                Select(kvp => kvp.Key).ToList();
 
             // get the current room instance
             DungeonRoomInstance currRoomInstance = GetOrCreateDungeonRoomInstance(currRoom, placedRooms);
@@ -101,14 +107,20 @@ public class GraphBasedGeneration
                 // try to get the child room instance if it exists
                 DungeonRoomInstance childRoomInstance = GetOrCreateDungeonRoomInstance(childRoom, placedRooms);
 
+                TilemapHelper.Edge room2Edge = TilemapHelper.Edge.INVALID;
+
                 // if child room instance did not exist generate corridor using random walk
                 if (!childExisted)
                 {
                     // random walk
-                    List<Vector3Int> corridorCells = RandomWalk.GetCorridorFloorCells(cellPosition, edge, childRoomInstance, maxIterations: 2);
+                    List<Vector3Int> corridorCells = RandomWalk.GetCorridorFloorCells(cellPosition, edge, childRoomInstance, maxIterations: 4);
 
                     bool generateCorridor = PlaceCorridorCells(corridorCells, corridorTiles, corridorTilemap, currRoomInstance, grid);
+
                     // place room at end of corridor on it's appropriate edge
+
+                    bool room2Placed = PlaceRoomAtCorridorEnd(corridorCells, currRoomInstance, childRoomInstance, grid, roomsGO, ref room2Edge);
+
                 }
                 else
                 {
@@ -123,12 +135,85 @@ public class GraphBasedGeneration
                 availableEdges.Remove(edge);
 
                 // update the edges occupation for both rooms
+                roomEdges[edge] = true;
+                roomEdgeOccupiedTracker[childRoom][room2Edge] = true;
 
+
+                // add child to queue child has not been visited before.
+                if(!roomVisited.Contains(childRoom))
+                    childPlacementQueue.Enqueue(childRoom);
             }
             // place all the child rooms
         }
 
         return false;
+    }
+
+    private static bool PlaceRoomAtCorridorEnd(List<Vector3Int> corridorCells, DungeonRoomInstance currRoom, DungeonRoomInstance room2, Grid grid, GameObject roomsGO, ref TilemapHelper.Edge room2Edge)
+    {
+        // identify direction of corridor end
+
+        // gets the last 2 corridorCell
+        List<Vector3Int> last2Cells =  corridorCells.GetRange(corridorCells.Count - 2, 2);
+        Vector3 dir = last2Cells[1] - last2Cells[0];
+        dir = dir.normalized;
+
+        Vector3Int corridorOffset;
+
+        // identify edge of room2
+        if (dir == Vector3.down)
+        {
+            // room2 should use top edge
+            room2Edge = TilemapHelper.Edge.TOP;
+            corridorOffset = Vector3Int.up;
+        }
+        else if (dir == Vector3.up)
+        {
+            // room2 should use bottom edge
+            room2Edge = TilemapHelper.Edge.BOTTOM;
+            corridorOffset = Vector3Int.down;
+        }
+        else if (dir == Vector3.left)
+        {
+            // room2 should use right edge
+            room2Edge = TilemapHelper.Edge.RIGHT;
+            corridorOffset = Vector3Int.right;
+        }
+        else if (dir == Vector3.right)
+        {
+            // room2 should use left edge
+            room2Edge = TilemapHelper.Edge.LEFT;
+            corridorOffset = Vector3Int.left;
+        }
+        else
+        {
+            Debug.Log("Could not obtain direction");
+            room2Edge = TilemapHelper.Edge.INVALID;
+            return false;
+        }
+
+        // pick a edge cell for room2
+        Vector3Int cellPosition;
+        bool edgeCellPicked = TilemapHelper.PickEdgeCell(room2.groundMap, room2Edge, out cellPosition);
+
+
+        if (!edgeCellPicked) return false;
+
+        // "place" room2 on the last corridorCell
+
+        // calculate the corridor's final cell position in the global grid space,
+        // by adding the room's grid offset to the last corridor cell (local to room)
+        Vector3Int corridorEndPositionInGrid = last2Cells.Last() + currRoom.GetPositionInCell(grid);
+
+        // calculate the difference between the edge cell and room2 center (prob just invert the edge cell)
+        Vector3Int room2Position = corridorEndPositionInGrid;
+
+        // offset the room2 position with the difference
+        room2Position = room2Position - cellPosition - corridorOffset;
+
+        room2.InstantiateInstance(room2Position, grid, roomsGO);
+
+        return true;
     }
 
     private static bool InsertCorridorFloorTileEntranceToRoom(CorridorTiles corridorTiles, Vector3Int cell, DungeonRoomInstance dungeonRoomInstance)

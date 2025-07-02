@@ -226,6 +226,8 @@ public class RandomWalk
         // keep track of the latest corridor cell
         Vector3Int currCell = room1CorridorCell;
 
+        room2Instance.wallMap.CompressBounds();
+
         BoundsInt room2Bounds = room2Instance.wallMap.cellBounds;
 
         // keep track of the axis that room1Edge is on
