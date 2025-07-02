@@ -113,13 +113,13 @@ public class GraphBasedGeneration
                 if (!childExisted)
                 {
                     // random walk
-                    List<Vector3Int> corridorCells = RandomWalk.GetCorridorFloorCells(cellPosition, edge, childRoomInstance, maxIterations: 4);
+                    List<List<Vector3Int>> corridor = RandomWalk.GetCorridorFloorCells(cellPosition, edge, childRoomInstance, maxIterations: 4);
 
-                    bool generateCorridor = PlaceCorridorCells(corridorCells, corridorTiles, corridorTilemap, currRoomInstance, grid);
+                    bool generateCorridor = PlaceCorridor(corridor, corridorTiles, corridorTilemap, currRoomInstance, grid);
 
                     // place room at end of corridor on it's appropriate edge
 
-                    bool room2Placed = PlaceRoomAtCorridorEnd(corridorCells, currRoomInstance, childRoomInstance, grid, roomsGO, ref room2Edge);
+                    bool room2Placed = PlaceRoomAtCorridorEnd(corridor, currRoomInstance, childRoomInstance, grid, roomsGO, ref room2Edge);
 
                 }
                 else
@@ -149,13 +149,25 @@ public class GraphBasedGeneration
         return false;
     }
 
-    private static bool PlaceRoomAtCorridorEnd(List<Vector3Int> corridorCells, DungeonRoomInstance currRoom, DungeonRoomInstance room2, Grid grid, GameObject roomsGO, ref TilemapHelper.Edge room2Edge)
+    private static bool PlaceRoomAtCorridorEnd(List<List<Vector3Int>> corridor, DungeonRoomInstance currRoom, DungeonRoomInstance room2, Grid grid, GameObject roomsGO, ref TilemapHelper.Edge room2Edge)
     {
+        if (corridor == null ||
+            currRoom == null ||
+            room2 == null ||
+            roomsGO == null) return false;
         // identify direction of corridor end
 
-        // gets the last 2 corridorCell
-        List<Vector3Int> last2Cells =  corridorCells.GetRange(corridorCells.Count - 2, 2);
-        Vector3 dir = last2Cells[1] - last2Cells[0];
+        // gets the last 2 corridor strips
+        List<List<Vector3Int>> last2CorridorStrips = corridor.GetRange(corridor.Count - 2, 2);
+
+        // get center cell of each strip
+        List<Vector3Int> last2CenterCells = new List<Vector3Int> 
+        { 
+            { last2CorridorStrips[0][1] },
+            { last2CorridorStrips[1][1] } 
+        };
+
+        Vector3 dir = last2CenterCells[1] - last2CenterCells[0];
         dir = dir.normalized;
 
         Vector3Int corridorOffset;
@@ -203,7 +215,7 @@ public class GraphBasedGeneration
 
         // calculate the corridor's final cell position in the global grid space,
         // by adding the room's grid offset to the last corridor cell (local to room)
-        Vector3Int corridorEndPositionInGrid = last2Cells.Last() + currRoom.GetPositionInCell(grid);
+        Vector3Int corridorEndPositionInGrid = last2CenterCells.Last() + currRoom.GetPositionInCell(grid);
 
         // calculate the difference between the edge cell and room2 center (prob just invert the edge cell)
         Vector3Int room2Position = corridorEndPositionInGrid;
@@ -221,15 +233,15 @@ public class GraphBasedGeneration
         return true;
     }
 
-    private static bool PlaceCorridorCells(List<Vector3Int> corridorCells, CorridorTiles corridorTiles, Tilemap corridorTilemap, DungeonRoomInstance currRoomInstance, Grid grid)
+    private static bool PlaceCorridor(List<List<Vector3Int>> corridor, CorridorTiles corridorTiles, Tilemap corridorTilemap, DungeonRoomInstance currRoomInstance, Grid grid)
     {
-        if (corridorCells == null ||
+        if (corridor == null ||
             currRoomInstance == null ||
             corridorTiles == null ||
             corridorTilemap == null ||
             grid == null) return false;
 
-        foreach (var corridorCell in corridorCells)
+        foreach (var corridorStrip in corridor)
         {
             // cell location of the room in the grid
             Vector3Int roomCellPositionOffset = currRoomInstance.GetPositionInCell(grid);
@@ -237,11 +249,14 @@ public class GraphBasedGeneration
             // invalid offset
             if (roomCellPositionOffset == Vector3Int.one * -1) return false;
 
-            Vector3Int position = corridorCell + roomCellPositionOffset;
+            foreach(var corridorCell in corridorStrip)
+            {
+                Vector3Int position = corridorCell + roomCellPositionOffset;
 
-            corridorTilemap.SetTile(position, corridorTiles.corridorFloor);
+                corridorTilemap.SetTile(position, corridorTiles.corridorFloor);
 
-            Debug.Log($"Corridor Cell: {position}");
+                Debug.Log($"Corridor Cell: {position}");
+            }
         }
         return true;
     }

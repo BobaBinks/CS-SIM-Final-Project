@@ -102,6 +102,9 @@ public class TilemapHelper
             return false;
 
         groundMap.CompressBounds();
+        
+        if (groundMap.cellBounds.size.x < 5 || groundMap.cellBounds.size.y < 5)
+            return false;
 
         // pick a point at the edge of room
         switch (edge)
@@ -109,28 +112,28 @@ public class TilemapHelper
             case Edge.LEFT:
                 {
                     // tilemap bounds will be 2 less cuz we using the ground tilemap so walls not included
-                    int y = Random.Range(groundMap.cellBounds.yMin, groundMap.cellBounds.yMax);
+                    int y = Random.Range(groundMap.cellBounds.yMin + 1, groundMap.cellBounds.yMax - 1);
                     cellPosition = new Vector3Int(groundMap.cellBounds.xMin, y);
                     return true;
                 }
             case Edge.RIGHT:
                 {
                     // tilemap bounds will be 2 less cuz we using the ground tilemap so walls not included
-                    int y = Random.Range(groundMap.cellBounds.yMin, groundMap.cellBounds.yMax);
+                    int y = Random.Range(groundMap.cellBounds.yMin + 1, groundMap.cellBounds.yMax - 1);
                     cellPosition = new Vector3Int(groundMap.cellBounds.xMax - 1, y);
                     return true;
                 }
             case Edge.TOP:
                 {
                     // tilemap bounds will be 2 less cuz we using the ground tilemap so walls not included
-                    int x = Random.Range(groundMap.cellBounds.xMin, groundMap.cellBounds.xMax);
+                    int x = Random.Range(groundMap.cellBounds.xMin + 1, groundMap.cellBounds.xMax - 1);
                     cellPosition = new Vector3Int(x, groundMap.cellBounds.yMax - 1);
                     return true;
                 }
             case Edge.BOTTOM:
                 {
                     // tilemap bounds will be 2 less cuz we using the ground tilemap so walls not included
-                    int x = Random.Range(groundMap.cellBounds.xMin, groundMap.cellBounds.xMax);
+                    int x = Random.Range(groundMap.cellBounds.xMin + 1, groundMap.cellBounds.xMax - 1);
                     cellPosition = new Vector3Int(x, groundMap.cellBounds.yMin);
                     return true;
                 }
