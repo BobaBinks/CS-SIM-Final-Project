@@ -13,12 +13,18 @@ MonoBehaviour:
   m_Name: TestLayout
   m_EditorClassIdentifier: 
   dungeonRoomList:
-  - {fileID: 11400000, guid: 3d69fd9eeb141e943bbad3f054321885, type: 2}
-  - {fileID: 11400000, guid: fcc43044d28413d4bb160ddf3d3b78ad, type: 2}
-  - {fileID: 11400000, guid: e149d0ae173222545b9100852de6fdd3, type: 2}
-  - {fileID: 11400000, guid: d50c20c2e75d91f4199bbe5671b1f17d, type: 2}
-  - {fileID: 11400000, guid: b4ef67f1e59989e489f4e10c318d22cb, type: 2}
-  - {fileID: 11400000, guid: 3803fff96e9041943ac936e6bd8551af, type: 2}
+  - {fileID: 11400000, guid: 562b59bff3c2f674a860b97c6c4a32e3, type: 2}
+  - {fileID: 11400000, guid: 26464be79640e094e921b20122dfa279, type: 2}
+  - {fileID: 11400000, guid: 4083d1edcf2bfd642a58add2512fad8a, type: 2}
+  - {fileID: 11400000, guid: b7be745c72448584cab04fdbe2390964, type: 2}
+  - {fileID: 11400000, guid: 0176baddd41e1eb4399663faee657f41, type: 2}
+  - {fileID: 11400000, guid: dba41a34733a1be42957794aae8cbd28, type: 2}
+  - {fileID: 11400000, guid: 60f50d65456fe624696838406697e0b0, type: 2}
+  - {fileID: 11400000, guid: e1259e45866b89d4ca008ef81c0fd785, type: 2}
+  - {fileID: 11400000, guid: 0eb0b0e934441db44b64b048c3d805e6, type: 2}
+  - {fileID: 11400000, guid: 27ab8d69d985f3c4a8802e5986cd6423, type: 2}
+  - {fileID: 11400000, guid: 81366e5139021b54f95d2b7c3d340529, type: 2}
+  - {fileID: 11400000, guid: caefdec8083e22a4d89e47cc94e6b906, type: 2}
   roomTypeList: {fileID: 11400000, guid: f0da55397f2229e498752a592243db28, type: 2}
   width: 50
   height: 50

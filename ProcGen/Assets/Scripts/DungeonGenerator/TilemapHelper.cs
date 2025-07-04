@@ -147,4 +147,35 @@ public class TilemapHelper
         Vector3Int cellPosition = grid.WorldToCell(position);
         return grid.CellToWorld(cellPosition);
     }
+
+    /// <summary>
+    /// To check for overlaps
+    /// </summary>
+    /// <param name="cellsToCheck"></param>
+    /// <param name="occupiedCells"></param>
+    /// <returns></returns>
+    public static bool CheckOverlap(HashSet<Vector3Int> cellsToCheck, HashSet<Vector3Int> occupiedCells)
+    {
+        if (cellsToCheck == null || occupiedCells == null) return true;
+
+        foreach(Vector3Int cell in cellsToCheck)
+        {
+            if (occupiedCells.Contains(cell))
+                return true;
+        }
+
+        return false;
+    }
+
+    public static HashSet<Vector3Int> PopulateCellsToCheck(Vector3Int cellPositionOffset, HashSet<Vector3Int> cells)
+    {
+        HashSet<Vector3Int> cellsToCheck = new HashSet<Vector3Int>();
+
+        foreach(Vector3Int cell in cells)
+        {
+            cellsToCheck.Add(cell + cellPositionOffset);
+        }
+
+        return cellsToCheck;
+    }
 }

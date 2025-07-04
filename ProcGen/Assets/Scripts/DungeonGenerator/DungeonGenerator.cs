@@ -48,7 +48,17 @@ public class DungeonGenerator : MonoBehaviour
         //    }
         //}
 
-        GraphBasedGeneration.GenerateDungeon(layout, grid, roomsGO, corridorTilemap ,corridorTiles, out roomsDict, maxPlacementFailCount: 3);
+        int maxAttempts = 5;
+        int attempts = 0;
+        while (attempts < maxAttempts)
+        {
+            if(GraphBasedGeneration.GenerateDungeon(layout, grid, roomsGO, corridorTilemap, corridorTiles, out roomsDict, maxPlacementFailCount: 3))
+                break;
+
+            attempts += 1;
+            Debug.Log($"Failed to generate dungeon: attempt {attempts}/{maxAttempts}");
+        }
+   
     }
 
 }

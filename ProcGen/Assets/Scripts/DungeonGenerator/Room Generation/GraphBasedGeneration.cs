@@ -7,6 +7,23 @@ public class GraphBasedGeneration
 {
     public static bool GenerateDungeon(DungeonLayout layout, Grid grid, GameObject roomsGO, Tilemap corridorTilemap, CorridorTiles corridorTiles,out Dictionary<DungeonRoom, DungeonRoomInstance> placedRooms, int maxPlacementFailCount = 5, int maxPrefabFailCount = 5)
     {
+        // reset the dungeon
+        // clear all children in roomGO
+        // clear all tiles in corridorTilemap
+        for(int childIndex = roomsGO.transform.childCount - 1; childIndex >= 0 ; --childIndex)
+        {
+            GameObject.Destroy(roomsGO.transform.GetChild(childIndex).gameObject);
+        }
+
+        corridorTilemap.ClearAllTiles();
+
+
+        // to check for overlaps
+        HashSet<Vector3Int> occupiedCells = new HashSet<Vector3Int>();
+
+        // monitor unique connection placement
+        List<RoomConnection> connectionsPlaced = new List<RoomConnection>();
+
         placedRooms = new Dictionary<DungeonRoom, DungeonRoomInstance>();
 
         if (corridorTiles == null || corridorTilemap == null) return false;
@@ -31,19 +48,18 @@ public class GraphBasedGeneration
 
         if (roomEdgeOccupiedTracker == null) return false;
 
-
-
         // enqueue entrance room
         childPlacementQueue.Enqueue(entranceRoom);
 
         // place entrance room
         DungeonRoomInstance entranceRoomInstance = GetOrCreateDungeonRoomInstance(entranceRoom, placedRooms);
+        placedRooms.Add(entranceRoom, entranceRoomInstance);
 
         int randomX = Random.Range(0, layout.width);
         int randomY = Random.Range(0, layout.height);
 
         // if could not instantiate the entrance room then stop generation
-        if (!entranceRoomInstance.InstantiateInstance(new Vector3Int(randomX, randomY), grid, roomsGO))
+        if (!entranceRoomInstance.InstantiateInstance(new Vector3Int(randomX, randomY), grid, roomsGO, occupiedCells))
             return false;
 
         // place and connect child rooms
@@ -57,9 +73,9 @@ public class GraphBasedGeneration
 
             // https://learn.microsoft.com/en-us/dotnet/api/system.linq.enumerable.aggregate?view=net-9.0
             int availableEdgesCount = roomEdges.Aggregate(0, (count, edge) =>  edge.Value == false ? count + 1 : count );
-
+            int connectionAlreadyPlacedCount = connectionsPlaced.Aggregate(0, (count, roomConnection) => roomConnection.CheckRoomInConnection(currRoom) == true ? count + 1 : count);
             // check if there are enough available edges for the new connections
-            if (currRoom.connectionList.Count > availableEdgesCount)
+            if (currRoom.connectionList.Count - connectionAlreadyPlacedCount > availableEdgesCount)
             {
                 Debug.Log("GraphBasedGeneration: Not enough available edges");
                 return false;
@@ -75,32 +91,104 @@ public class GraphBasedGeneration
 
             if (currRoomInstance == null || currRoomInstance.wallMap == null)
             {
-                Debug.Log("Invalid current room instance");
+                Debug.Log("GraphBasedGeneration: Invalid current room instance");
                 return false;
             }
 
-            // place rooms and corridors
-            foreach(DungeonRoom childRoom in currRoom.connectionList)
+            // place all the child rooms
+            bool childRoomsPlacedAndConnected = ConnectAndPlaceChildRooms(currRoom,
+                                                                        currRoomInstance,
+                                                                        grid,
+                                                                        roomsGO,
+                                                                        corridorTiles,
+                                                                        corridorTilemap,
+                                                                        placedRooms,
+                                                                        roomEdgeOccupiedTracker,
+                                                                        occupiedCells,
+                                                                        roomVisited,
+                                                                        childPlacementQueue,
+                                                                        availableEdges,
+                                                                        roomEdges,
+                                                                        connectionsPlaced);
+
+            if (!childRoomsPlacedAndConnected)
             {
-                if(childRoom == null) continue;
+                Debug.Log("GraphBasedGeneration: Failed to place or connect child rooms.");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+
+    private static bool ConnectAndPlaceChildRooms(
+                            DungeonRoom currRoom,
+                            DungeonRoomInstance currRoomInstance,
+                            Grid grid,
+                            GameObject roomsGO,
+                            CorridorTiles corridorTiles,
+                            Tilemap corridorTilemap,
+                            Dictionary<DungeonRoom, DungeonRoomInstance> placedRooms,
+                            Dictionary<DungeonRoom, Dictionary<TilemapHelper.Edge, bool>> roomEdgeOccupiedTracker,
+                            HashSet<Vector3Int> occupiedCells,
+                            List<DungeonRoom> roomVisited,
+                            Queue<DungeonRoom> childPlacementQueue,
+                            List<TilemapHelper.Edge> availableEdges,
+                            Dictionary<TilemapHelper.Edge, bool> roomEdges,
+                            List<RoomConnection> connectionsPlaced,
+                            int maxPlacementFailCount = 5)
+    {
+        if (currRoom == null ||
+            currRoomInstance == null ||
+            grid == null ||
+            roomsGO == null ||
+            corridorTiles == null ||
+            corridorTilemap == null ||
+            placedRooms == null ||
+            roomEdgeOccupiedTracker == null ||
+            occupiedCells == null ||
+            roomVisited == null ||
+            childPlacementQueue == null ||
+            availableEdges == null ||
+            roomEdges == null ||
+            connectionsPlaced == null)
+        {
+            Debug.LogError("ConnectAndPlaceChildRooms: One or more required arguments are null.");
+            return false;
+        }
+
+        // place rooms and corridors
+        foreach (DungeonRoom childRoom in currRoom.connectionList)
+        {
+            if (childRoom == null) continue;
+
+            RoomConnection connection = new RoomConnection(currRoom, childRoom);
+
+            // check the connection has not been placed already
+            if (!RoomConnection.CheckConnectionUnique(connectionsPlaced, connection))
+                continue;
+
+            int placementAttempts = 0;
+
+            while (placementAttempts < maxPlacementFailCount)
+            {
+                Debug.Log($"Attempt {placementAttempts} / {maxPlacementFailCount}: Connecting {currRoom.roomType.name} - {childRoom.roomType.name}");
 
                 // pick a random available edge from curr room
                 int edgeIndex = Random.Range(0, availableEdges.Count);
                 TilemapHelper.Edge edge = availableEdges[edgeIndex];
 
-
                 // pick a point in the edge for corridor
                 Vector3Int cellPosition;
                 bool currRoomEdgeCellPicked = TilemapHelper.PickEdgeCell(currRoomInstance.groundMap, edge, out cellPosition);
 
-
-                if(currRoomEdgeCellPicked)
-                    Debug.Log($"Edge cell {cellPosition + currRoomInstance.GetPositionInCell(grid)} picked for {currRoom.roomType.name}: {edge.ToString()}");
-                Debug.Log($"Edge cell {cellPosition}");
-
-                //corridorTilemap.SetTile(cellPosition + currRoomInstance.GetPositionInCell(grid), corridorTiles.BottomHorizontalWall);
-
-                Debug.Log(currRoomInstance.GetPositionInCell(grid));
+                if (!currRoomEdgeCellPicked)
+                {
+                    Debug.Log($"ConnectAndPlaceChildRooms attempt {placementAttempts}/{maxPlacementFailCount}: Could not pick edge cell for curr room");
+                    placementAttempts++;
+                    continue;
+                }
 
                 bool childExisted = placedRooms.ContainsKey(childRoom);
 
@@ -115,45 +203,81 @@ public class GraphBasedGeneration
                     // random walk
                     List<List<Vector3Int>> corridor = RandomWalk.GetCorridorFloorCells(cellPosition, edge, childRoomInstance, maxIterations: 4);
 
-                    bool generateCorridor = PlaceCorridor(corridor, corridorTiles, corridorTilemap, currRoomInstance, grid);
+                    // check if corridor overlaps with other occupied tiles
+                    bool corridorOverlap = CheckCorridorOverlap(currRoomInstance, grid, corridor, occupiedCells);
+
+                    if (corridorOverlap)
+                    {
+                        Debug.Log($"Corridor from {currRoom.roomType.name}'s {edge} edge to {childRoom.roomType.name} could not be placed");
+                        placementAttempts++;
+                        continue;
+                    }
 
                     // place room at end of corridor on it's appropriate edge
+                    bool room2Placed = PlaceRoomAtCorridorEnd(corridor, currRoomInstance, childRoomInstance, grid, roomsGO, occupiedCells, ref room2Edge);
 
-                    bool room2Placed = PlaceRoomAtCorridorEnd(corridor, currRoomInstance, childRoomInstance, grid, roomsGO, ref room2Edge);
+                    if (!room2Placed)
+                    {
+                        placementAttempts++;
+                        Debug.Log($"Failed room2 placement attempt: childRoomInstance Clone:{childRoomInstance.instance}");
+                        continue;
+                    }
 
+                    placedRooms.Add(childRoom, childRoomInstance);
+
+                    bool generateCorridor = PlaceCorridor(corridor, corridorTiles, corridorTilemap, currRoomInstance, grid, occupiedCells);
+
+                    if (!generateCorridor)
+                    {
+                        placementAttempts++;
+                        continue;
+                    }
                 }
                 else
                 {
                     // if child room instance existed, use A star algorithm to generate a valid non overlapping path
                 }
 
-
-                // check for overlaps
-                // placedRooms.Add(childRoom, childRoomInstance);
-
-                // remove edge from available list
+                // remove edge from available list after room and corridor placement succeeds
                 availableEdges.Remove(edge);
 
                 // update the edges occupation for both rooms
                 roomEdges[edge] = true;
                 roomEdgeOccupiedTracker[childRoom][room2Edge] = true;
 
+                // add this connection to the connectionPlaced Tracker
+                connectionsPlaced.Add(connection);
+
 
                 // add child to queue child has not been visited before.
-                if(!roomVisited.Contains(childRoom))
+                if (!roomVisited.Contains(childRoom))
                     childPlacementQueue.Enqueue(childRoom);
+                break;
             }
-            // place all the child rooms
+
+            if (placementAttempts == maxPlacementFailCount)
+            {
+                Debug.LogWarning($"ConnectAndPlaceChildRooms: Failed to place {childRoom.roomType.name} after {maxPlacementFailCount} attempts.");
+                return false;
+            }
+
         }
 
-        return false;
+        return true;
     }
 
-    private static bool PlaceRoomAtCorridorEnd(List<List<Vector3Int>> corridor, DungeonRoomInstance currRoom, DungeonRoomInstance room2, Grid grid, GameObject roomsGO, ref TilemapHelper.Edge room2Edge)
+    private static bool PlaceRoomAtCorridorEnd(List<List<Vector3Int>> corridor,
+        DungeonRoomInstance currRoom,
+        DungeonRoomInstance room2,
+        Grid grid,
+        GameObject roomsGO,
+        HashSet<Vector3Int> occupiedCells,
+        ref TilemapHelper.Edge room2Edge)
     {
         if (corridor == null ||
             currRoom == null ||
             room2 == null ||
+            occupiedCells == null ||
             roomsGO == null) return false;
         // identify direction of corridor end
 
@@ -205,8 +329,8 @@ public class GraphBasedGeneration
         }
 
         // pick a edge cell for room2
-        Vector3Int cellPosition;
-        bool edgeCellPicked = TilemapHelper.PickEdgeCell(room2.groundMap, room2Edge, out cellPosition);
+        Vector3Int room2EdgeCellPosition;
+        bool edgeCellPicked = TilemapHelper.PickEdgeCell(room2.groundMap, room2Edge, out room2EdgeCellPosition);
 
 
         if (!edgeCellPicked) return false;
@@ -221,11 +345,10 @@ public class GraphBasedGeneration
         Vector3Int room2Position = corridorEndPositionInGrid;
 
         // offset the room2 position with the difference
-        room2Position = room2Position - cellPosition - corridorOffset;
+        corridorOffset = corridorOffset * 2;
+        room2Position = room2Position - corridorOffset - room2EdgeCellPosition;
 
-        room2.InstantiateInstance(room2Position, grid, roomsGO);
-
-        return true;
+        return room2.InstantiateInstance(room2Position, grid, roomsGO, occupiedCells);
     }
 
     private static bool InsertCorridorFloorTileEntranceToRoom(CorridorTiles corridorTiles, Vector3Int cell, DungeonRoomInstance dungeonRoomInstance)
@@ -233,13 +356,16 @@ public class GraphBasedGeneration
         return true;
     }
 
-    private static bool PlaceCorridor(List<List<Vector3Int>> corridor, CorridorTiles corridorTiles, Tilemap corridorTilemap, DungeonRoomInstance currRoomInstance, Grid grid)
+    private static bool PlaceCorridor(List<List<Vector3Int>> corridor, CorridorTiles corridorTiles, Tilemap corridorTilemap, DungeonRoomInstance currRoomInstance, Grid grid, HashSet<Vector3Int> occupiedCells)
     {
         if (corridor == null ||
             currRoomInstance == null ||
             corridorTiles == null ||
             corridorTilemap == null ||
+            occupiedCells == null ||
             grid == null) return false;
+
+
 
         foreach (var corridorStrip in corridor)
         {
@@ -254,8 +380,6 @@ public class GraphBasedGeneration
                 Vector3Int position = corridorCell + roomCellPositionOffset;
 
                 corridorTilemap.SetTile(position, corridorTiles.corridorFloor);
-
-                Debug.Log($"Corridor Cell: {position}");
             }
         }
         return true;
@@ -279,7 +403,7 @@ public class GraphBasedGeneration
 
             // create DungeonRoomInstance
             DungeonRoomInstance instance = new DungeonRoomInstance(roomPrefab, room);
-            placedRooms.Add(room, instance);
+
 
             return instance;
         }
@@ -303,5 +427,42 @@ public class GraphBasedGeneration
         }
 
         return roomEdgeOccupiedTracker;
+    }
+
+    private static bool CheckCorridorOverlap(DungeonRoomInstance currRoomInstance, Grid grid, List<List<Vector3Int>> corridor, HashSet<Vector3Int> occupiedCells)
+    {
+        if (currRoomInstance == null ||
+            grid == null ||
+            corridor == null ||
+            occupiedCells == null)
+            return true;
+
+        HashSet<Vector3Int> cellsToCheck = new HashSet<Vector3Int>();
+        // check for overlap
+        foreach (var corridorStrip in corridor)
+        {
+            // cell location of the room in the grid
+            Vector3Int roomCellPositionOffset = currRoomInstance.GetPositionInCell(grid);
+
+            // invalid offset
+            if (roomCellPositionOffset == Vector3Int.one * -1) return false;
+
+            foreach (var corridorCell in corridorStrip)
+            {
+                Vector3Int position = corridorCell + roomCellPositionOffset;
+                cellsToCheck.Add(position);
+            }
+        }
+
+        if (TilemapHelper.CheckOverlap(cellsToCheck, occupiedCells))
+        {
+            Debug.Log("Corridor overlap");
+            return true;
+        }
+
+        // add corridor cells to occupiedCells
+        occupiedCells.UnionWith(cellsToCheck);
+
+        return false;
     }
 }

@@ -23,6 +23,11 @@ public class RoomConnection
         return room2;
     }
 
+    public bool CheckRoomInConnection(DungeonRoom room)
+    {
+        return room1 == room || room2 == room;
+    }
+
     public static bool CheckConnectionUnique(List<RoomConnection> connections, RoomConnection connection)
     {
         if(connections == null || connection == null || connection.room1 == null || connection.room2 == null)

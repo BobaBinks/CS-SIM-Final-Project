@@ -291,6 +291,9 @@ public class RandomWalk
             currIteration++;
         }
 
+        //corridorFloorCells.Remove(corridorFloorCells.Last());
+        corridorFloorCells.Remove(corridorFloorCells.First());
+
         return corridorFloorCells;
     }
 
