@@ -5,12 +5,6 @@ using System.Collections.Generic;
 
 public class RandomWalk
 {
-    private enum Axis 
-    { 
-        HORIZONTAL,
-        VERTICAL,
-        MAX_EXCLUSIVE,
-    }
 
     //public static bool GenerateCorridors(DungeonLayout layout, Grid grid, Dictionary<DungeonRoom, Tilemap> placedRooms, Tilemap corridorTilemap, CorridorTiles corridorTiles, int maxCorridorPathIterations = 50, int maxPairFail = 5, int maxConnectionFail = 5)
     //{
@@ -229,7 +223,7 @@ public class RandomWalk
         BoundsInt room2Bounds = room2Instance.wallMap.cellBounds;
 
         // keep track of the axis that room1Edge is on
-        Axis room1EdgeAxis;
+        TilemapHelper.Axis room1EdgeAxis;
 
         // only 1 valid initial direction for the 1st iteration to prevent corridor from overlapping with room1
         Vector2Int initDir;
@@ -241,25 +235,25 @@ public class RandomWalk
             case TilemapHelper.Edge.LEFT:
                 {
                     initDir = new Vector2Int(-1, 0);
-                    room1EdgeAxis = Axis.HORIZONTAL;
+                    room1EdgeAxis = TilemapHelper.Axis.HORIZONTAL;
                     break;
                 }
             case TilemapHelper.Edge.RIGHT:
                 {
                     initDir = new Vector2Int(1, 0);
-                    room1EdgeAxis = Axis.HORIZONTAL;
+                    room1EdgeAxis = TilemapHelper.Axis.HORIZONTAL;
                     break;
                 }
             case TilemapHelper.Edge.TOP:
                 {
                     initDir = new Vector2Int(0, 1);
-                    room1EdgeAxis = Axis.VERTICAL;
+                    room1EdgeAxis = TilemapHelper.Axis.VERTICAL;
                     break;
                 }
             case TilemapHelper.Edge.BOTTOM:
                 {
                     initDir = new Vector2Int(0, -1);
-                    room1EdgeAxis = Axis.VERTICAL;
+                    room1EdgeAxis = TilemapHelper.Axis.VERTICAL;
                     break;
                 }
             default: return null;
@@ -278,7 +272,7 @@ public class RandomWalk
         while (currIteration < numOfIteration)
         {
             // pick horizontal or vertical direction
-            Axis axis = (Axis)Random.Range(0, (int)Axis.MAX_EXCLUSIVE);
+            TilemapHelper.Axis axis = (TilemapHelper.Axis)Random.Range(0, (int)TilemapHelper.Axis.MAX_EXCLUSIVE);
 
             // pick a random number of steps
             int steps = GetRandomSteps(room2Bounds, axis);
@@ -292,7 +286,7 @@ public class RandomWalk
         }
 
         //corridorFloorCells.Remove(corridorFloorCells.Last());
-        corridorFloorCells.Remove(corridorFloorCells.First());
+        //corridorFloorCells.Remove(corridorFloorCells.First());
 
         return corridorFloorCells;
     }
@@ -301,21 +295,21 @@ public class RandomWalk
     /// Get random steps for corridor generation iteration
     /// </summary>
     /// <returns></returns>
-    private static int GetRandomSteps(BoundsInt room2Bounds, Axis chosenAxis, int maxStepsOffset = 3)
+    private static int GetRandomSteps(BoundsInt room2Bounds, TilemapHelper.Axis chosenAxis, int maxStepsOffset = 3)
     {
         if (maxStepsOffset < 0 || room2Bounds.size.x == 0 || room2Bounds.size.y == 0) return 0;
 
         // min step should based on the size of the room on chosen axis
-        int minSteps = chosenAxis == Axis.HORIZONTAL ? room2Bounds.size.x : room2Bounds.size.y;
+        int minSteps = chosenAxis == TilemapHelper.Axis.HORIZONTAL ? room2Bounds.size.x : room2Bounds.size.y;
 
         return Random.Range(minSteps, minSteps + maxStepsOffset);
     }
 
-    private static Vector2Int PickNextDirection(Axis chosenAxis, Axis room1EdgeAxis, TilemapHelper.Edge room1Edge)
+    private static Vector2Int PickNextDirection(TilemapHelper.Axis chosenAxis, TilemapHelper.Axis room1EdgeAxis, TilemapHelper.Edge room1Edge)
     {
         Vector2Int dir;
 
-        if (chosenAxis == Axis.HORIZONTAL)
+        if (chosenAxis == TilemapHelper.Axis.HORIZONTAL)
         {
             int xDir;
             // room1Edge is on horizontal axis
@@ -362,50 +356,29 @@ public class RandomWalk
     /// <param name="corridorFloorCells"></param>
     private static void AddNewFloorCells(ref Vector3Int currCell, int steps, Vector2Int dir, List<List<Vector3Int>> corridorFloorCells)
     {
-        Axis axis = Axis.HORIZONTAL;
+        TilemapHelper.Axis axis = TilemapHelper.Axis.VERTICAL;
 
         if (dir == Vector2Int.up || dir == Vector2Int.down)
-            axis = Axis.VERTICAL;
+            axis = TilemapHelper.Axis.HORIZONTAL;
 
         Vector3Int step = new Vector3Int(dir.x, dir.y);
         for (int i = 0; i < steps; ++i)
         {
             currCell += step;
 
-            List<Vector3Int> corridorStrip = GetAdjacentCells(currCell, axis);
+            List<Vector3Int> corridorStrip = TilemapHelper.GetAdjacentCells(currCell, axis);
             corridorStrip.Insert(1, currCell);
 
             corridorFloorCells.Add(corridorStrip);
         }
 
-        List<Vector3Int> finalCorridorStrip = GetAdjacentCells(currCell + step, axis);
+        List<Vector3Int> finalCorridorStrip = TilemapHelper.GetAdjacentCells(currCell + step, axis);
         finalCorridorStrip.Insert(1, currCell + step);
 
         corridorFloorCells.Add(finalCorridorStrip);
     }
 
-    /// <summary>
-    /// Return adjacent cells for the provided cell position based on the axis
-    /// </summary>
-    /// <param name="position"></param>
-    /// <param name="axis"></param>
-    /// <returns></returns>
-    private static List<Vector3Int> GetAdjacentCells(Vector3Int position, Axis axis)
-    {
-        List<Vector3Int> cells = new List<Vector3Int>();
-        if(axis == Axis.VERTICAL)
-        {
-            cells.Add(position + Vector3Int.left);
-            cells.Add(position + Vector3Int.right);
-        }
-        else
-        {
-            cells.Add(position + Vector3Int.down);
-            cells.Add(position + Vector3Int.up);
-        }
 
-        return cells;
-    }
 
     /// <summary>
     /// Calculates the position of the edges of a room.

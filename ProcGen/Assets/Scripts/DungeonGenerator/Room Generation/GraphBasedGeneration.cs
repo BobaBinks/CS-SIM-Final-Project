@@ -10,13 +10,7 @@ public class GraphBasedGeneration
         // reset the dungeon
         // clear all children in roomGO
         // clear all tiles in corridorTilemap
-        for(int childIndex = roomsGO.transform.childCount - 1; childIndex >= 0 ; --childIndex)
-        {
-            GameObject.Destroy(roomsGO.transform.GetChild(childIndex).gameObject);
-        }
-
-        corridorTilemap.ClearAllTiles();
-
+        ResetDungeon(roomsGO, corridorTilemap);
 
         // to check for overlaps
         HashSet<Vector3Int> occupiedCells = new HashSet<Vector3Int>();
@@ -181,7 +175,7 @@ public class GraphBasedGeneration
 
                 // pick a point in the edge for corridor
                 Vector3Int cellPosition;
-                bool currRoomEdgeCellPicked = TilemapHelper.PickEdgeCell(currRoomInstance.groundMap, edge, out cellPosition);
+                bool currRoomEdgeCellPicked = TilemapHelper.PickEdgeCell(currRoomInstance.wallMap, edge, out cellPosition);
 
                 if (!currRoomEdgeCellPicked)
                 {
@@ -189,6 +183,10 @@ public class GraphBasedGeneration
                     placementAttempts++;
                     continue;
                 }
+
+                // replace the wall tiles at the corridor position with floor tiles instead
+                InsertCorridorFloorTileEntranceToRoom(corridorTiles, cellPosition, edge, currRoomInstance);
+
 
                 bool childExisted = placedRooms.ContainsKey(childRoom);
 
@@ -214,7 +212,7 @@ public class GraphBasedGeneration
                     }
 
                     // place room at end of corridor on it's appropriate edge
-                    bool room2Placed = PlaceRoomAtCorridorEnd(corridor, currRoomInstance, childRoomInstance, grid, roomsGO, occupiedCells, ref room2Edge);
+                    bool room2Placed = PlaceRoomAtCorridorEnd(corridor, currRoomInstance, childRoomInstance, grid, roomsGO, occupiedCells, corridorTiles, ref room2Edge);
 
                     if (!room2Placed)
                     {
@@ -272,6 +270,7 @@ public class GraphBasedGeneration
         Grid grid,
         GameObject roomsGO,
         HashSet<Vector3Int> occupiedCells,
+        CorridorTiles corridorTiles,
         ref TilemapHelper.Edge room2Edge)
     {
         if (corridor == null ||
@@ -330,7 +329,7 @@ public class GraphBasedGeneration
 
         // pick a edge cell for room2
         Vector3Int room2EdgeCellPosition;
-        bool edgeCellPicked = TilemapHelper.PickEdgeCell(room2.groundMap, room2Edge, out room2EdgeCellPosition);
+        bool edgeCellPicked = TilemapHelper.PickEdgeCell(room2.wallMap, room2Edge, out room2EdgeCellPosition);
 
 
         if (!edgeCellPicked) return false;
@@ -345,15 +344,115 @@ public class GraphBasedGeneration
         Vector3Int room2Position = corridorEndPositionInGrid;
 
         // offset the room2 position with the difference
-        corridorOffset = corridorOffset * 2;
         room2Position = room2Position - corridorOffset - room2EdgeCellPosition;
 
-        return room2.InstantiateInstance(room2Position, grid, roomsGO, occupiedCells);
+        if (room2.InstantiateInstance(room2Position, grid, roomsGO, occupiedCells))
+        {
+            InsertCorridorFloorTileEntranceToRoom(corridorTiles, room2EdgeCellPosition, room2Edge, room2);
+            return true;
+        }
+
+
+        return false;
     }
 
-    private static bool InsertCorridorFloorTileEntranceToRoom(CorridorTiles corridorTiles, Vector3Int cell, DungeonRoomInstance dungeonRoomInstance)
+    private static bool InsertCorridorFloorTileEntranceToRoom(CorridorTiles corridorTiles, Vector3Int cell, TilemapHelper.Edge edge, DungeonRoomInstance dungeonRoomInstance)
     {
+        if (dungeonRoomInstance == null
+            || corridorTiles == null
+            || corridorTiles.corridorFloor == null)
+            return false;
+
+        // get edge axis
+        TilemapHelper.Axis axis = TilemapHelper.GetEdgeAxis(edge);
+
+        // get adjacent cells
+        List<Vector3Int> adjacentCells = TilemapHelper.GetAdjacentCells(cell, axis);
+        adjacentCells.Insert(1, cell);
+
+        // replace the tiles in the wall map and ground map
+        TileBase[] nullTiles = Enumerable.Repeat<TileBase>(null, adjacentCells.Count).ToArray();
+        TileBase[] groundTiles = Enumerable.Repeat<TileBase>(corridorTiles.corridorFloor, adjacentCells.Count).ToArray();
+
+        Vector3Int[] adjacentCellsArray = adjacentCells.ToArray();
+
+        Transform wallsTransform = dungeonRoomInstance.instance.transform.Find("Walls");
+        if(wallsTransform != null)
+        {
+            Tilemap wallMap = wallsTransform.GetComponent<Tilemap>();
+
+            if(wallMap != null)
+                wallMap.SetTiles(adjacentCellsArray, nullTiles);
+        }
+
+        Transform propsNoCollisionTransform = dungeonRoomInstance.instance.transform.Find("PropsNoCollision");
+        if (propsNoCollisionTransform != null)
+        {
+            Tilemap propsNoCollisionMap = propsNoCollisionTransform.GetComponent<Tilemap>();
+
+            if (propsNoCollisionMap != null)
+            {
+                Vector3Int offsetDir = Vector3Int.zero;
+                // get edge
+                switch (edge) 
+                {
+                    case TilemapHelper.Edge.LEFT:
+                        {
+                            offsetDir = Vector3Int.right;
+                            break;
+                        }
+                    case TilemapHelper.Edge.RIGHT:
+                        {
+                            offsetDir = Vector3Int.left;
+                            break;
+                        }
+                    case TilemapHelper.Edge.TOP:
+                        {
+                            offsetDir = Vector3Int.zero;
+                            break;
+                        }
+                    case TilemapHelper.Edge.BOTTOM:
+                        {
+                            offsetDir = Vector3Int.up;
+                            break;
+                        }
+                }
+
+                Vector3Int[] propsCellArray = adjacentCellsArray.Select(cell => cell + offsetDir)
+                                                                .ToArray();
+
+                propsNoCollisionMap.SetTiles(propsCellArray, nullTiles);
+            }
+
+        }
+
+        Transform groundTransform = dungeonRoomInstance.instance.transform.Find("Ground");
+        if (groundTransform != null)
+        {
+            Tilemap groundMap = groundTransform.GetComponent<Tilemap>();
+
+            if (groundMap != null)
+                groundMap.SetTiles(adjacentCellsArray, groundTiles);
+        }
+
         return true;
+    }
+
+    /// <summary>
+    /// Resets the dungeon by clearing all corridor tiles and removing all instantiated rooms from roomsGO
+    /// </summary>
+    /// <param name="roomsGO"></param>
+    /// <param name="corridorTilemap"></param>
+    private static void ResetDungeon(GameObject roomsGO, Tilemap corridorTilemap)
+    {
+        if (roomsGO == null || corridorTilemap == null) return;
+
+        for (int childIndex = roomsGO.transform.childCount - 1; childIndex >= 0; --childIndex)
+        {
+            GameObject.Destroy(roomsGO.transform.GetChild(childIndex).gameObject);
+        }
+
+        corridorTilemap.ClearAllTiles();
     }
 
     private static bool PlaceCorridor(List<List<Vector3Int>> corridor, CorridorTiles corridorTiles, Tilemap corridorTilemap, DungeonRoomInstance currRoomInstance, Grid grid, HashSet<Vector3Int> occupiedCells)

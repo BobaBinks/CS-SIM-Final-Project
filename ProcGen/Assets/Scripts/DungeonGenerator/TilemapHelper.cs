@@ -14,6 +14,14 @@ public class TilemapHelper
         INVALID
     }
 
+    public enum Axis
+    {
+        HORIZONTAL,
+        VERTICAL,
+        MAX_EXCLUSIVE,
+    }
+
+
     public static bool CheckOverlap(Tilemap room1Tilemap, Dictionary<DungeonRoom, Tilemap> otherTileMaps, int minGapBetweenRooms)
     {
         if (otherTileMaps == null || room1Tilemap == null)
@@ -112,28 +120,28 @@ public class TilemapHelper
             case Edge.LEFT:
                 {
                     // tilemap bounds will be 2 less cuz we using the ground tilemap so walls not included
-                    int y = Random.Range(groundMap.cellBounds.yMin + 1, groundMap.cellBounds.yMax - 1);
+                    int y = Random.Range(groundMap.cellBounds.yMin + 2, groundMap.cellBounds.yMax - 2);
                     cellPosition = new Vector3Int(groundMap.cellBounds.xMin, y);
                     return true;
                 }
             case Edge.RIGHT:
                 {
                     // tilemap bounds will be 2 less cuz we using the ground tilemap so walls not included
-                    int y = Random.Range(groundMap.cellBounds.yMin + 1, groundMap.cellBounds.yMax - 1);
+                    int y = Random.Range(groundMap.cellBounds.yMin + 2, groundMap.cellBounds.yMax - 2);
                     cellPosition = new Vector3Int(groundMap.cellBounds.xMax - 1, y);
                     return true;
                 }
             case Edge.TOP:
                 {
                     // tilemap bounds will be 2 less cuz we using the ground tilemap so walls not included
-                    int x = Random.Range(groundMap.cellBounds.xMin + 1, groundMap.cellBounds.xMax - 1);
+                    int x = Random.Range(groundMap.cellBounds.xMin + 2, groundMap.cellBounds.xMax - 2);
                     cellPosition = new Vector3Int(x, groundMap.cellBounds.yMax - 1);
                     return true;
                 }
             case Edge.BOTTOM:
                 {
                     // tilemap bounds will be 2 less cuz we using the ground tilemap so walls not included
-                    int x = Random.Range(groundMap.cellBounds.xMin + 1, groundMap.cellBounds.xMax - 1);
+                    int x = Random.Range(groundMap.cellBounds.xMin + 2, groundMap.cellBounds.xMax - 2);
                     cellPosition = new Vector3Int(x, groundMap.cellBounds.yMin);
                     return true;
                 }
@@ -165,6 +173,34 @@ public class TilemapHelper
         }
 
         return false;
+    }
+
+    public static Axis GetEdgeAxis(Edge edge)
+    {
+        return (edge == Edge.LEFT || edge == Edge.RIGHT) ? Axis.VERTICAL : Axis.HORIZONTAL;
+    }
+
+    /// <summary>
+    /// Return adjacent cells for the provided cell position based on the axis
+    /// </summary>
+    /// <param name="position"></param>
+    /// <param name="axis"></param>
+    /// <returns></returns>
+    public static List<Vector3Int> GetAdjacentCells(Vector3Int position, Axis axis)
+    {
+        List<Vector3Int> cells = new List<Vector3Int>();
+        if (axis == Axis.VERTICAL)
+        {
+            cells.Add(position + Vector3Int.down);
+            cells.Add(position + Vector3Int.up);
+        }
+        else
+        {
+            cells.Add(position + Vector3Int.left);
+            cells.Add(position + Vector3Int.right);
+        }
+
+        return cells;
     }
 
     public static HashSet<Vector3Int> PopulateCellsToCheck(Vector3Int cellPositionOffset, HashSet<Vector3Int> cells)
