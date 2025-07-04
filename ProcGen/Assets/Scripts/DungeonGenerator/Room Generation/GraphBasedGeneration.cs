@@ -5,12 +5,12 @@ using System.Linq;
 
 public class GraphBasedGeneration
 {
-    public static bool GenerateDungeon(DungeonLayout layout, Grid grid, GameObject roomsGO, Tilemap corridorTilemap, CorridorTiles corridorTiles,out Dictionary<DungeonRoom, DungeonRoomInstance> placedRooms, int maxPlacementFailCount = 5, int maxPrefabFailCount = 5)
+    public static bool GenerateDungeon(DungeonLayout layout, Grid grid, GameObject roomsGO, Tilemap corridorFloorTilemap, Tilemap corridorWallmap, CorridorTiles corridorTiles,out Dictionary<DungeonRoom, DungeonRoomInstance> placedRooms, int maxPlacementFailCount = 5, int maxPrefabFailCount = 5, int corridorWidth = 5)
     {
         // reset the dungeon
         // clear all children in roomGO
         // clear all tiles in corridorTilemap
-        ResetDungeon(roomsGO, corridorTilemap);
+        ResetDungeon(roomsGO, corridorFloorTilemap);
 
         // to check for overlaps
         HashSet<Vector3Int> occupiedCells = new HashSet<Vector3Int>();
@@ -20,7 +20,7 @@ public class GraphBasedGeneration
 
         placedRooms = new Dictionary<DungeonRoom, DungeonRoomInstance>();
 
-        if (corridorTiles == null || corridorTilemap == null) return false;
+        if (corridorTiles == null || corridorFloorTilemap == null) return false;
 
         Queue<DungeonRoom> childPlacementQueue = new Queue<DungeonRoom>();
 
@@ -95,7 +95,8 @@ public class GraphBasedGeneration
                                                                         grid,
                                                                         roomsGO,
                                                                         corridorTiles,
-                                                                        corridorTilemap,
+                                                                        corridorFloorTilemap,
+                                                                        corridorWallmap,
                                                                         placedRooms,
                                                                         roomEdgeOccupiedTracker,
                                                                         occupiedCells,
@@ -103,7 +104,7 @@ public class GraphBasedGeneration
                                                                         childPlacementQueue,
                                                                         availableEdges,
                                                                         roomEdges,
-                                                                        connectionsPlaced);
+                                                                        connectionsPlaced, corridorWidth);
 
             if (!childRoomsPlacedAndConnected)
             {
@@ -122,7 +123,8 @@ public class GraphBasedGeneration
                             Grid grid,
                             GameObject roomsGO,
                             CorridorTiles corridorTiles,
-                            Tilemap corridorTilemap,
+                            Tilemap corridorFloorTilemap,
+                            Tilemap corridorWallTilemap,
                             Dictionary<DungeonRoom, DungeonRoomInstance> placedRooms,
                             Dictionary<DungeonRoom, Dictionary<TilemapHelper.Edge, bool>> roomEdgeOccupiedTracker,
                             HashSet<Vector3Int> occupiedCells,
@@ -131,14 +133,16 @@ public class GraphBasedGeneration
                             List<TilemapHelper.Edge> availableEdges,
                             Dictionary<TilemapHelper.Edge, bool> roomEdges,
                             List<RoomConnection> connectionsPlaced,
-                            int maxPlacementFailCount = 5)
+                            int maxPlacementFailCount = 5,
+                            int corridorWidth = 5)
     {
         if (currRoom == null ||
             currRoomInstance == null ||
             grid == null ||
             roomsGO == null ||
             corridorTiles == null ||
-            corridorTilemap == null ||
+            corridorFloorTilemap == null ||
+            corridorWallTilemap == null ||
             placedRooms == null ||
             roomEdgeOccupiedTracker == null ||
             occupiedCells == null ||
@@ -199,7 +203,7 @@ public class GraphBasedGeneration
                 if (!childExisted)
                 {
                     // random walk
-                    List<List<Vector3Int>> corridor = RandomWalk.GetCorridorFloorCells(cellPosition, edge, childRoomInstance, maxIterations: 4);
+                    List<List<Vector3Int>> corridor = RandomWalk.GetCorridorFloorCells(cellPosition, edge, childRoomInstance, maxIterations: 4, corridorWidth);
 
                     // check if corridor overlaps with other occupied tiles
                     bool corridorOverlap = CheckCorridorOverlap(currRoomInstance, grid, corridor, occupiedCells);
@@ -212,7 +216,7 @@ public class GraphBasedGeneration
                     }
 
                     // place room at end of corridor on it's appropriate edge
-                    bool room2Placed = PlaceRoomAtCorridorEnd(corridor, currRoomInstance, childRoomInstance, grid, roomsGO, occupiedCells, corridorTiles, ref room2Edge);
+                    bool room2Placed = PlaceRoomAtCorridorEnd(corridor, currRoomInstance, childRoomInstance, grid, roomsGO, occupiedCells, corridorTiles, ref room2Edge, corridorWidth);
 
                     if (!room2Placed)
                     {
@@ -223,7 +227,7 @@ public class GraphBasedGeneration
 
                     placedRooms.Add(childRoom, childRoomInstance);
 
-                    bool generateCorridor = PlaceCorridor(corridor, corridorTiles, corridorTilemap, currRoomInstance, grid, occupiedCells);
+                    bool generateCorridor = PlaceCorridor(corridor, corridorTiles, corridorFloorTilemap, corridorWallTilemap, currRoomInstance, grid, occupiedCells, corridorWidth);
 
                     if (!generateCorridor)
                     {
@@ -271,23 +275,25 @@ public class GraphBasedGeneration
         GameObject roomsGO,
         HashSet<Vector3Int> occupiedCells,
         CorridorTiles corridorTiles,
-        ref TilemapHelper.Edge room2Edge)
+        ref TilemapHelper.Edge room2Edge, int corridorWidth = 5)
     {
         if (corridor == null ||
             currRoom == null ||
             room2 == null ||
             occupiedCells == null ||
-            roomsGO == null) return false;
+            roomsGO == null || corridorWidth == 0) return false;
         // identify direction of corridor end
 
         // gets the last 2 corridor strips
         List<List<Vector3Int>> last2CorridorStrips = corridor.GetRange(corridor.Count - 2, 2);
 
+        int centerIndex = corridorWidth / 2;
+
         // get center cell of each strip
         List<Vector3Int> last2CenterCells = new List<Vector3Int> 
         { 
-            { last2CorridorStrips[0][1] },
-            { last2CorridorStrips[1][1] } 
+            { last2CorridorStrips[0][centerIndex] },
+            { last2CorridorStrips[1][centerIndex] } 
         };
 
         Vector3 dir = last2CenterCells[1] - last2CenterCells[0];
@@ -455,16 +461,16 @@ public class GraphBasedGeneration
         corridorTilemap.ClearAllTiles();
     }
 
-    private static bool PlaceCorridor(List<List<Vector3Int>> corridor, CorridorTiles corridorTiles, Tilemap corridorTilemap, DungeonRoomInstance currRoomInstance, Grid grid, HashSet<Vector3Int> occupiedCells)
+    private static bool PlaceCorridor(List<List<Vector3Int>> corridor, CorridorTiles corridorTiles, Tilemap corridorFloorTilemap, Tilemap corridorWallTilemap, DungeonRoomInstance currRoomInstance, Grid grid, HashSet<Vector3Int> occupiedCells, int corridorWidth = 5)
     {
         if (corridor == null ||
             currRoomInstance == null ||
             corridorTiles == null ||
-            corridorTilemap == null ||
+            corridorFloorTilemap == null ||
+            corridorWallTilemap == null ||
             occupiedCells == null ||
-            grid == null) return false;
-
-
+            grid == null || 
+            corridorWidth == 0) return false;
 
         foreach (var corridorStrip in corridor)
         {
@@ -474,12 +480,23 @@ public class GraphBasedGeneration
             // invalid offset
             if (roomCellPositionOffset == Vector3Int.one * -1) return false;
 
-            foreach(var corridorCell in corridorStrip)
-            {
-                Vector3Int position = corridorCell + roomCellPositionOffset;
+            List<Vector3Int> corridorFloorCells = new List<Vector3Int>(corridorStrip);
+            corridorFloorCells.Remove(corridorStrip.First());
+            corridorFloorCells.Remove(corridorStrip.Last());
 
-                corridorTilemap.SetTile(position, corridorTiles.corridorFloor);
+            // place floor cells
+            foreach (var floorCell in corridorFloorCells)
+            {
+                Vector3Int position = floorCell + roomCellPositionOffset;
+
+                corridorFloorTilemap.SetTile(position, corridorTiles.corridorFloor);
             }
+
+            // place wall cells
+            // iterate through the edge cells
+            // get the 3x3 block of tile positions
+            // the tiles in the 3x3 that are occupied/have ground tiles should be ignored
+            // every thing else should be placed with wall tiles
         }
         return true;
     }

@@ -186,21 +186,39 @@ public class TilemapHelper
     /// <param name="position"></param>
     /// <param name="axis"></param>
     /// <returns></returns>
-    public static List<Vector3Int> GetAdjacentCells(Vector3Int position, Axis axis)
+    public static List<Vector3Int> GetAdjacentCells(Vector3Int position, Axis axis, int width = 3)
     {
+        int halfWidth = width / 2;
         List<Vector3Int> cells = new List<Vector3Int>();
-        if (axis == Axis.VERTICAL)
+
+        for(int i = -halfWidth; i <= halfWidth; ++i)
         {
-            cells.Add(position + Vector3Int.down);
-            cells.Add(position + Vector3Int.up);
-        }
-        else
-        {
-            cells.Add(position + Vector3Int.left);
-            cells.Add(position + Vector3Int.right);
+            if (i == 0)
+                continue;
+
+            Vector3Int offset = axis == Axis.VERTICAL ?
+                new Vector3Int(0, i) :
+                new Vector3Int(i, 0);
+
+            cells.Add(position + offset);
         }
 
         return cells;
+    }
+
+    public List<Vector3Int> GetThreeByThreeBlockTilePositions(Vector3Int positionInGrid)
+    {
+        // insert row by row starting from top left to bottom right
+        List<Vector3Int> threeByThreeBlock = new List<Vector3Int>();
+
+        for(int row = 1; row >= -1; --row)
+        {
+            threeByThreeBlock.Add(positionInGrid + new Vector3Int(-1, row));
+            threeByThreeBlock.Add(positionInGrid + new Vector3Int(0, row));
+            threeByThreeBlock.Add(positionInGrid + new Vector3Int(1, row));
+        }
+
+        return threeByThreeBlock;
     }
 
     public static HashSet<Vector3Int> PopulateCellsToCheck(Vector3Int cellPositionOffset, HashSet<Vector3Int> cells)

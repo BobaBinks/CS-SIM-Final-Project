@@ -15,7 +15,10 @@ public class DungeonGenerator : MonoBehaviour
     private GameObject roomsGO;
 
     [SerializeField]
-    private Tilemap corridorTilemap;
+    private Tilemap corridorFloorTilemap;
+
+    [SerializeField]
+    private Tilemap corridorWallTilemap;
 
     [Header("RandomWalk Parameters")]
     [SerializeField] int maxCorridorPathIterations = 50;
@@ -36,7 +39,7 @@ public class DungeonGenerator : MonoBehaviour
 
     void GenerateDungeon()
     {
-        if (layout == null || corridorTilemap == null || roomsGO == null) return;
+        if (layout == null || corridorFloorTilemap == null || roomsGO == null) return;
         //while (true)
         //{
         //    // room generation
@@ -52,7 +55,7 @@ public class DungeonGenerator : MonoBehaviour
         int attempts = 0;
         while (attempts < maxAttempts)
         {
-            if(GraphBasedGeneration.GenerateDungeon(layout, grid, roomsGO, corridorTilemap, corridorTiles, out roomsDict, maxPlacementFailCount: 3))
+            if(GraphBasedGeneration.GenerateDungeon(layout, grid, roomsGO, corridorFloorTilemap, corridorWallTilemap , corridorTiles, out roomsDict, maxPlacementFailCount: 3))
                 break;
 
             attempts += 1;

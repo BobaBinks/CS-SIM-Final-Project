@@ -190,7 +190,7 @@ public class RandomWalk
     //            Debug.Log("Hataraku Saibo");
     //            return true;
     //        }
-            
+
     //        if(currIteration >= maxIterations)
     //        {
     //            Debug.Log($"Max Iteration reached: {currIteration} / {maxIterations}");
@@ -208,7 +208,7 @@ public class RandomWalk
     /// <param name="maxIterations"></param>
     /// <param name="maxConnectionFail"></param>
     /// <returns></returns>
-    public static List<List<Vector3Int>> GetCorridorFloorCells(Vector3Int room1CorridorCell, TilemapHelper.Edge room1Edge, DungeonRoomInstance room2Instance ,int maxIterations = 3, int maxConnectionFail = 5)
+    public static List<List<Vector3Int>> GetCorridorFloorCells(Vector3Int room1CorridorCell, TilemapHelper.Edge room1Edge, DungeonRoomInstance room2Instance, int maxIterations = 3, int maxConnectionFail = 5, int corridorWidth = 5)
     {
         if (room2Instance == null || room2Instance.wallMap == null) return null;
 
@@ -262,7 +262,7 @@ public class RandomWalk
         // initial steps 
         initStep = GetRandomSteps(room2Bounds, room1EdgeAxis);
 
-        AddNewFloorCells(ref currCell, initStep, initDir, corridorFloorCells);
+        AddNewFloorCells(ref currCell, initStep, initDir, corridorFloorCells, corridorWidth);
 
         // stop loop if reach destination
         int numOfIteration = Random.Range(1, maxIterations);
@@ -280,7 +280,7 @@ public class RandomWalk
             Vector2Int dir = PickNextDirection(axis, room1EdgeAxis, room1Edge);
 
             // add new path and update currCell
-            AddNewFloorCells(ref currCell, steps, dir, corridorFloorCells);
+            AddNewFloorCells(ref currCell, steps, dir, corridorFloorCells, corridorWidth);
 
             currIteration++;
         }
@@ -354,8 +354,14 @@ public class RandomWalk
     /// <param name="steps"></param>
     /// <param name="dir"></param>
     /// <param name="corridorFloorCells"></param>
-    private static void AddNewFloorCells(ref Vector3Int currCell, int steps, Vector2Int dir, List<List<Vector3Int>> corridorFloorCells)
+    private static void AddNewFloorCells(ref Vector3Int currCell, int steps, Vector2Int dir, List<List<Vector3Int>> corridorFloorCells, int corridorWidth = 3)
     {
+        if(corridorWidth == 0)
+        {
+            Debug.Log("AddNewFloorCells: Cannot divide by zero");
+            return;
+        }
+
         TilemapHelper.Axis axis = TilemapHelper.Axis.VERTICAL;
 
         if (dir == Vector2Int.up || dir == Vector2Int.down)
@@ -366,16 +372,23 @@ public class RandomWalk
         {
             currCell += step;
 
-            List<Vector3Int> corridorStrip = TilemapHelper.GetAdjacentCells(currCell, axis);
-            corridorStrip.Insert(1, currCell);
+            List<Vector3Int> corridorStrip = TilemapHelper.GetAdjacentCells(currCell, axis, corridorWidth);
+            corridorStrip.Insert(corridorWidth / 2, currCell);
 
             corridorFloorCells.Add(corridorStrip);
         }
 
-        List<Vector3Int> finalCorridorStrip = TilemapHelper.GetAdjacentCells(currCell + step, axis);
-        finalCorridorStrip.Insert(1, currCell + step);
-
+        List<Vector3Int> finalCorridorStrip = TilemapHelper.GetAdjacentCells(currCell + step, axis, corridorWidth);
+        finalCorridorStrip.Insert(corridorWidth / 2, currCell + step);
         corridorFloorCells.Add(finalCorridorStrip);
+
+        // fill missing pieces of the corridor at the corner 
+        //for (int i = 1; i <= length / 2; ++i)
+        //{
+        //    List<Vector3Int> finalCorridorStrip = TilemapHelper.GetAdjacentCells(currCell + step * i, axis, length);
+        //    finalCorridorStrip.Insert(length / 2, currCell + step * i);
+        //    corridorFloorCells.Add(finalCorridorStrip);
+        //}
     }
 
 
