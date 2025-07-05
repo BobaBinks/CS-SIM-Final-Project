@@ -17,5 +17,9 @@ MonoBehaviour:
   BottomHorizontalWall: {fileID: 11400000, guid: cdd4476423274eb4f8210285384cd01a, type: 2}
   LeftVerticalWall: {fileID: 11400000, guid: 8d75ea3f6bf9a9d4ea9f2028a64b0f9e, type: 2}
   RightVerticalWall: {fileID: 11400000, guid: 8a9b950e7ec60cf4f9997df0309f2533, type: 2}
-  TopLeftCornerWall: {fileID: 11400000, guid: 83880ab8eda73984fbb2b6b7639bdcb1, type: 2}
-  TopRightCornerWall: {fileID: 11400000, guid: b43cfea76c75b7345bf7d37273c588d6, type: 2}
+  TopLeftCornerWall: {fileID: 11400000, guid: 1f08211b84f0e264c99d7d7eed43f4e6, type: 2}
+  TopRightCornerWall: {fileID: 11400000, guid: 602ea642c9015e44a9218ee8d96c7286, type: 2}
+  BottomLeftCornerWall: {fileID: 11400000, guid: 2651f1e57261b424aaca20aefa5ca448, type: 2}
+  BottomRightCornerWall: {fileID: 11400000, guid: 0791ea696d03e8a42b6839e42bd69655, type: 2}
+  TurningBottomLeftCornerWall: {fileID: 11400000, guid: b43cfea76c75b7345bf7d37273c588d6, type: 2}
+  TurningBottomRightCornerWall: {fileID: 11400000, guid: 83880ab8eda73984fbb2b6b7639bdcb1, type: 2}
