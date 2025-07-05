@@ -13,4 +13,10 @@ public class CorridorTiles : ScriptableObject
 
     public Tile TopLeftCornerWall;
     public Tile TopRightCornerWall;
+
+    public Tile BottomLeftCornerWall;
+    public Tile BottomRightCornerWall;
+
+    public Tile TurningBottomLeftCornerWall;
+    public Tile TurningBottomRightCornerWall;
 }

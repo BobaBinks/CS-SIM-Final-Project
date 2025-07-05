@@ -21,6 +21,15 @@ public class TilemapHelper
         MAX_EXCLUSIVE,
     }
 
+    public enum Corner
+    {
+        TOP_LEFT,
+        TOP_RIGHT,
+        BOTTOM_LEFT,
+        BOTTOM_RIGHT,
+        INVALID
+    }
+
 
     public static bool CheckOverlap(Tilemap room1Tilemap, Dictionary<DungeonRoom, Tilemap> otherTileMaps, int minGapBetweenRooms)
     {
@@ -206,7 +215,7 @@ public class TilemapHelper
         return cells;
     }
 
-    public List<Vector3Int> GetThreeByThreeBlockTilePositions(Vector3Int positionInGrid)
+    public static List<Vector3Int> GetThreeByThreeBlockTilePositions(Vector3Int positionInGrid)
     {
         // insert row by row starting from top left to bottom right
         List<Vector3Int> threeByThreeBlock = new List<Vector3Int>();
@@ -219,6 +228,139 @@ public class TilemapHelper
         }
 
         return threeByThreeBlock;
+    }
+
+    public static bool PlaceWall(Vector3Int positionInGrid, Tilemap corridorWallTilemap, Tilemap corridorFloorTilemap, CorridorTiles corridorTiles)
+    {
+        if (corridorTiles == null || corridorFloorTilemap == null || corridorWallTilemap == null)
+            return false;
+
+        List<Vector3Int> neighbours = GetThreeByThreeBlockTilePositions(positionInGrid);
+
+        // place wall based on up down left right
+        bool hasTop = corridorFloorTilemap.GetTile(neighbours[1]) != null;
+        bool hasBottom = corridorFloorTilemap.GetTile(neighbours[7]) != null;
+        bool hasLeft = corridorFloorTilemap.GetTile(neighbours[3]) != null;
+        bool hasRight = corridorFloorTilemap.GetTile(neighbours[5]) != null;
+
+        // if no up down left right, check diagonal instead
+        if (hasTop)
+        {
+            corridorWallTilemap.SetTile(positionInGrid, corridorTiles.BottomHorizontalWall);
+        }
+        else if (hasBottom)
+        {
+            corridorWallTilemap.SetTile(positionInGrid, corridorTiles.TopHorizontalWall);
+        }
+        else if (hasLeft)
+        {
+            corridorWallTilemap.SetTile(positionInGrid, corridorTiles.RightVerticalWall);
+        }
+        else if (hasRight)
+        {
+            corridorWallTilemap.SetTile(positionInGrid, corridorTiles.LeftVerticalWall);
+        }
+        return hasRight || hasLeft || hasBottom || hasTop;
+    }
+
+    public static bool PlaceCornerWall(Vector3Int positionInGrid, Tilemap corridorWallTilemap, Tilemap corridorFloorTilemap, CorridorTiles corridorTiles)
+    {
+        if (corridorTiles == null || corridorFloorTilemap == null || corridorWallTilemap == null)
+            return false;
+
+        List<Vector3Int> neighbours = GetThreeByThreeBlockTilePositions(positionInGrid);
+
+        // add it to the corridorWallTilemap
+        bool hasGroundTopLeft = corridorFloorTilemap.GetTile(neighbours[0]) != null;
+        bool hasGroundTopRight = corridorFloorTilemap.GetTile(neighbours[2]) != null;
+        bool hasGroundBottomLeft = corridorFloorTilemap.GetTile(neighbours[6]) != null;
+        bool hasGroundBottomRight = corridorFloorTilemap.GetTile(neighbours[8]) != null;
+
+        if (hasGroundTopLeft)
+        {
+            corridorWallTilemap.SetTile(positionInGrid, corridorTiles.BottomRightCornerWall);
+        }
+        else if (hasGroundTopRight)
+        {
+            corridorWallTilemap.SetTile(positionInGrid, corridorTiles.BottomLeftCornerWall);
+        }
+        else if (hasGroundBottomLeft)
+        {
+            corridorWallTilemap.SetTile(positionInGrid, corridorTiles.TopRightCornerWall);
+        }
+        else if (hasGroundBottomRight)
+        {
+            corridorWallTilemap.SetTile(positionInGrid, corridorTiles.TopLeftCornerWall);
+        }
+        return hasGroundTopLeft || hasGroundTopRight || hasGroundBottomLeft || hasGroundBottomRight;
+    }
+
+    public static bool PlaceTurningBottomCornerWall(Vector3Int positionInGrid, Tilemap corridorWallTilemap, Tilemap corridorFloorTilemap, CorridorTiles corridorTiles)
+    {
+        if (corridorTiles == null || corridorFloorTilemap == null || corridorWallTilemap == null)
+            return false;
+
+        List<Vector3Int> neighbours = GetThreeByThreeBlockTilePositions(positionInGrid);
+
+        // place wall based on up down left right
+        bool hasGroundTopRight = corridorFloorTilemap.GetTile(neighbours[2]) != null;
+        bool hasGroundTopLeft = corridorFloorTilemap.GetTile(neighbours[0]) != null;
+        bool hasWallBottom = corridorWallTilemap.GetTile(neighbours[7]) != null;
+        bool hasWallLeft = corridorWallTilemap.GetTile(neighbours[3]) != null;
+        bool hasWallRight = corridorWallTilemap.GetTile(neighbours[5]) != null;
+
+        // if no up down left right, check diagonal instead
+        if (hasWallBottom && (hasGroundTopLeft || hasGroundTopRight))
+        {
+            if (hasWallLeft)
+            {
+                corridorWallTilemap.SetTile(positionInGrid, corridorTiles.TurningBottomLeftCornerWall);
+            }
+            else if (hasWallRight)
+            {
+                corridorWallTilemap.SetTile(positionInGrid, corridorTiles.TurningBottomRightCornerWall);
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static Corner IsCornerEdgeWall(Vector3Int wallCell, Tilemap wallMap)
+    {
+        if (wallMap == null) return Corner.INVALID;
+
+        wallMap.CompressBounds();
+
+        // get corner edges
+        int xMin = wallMap.cellBounds.xMin;
+        int xMax = wallMap.cellBounds.xMax - 1;
+        int yMin = wallMap.cellBounds.yMin;
+        int yMax = wallMap.cellBounds.yMax - 1;
+
+        Vector3Int bottomLeftCorner = new Vector3Int(xMin, yMin);
+        Vector3Int bottomRightCorner = new Vector3Int(xMax, yMin);
+        Vector3Int TopLeftCorner = new Vector3Int(xMin, yMax);
+        Vector3Int TopRightCorner = new Vector3Int(xMax, yMax);
+
+        bool isBottomLeftCorner = wallCell == bottomLeftCorner;
+        bool isBottomRightCorner = wallCell == bottomRightCorner;
+        bool isTopLeftCorner = wallCell == TopLeftCorner;
+        bool isTopRightCorner = wallCell == TopRightCorner;
+
+        if (isBottomLeftCorner)
+            return Corner.BOTTOM_LEFT;
+        if (isBottomRightCorner)
+            return Corner.BOTTOM_RIGHT;
+        if (isTopLeftCorner)
+            return Corner.TOP_LEFT;
+        if (isTopRightCorner)
+            return Corner.TOP_RIGHT;
+
+        return Corner.INVALID;
     }
 
     public static HashSet<Vector3Int> PopulateCellsToCheck(Vector3Int cellPositionOffset, HashSet<Vector3Int> cells)

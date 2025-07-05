@@ -10,7 +10,7 @@ public class GraphBasedGeneration
         // reset the dungeon
         // clear all children in roomGO
         // clear all tiles in corridorTilemap
-        ResetDungeon(roomsGO, corridorFloorTilemap);
+        ResetDungeon(roomsGO, corridorFloorTilemap, corridorWallmap);
 
         // to check for overlaps
         HashSet<Vector3Int> occupiedCells = new HashSet<Vector3Int>();
@@ -362,7 +362,7 @@ public class GraphBasedGeneration
         return false;
     }
 
-    private static bool InsertCorridorFloorTileEntranceToRoom(CorridorTiles corridorTiles, Vector3Int cell, TilemapHelper.Edge edge, DungeonRoomInstance dungeonRoomInstance)
+    private static bool InsertCorridorFloorTileEntranceToRoom(CorridorTiles corridorTiles, Vector3Int cell, TilemapHelper.Edge edge, DungeonRoomInstance dungeonRoomInstance, int corridorWidth = 5)
     {
         if (dungeonRoomInstance == null
             || corridorTiles == null
@@ -373,8 +373,12 @@ public class GraphBasedGeneration
         TilemapHelper.Axis axis = TilemapHelper.GetEdgeAxis(edge);
 
         // get adjacent cells
-        List<Vector3Int> adjacentCells = TilemapHelper.GetAdjacentCells(cell, axis);
+        List<Vector3Int> adjacentCells = TilemapHelper.GetAdjacentCells(cell, axis, corridorWidth);
         adjacentCells.Insert(1, cell);
+
+        List<Vector3Int> wallCellToReplace = new List<Vector3Int> { adjacentCells.First(), adjacentCells.Last() };
+        adjacentCells.Remove(adjacentCells.First());
+        adjacentCells.Remove(adjacentCells.Last());
 
         // replace the tiles in the wall map and ground map
         TileBase[] nullTiles = Enumerable.Repeat<TileBase>(null, adjacentCells.Count).ToArray();
@@ -387,8 +391,117 @@ public class GraphBasedGeneration
         {
             Tilemap wallMap = wallsTransform.GetComponent<Tilemap>();
 
-            if(wallMap != null)
+            if (wallMap != null)
                 wallMap.SetTiles(adjacentCellsArray, nullTiles);
+
+            // assign the correct tile for corridor connection
+            foreach (var wallCell in wallCellToReplace)
+            {
+                bool hasWallLeft = wallMap.GetTile(wallCell + Vector3Int.left) != null;
+                bool hasWallRight = wallMap.GetTile(wallCell + Vector3Int.right) != null;
+
+                bool hasWallTop = wallMap.GetTile(wallCell + Vector3Int.up) != null;
+                bool hasWallBottom = wallMap.GetTile(wallCell + Vector3Int.down) != null;
+
+                TilemapHelper.Corner corner = TilemapHelper.IsCornerEdgeWall(wallCell, wallMap);
+
+                // if corner edge then ignore.
+                if (corner == TilemapHelper.Corner.INVALID)
+                {
+                    if (edge == TilemapHelper.Edge.LEFT)
+                    {
+                        if (hasWallTop)
+                        {
+                            wallMap.SetTile(wallCell, corridorTiles.TopHorizontalWall);
+                        }
+                        else if (hasWallBottom)
+                        {
+                            wallMap.SetTile(wallCell, corridorTiles.TurningBottomLeftCornerWall);
+                        }
+                    }
+                    else if (edge == TilemapHelper.Edge.RIGHT)
+                    {
+                        if (hasWallTop)
+                        {
+                            wallMap.SetTile(wallCell, corridorTiles.TopHorizontalWall);
+                        }
+                        else if (hasWallBottom)
+                        {
+                            wallMap.SetTile(wallCell, corridorTiles.TurningBottomRightCornerWall);
+                        }
+                    }
+                    else if(edge == TilemapHelper.Edge.TOP)
+                    {
+                        wallMap.SetTile(wallCell, corridorTiles.TopHorizontalWall);
+                    }
+                    else if(edge == TilemapHelper.Edge.BOTTOM)
+                    {
+                        if (hasWallLeft)
+                        {
+                            wallMap.SetTile(wallCell, corridorTiles.TurningBottomLeftCornerWall);
+                        }
+                        else
+                        {
+                            wallMap.SetTile(wallCell, corridorTiles.TurningBottomRightCornerWall);
+                        }
+                    }
+                }
+                else
+                {
+                    if(edge == TilemapHelper.Edge.BOTTOM)
+                    {
+                        if (corner == TilemapHelper.Corner.BOTTOM_RIGHT)
+                        {
+                            // bottom right corner
+                            wallMap.SetTile(wallCell, corridorTiles.RightVerticalWall);
+                        }
+                        else
+                        {
+                            // bottom left corner
+                            wallMap.SetTile(wallCell, corridorTiles.LeftVerticalWall);
+                        }
+                    }
+                    else if(edge == TilemapHelper.Edge.TOP)
+                    {
+                        if (corner == TilemapHelper.Corner.TOP_LEFT)
+                        {
+                            // top left corner
+                            wallMap.SetTile(wallCell, corridorTiles.LeftVerticalWall);
+                        }
+                        else if (hasWallLeft && hasWallBottom)
+                        {
+                            // top right corner
+                            wallMap.SetTile(wallCell, corridorTiles.RightVerticalWall);
+                        }
+                    }
+                    else if(edge == TilemapHelper.Edge.LEFT)
+                    {
+                        if (corner == TilemapHelper.Corner.TOP_LEFT)
+                        {
+                            // top left corner
+                            wallMap.SetTile(wallCell, corridorTiles.TopHorizontalWall);
+                        }
+                        else
+                        {
+                            // bottom left corner
+                            wallMap.SetTile(wallCell, corridorTiles.BottomHorizontalWall);
+                        }
+                    }
+                    else if(edge == TilemapHelper.Edge.RIGHT)
+                    {
+                        if (corner == TilemapHelper.Corner.TOP_RIGHT)
+                        {
+                            // top right corner
+                            wallMap.SetTile(wallCell, corridorTiles.TopHorizontalWall);
+                        }
+                        else
+                        {
+                            // bottom left corner
+                            wallMap.SetTile(wallCell, corridorTiles.BottomHorizontalWall);
+                        }
+                    }
+                }
+            }
         }
 
         Transform propsNoCollisionTransform = dungeonRoomInstance.instance.transform.Find("PropsNoCollision");
@@ -449,16 +562,17 @@ public class GraphBasedGeneration
     /// </summary>
     /// <param name="roomsGO"></param>
     /// <param name="corridorTilemap"></param>
-    private static void ResetDungeon(GameObject roomsGO, Tilemap corridorTilemap)
+    private static void ResetDungeon(GameObject roomsGO, Tilemap corridorFloorTilemap, Tilemap corridorWallmap)
     {
-        if (roomsGO == null || corridorTilemap == null) return;
+        if (roomsGO == null || corridorFloorTilemap == null || corridorWallmap == null) return;
 
         for (int childIndex = roomsGO.transform.childCount - 1; childIndex >= 0; --childIndex)
         {
             GameObject.Destroy(roomsGO.transform.GetChild(childIndex).gameObject);
         }
 
-        corridorTilemap.ClearAllTiles();
+        corridorFloorTilemap.ClearAllTiles();
+        corridorWallmap.ClearAllTiles();
     }
 
     private static bool PlaceCorridor(List<List<Vector3Int>> corridor, CorridorTiles corridorTiles, Tilemap corridorFloorTilemap, Tilemap corridorWallTilemap, DungeonRoomInstance currRoomInstance, Grid grid, HashSet<Vector3Int> occupiedCells, int corridorWidth = 5)
@@ -472,32 +586,61 @@ public class GraphBasedGeneration
             grid == null || 
             corridorWidth == 0) return false;
 
+
+        // get the offset for the tiles to get position in grid
+        Vector3Int roomCellPositionOffset = currRoomInstance.GetPositionInCell(grid);
+
+        // invalid offset
+        if (roomCellPositionOffset == Vector3Int.one * -1) return false;
+
+        // separate the tiles to floor and walls
+        HashSet<Vector3Int> corridorFloorCells = new HashSet<Vector3Int>();
+        HashSet<Vector3Int> corridorWallCells = new HashSet<Vector3Int>();
+
+        // separation
         foreach (var corridorStrip in corridor)
         {
-            // cell location of the room in the grid
-            Vector3Int roomCellPositionOffset = currRoomInstance.GetPositionInCell(grid);
+            HashSet<Vector3Int> tempCorridorFloorCells = new HashSet<Vector3Int>(corridorStrip);
+            HashSet<Vector3Int> tempCorridorWallCells = new HashSet<Vector3Int> { corridorStrip.First(), corridorStrip.Last() };
 
-            // invalid offset
-            if (roomCellPositionOffset == Vector3Int.one * -1) return false;
+            tempCorridorFloorCells.Remove(corridorStrip.First());
+            tempCorridorFloorCells.Remove(corridorStrip.Last());
 
-            List<Vector3Int> corridorFloorCells = new List<Vector3Int>(corridorStrip);
-            corridorFloorCells.Remove(corridorStrip.First());
-            corridorFloorCells.Remove(corridorStrip.Last());
-
-            // place floor cells
-            foreach (var floorCell in corridorFloorCells)
-            {
-                Vector3Int position = floorCell + roomCellPositionOffset;
-
-                corridorFloorTilemap.SetTile(position, corridorTiles.corridorFloor);
-            }
-
-            // place wall cells
-            // iterate through the edge cells
-            // get the 3x3 block of tile positions
-            // the tiles in the 3x3 that are occupied/have ground tiles should be ignored
-            // every thing else should be placed with wall tiles
+            corridorFloorCells.UnionWith(tempCorridorFloorCells);
+            corridorWallCells.UnionWith(tempCorridorWallCells);
         }
+
+        // place floor cells
+        foreach (var floorCell in corridorFloorCells)
+        {
+            Vector3Int position = floorCell + roomCellPositionOffset;
+
+            corridorFloorTilemap.SetTile(position, corridorTiles.corridorFloor);
+        }
+
+        // remove all cells in wall set that are also present in floor set
+        corridorWallCells.ExceptWith(corridorFloorCells);
+
+        // place basic wall cells
+        foreach (var wallCell in corridorWallCells)
+        {
+            Vector3Int position = wallCell + roomCellPositionOffset;
+            bool wallPlaced = TilemapHelper.PlaceWall(position, corridorWallTilemap, corridorFloorTilemap, corridorTiles);
+
+            // place corner wall cells
+            if (!wallPlaced)
+            {
+                TilemapHelper.PlaceCornerWall(position, corridorWallTilemap, corridorFloorTilemap, corridorTiles);
+            }
+        }
+
+        // place corner wall, the ones with neighbour walls on the bottom and side
+        foreach (var wallCell in corridorWallCells)
+        {
+            Vector3Int position = wallCell + roomCellPositionOffset;
+            TilemapHelper.PlaceTurningBottomCornerWall(position, corridorWallTilemap, corridorFloorTilemap, corridorTiles);
+        }
+
         return true;
     }
 

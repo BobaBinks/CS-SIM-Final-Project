@@ -368,6 +368,31 @@ public class RandomWalk
             axis = TilemapHelper.Axis.HORIZONTAL;
 
         Vector3Int step = new Vector3Int(dir.x, dir.y);
+
+
+        // go in reverse direction to set walls for corner
+        if (corridorFloorCells.Count > 0)
+        {
+            Vector3Int reverseStep = step * -1;
+
+            for (int i = corridorWidth / 2; i >= 0; --i)
+            {
+                Vector3Int position = currCell + reverseStep * i;
+                List<Vector3Int> corridorStrip = TilemapHelper.GetAdjacentCells(position, axis, corridorWidth);
+                if (i == corridorWidth / 2)
+                {
+                    corridorStrip = new List<Vector3Int> { corridorStrip.First(), corridorStrip.Last() };
+                }
+                else
+                {
+                    corridorStrip.Insert(corridorWidth / 2, position);
+                }
+
+                corridorFloorCells.Add(corridorStrip);
+            }
+
+        }
+
         for (int i = 0; i < steps; ++i)
         {
             currCell += step;
@@ -378,15 +403,17 @@ public class RandomWalk
             corridorFloorCells.Add(corridorStrip);
         }
 
+
+
         List<Vector3Int> finalCorridorStrip = TilemapHelper.GetAdjacentCells(currCell + step, axis, corridorWidth);
         finalCorridorStrip.Insert(corridorWidth / 2, currCell + step);
         corridorFloorCells.Add(finalCorridorStrip);
 
         // fill missing pieces of the corridor at the corner 
-        //for (int i = 1; i <= length / 2; ++i)
+        //for (int i = 1; i <= corridorWidth / 2; ++i)
         //{
-        //    List<Vector3Int> finalCorridorStrip = TilemapHelper.GetAdjacentCells(currCell + step * i, axis, length);
-        //    finalCorridorStrip.Insert(length / 2, currCell + step * i);
+        //    List<Vector3Int> finalCorridorStrip = TilemapHelper.GetAdjacentCells(currCell + step * i, axis, corridorWidth);
+        //    finalCorridorStrip.Insert(corridorWidth / 2, currCell + step * i);
         //    corridorFloorCells.Add(finalCorridorStrip);
         //}
     }
