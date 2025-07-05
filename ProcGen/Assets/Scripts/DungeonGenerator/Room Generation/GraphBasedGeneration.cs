@@ -188,8 +188,7 @@ public class GraphBasedGeneration
                     continue;
                 }
 
-                // replace the wall tiles at the corridor position with floor tiles instead
-                InsertCorridorFloorTileEntranceToRoom(corridorTiles, cellPosition, edge, currRoomInstance);
+
 
 
                 bool childExisted = placedRooms.ContainsKey(childRoom);
@@ -234,6 +233,9 @@ public class GraphBasedGeneration
                         placementAttempts++;
                         continue;
                     }
+
+                    // replace the wall tiles at the corridor position with floor tiles instead
+                    InsertCorridorFloorTileEntranceToRoom(corridorTiles, cellPosition, edge, currRoomInstance);
                 }
                 else
                 {
