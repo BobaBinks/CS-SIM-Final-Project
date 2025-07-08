@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEngine.UIElements;
 using System.Collections.Generic;
@@ -61,3 +62,4 @@ public class NodeConnection
         return new KeyValuePair<NodeElement, NodeElement>(node1, node2);
     }
 }
+#endif

@@ -1,20 +1,24 @@
 using UnityEngine;
+using System.Collections.Generic;
+
+# if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.Callbacks;
-using System.Collections;
-using UnityEngine.UIElements;
-using System.Collections.Generic;
+#endif
+
+
 [CreateAssetMenu(fileName = "DungeonLayout", menuName = "Scriptable Objects/DungeonLayout")]
 public class DungeonLayout : ScriptableObject
 {
     public List<DungeonRoom> dungeonRoomList = new List<DungeonRoom>();
-
-    public List<NodeConnection> nodeConnections = new List<NodeConnection>();
-    public List<NodeElement> nodeElements = new List<NodeElement>();
     public RoomTypesList roomTypeList;
     public int width = 100;
     public int height = 100;
     public int minGapBetweenRooms = 5;
+
+#if UNITY_EDITOR
+    public List<NodeConnection> nodeConnections = new List<NodeConnection>();
+    public List<NodeElement> nodeElements = new List<NodeElement>();
 
     /// <summary>
     /// Update the connection's line orientation
@@ -172,6 +176,7 @@ public class DungeonLayout : ScriptableObject
         return false;
     }
 
+
     // this opens the layout editor with this scriptable object
     //https://docs.unity3d.com/ScriptReference/Callbacks.OnOpenAssetAttribute.html
     //https://discussions.unity.com/t/is-it-possible-to-open-scriptableobjects-in-custom-editor-cindows-with-double-click/813843/2
@@ -192,5 +197,5 @@ public class DungeonLayout : ScriptableObject
 
         return false;
     }
-
+#endif
 }

@@ -1,9 +1,10 @@
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using System;
 using System.Collections.Generic;
 
+#if UNITY_EDITOR
+using UnityEditor;
 public class DungeonLayoutEditor : EditorWindow
 {
     private string layoutPrefKey = "DungeonLayoutEditorKey";
@@ -256,6 +257,5 @@ public class DungeonLayoutEditor : EditorWindow
     }
     #endregion
 
-
-
 }
+#endif

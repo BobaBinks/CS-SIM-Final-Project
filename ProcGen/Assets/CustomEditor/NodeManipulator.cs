@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEditor;
 using UnityEngine.UIElements;
@@ -78,3 +79,4 @@ public class NodeManipulator : PointerManipulator
         layout.UpdateConnection(node);
     }
 }
+#endif

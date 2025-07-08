@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor;
@@ -232,3 +233,4 @@ public class NodeConnectionManipulator : PointerManipulator
         line.MarkDirtyRepaint();
     }
 }
+#endif

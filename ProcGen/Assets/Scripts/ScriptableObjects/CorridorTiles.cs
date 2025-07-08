@@ -19,4 +19,5 @@ public class CorridorTiles : ScriptableObject
 
     public Tile TurningBottomLeftCornerWall;
     public Tile TurningBottomRightCornerWall;
+
 }

@@ -13,8 +13,11 @@ MonoBehaviour:
   m_Name: Room 00e21bde-3ad5-46ff-bd2e-d475aead2307
   m_EditorClassIdentifier: 
   roomType: {fileID: 11400000, guid: 6c07c46742c97ad4da9dfe08ee2937d8, type: 2}
-  styleLeft: 356
-  styleTop: 468
+  styleLeft: 274
+  styleTop: 369
   guid: 00e21bde-3ad5-46ff-bd2e-d475aead2307
   connectionList:
   - {fileID: 11400000, guid: de82f9814ce7f9e4689063911a05e931, type: 2}
+  - {fileID: 11400000, guid: c4ba041c01eca1b4abe8e499723c1369, type: 2}
+  - {fileID: 11400000, guid: 0d91a157ad1a84440948c5ab0a63f2f9, type: 2}
+  - {fileID: 11400000, guid: bfe3199f4a7987f418f8223b8ac7983d, type: 2}

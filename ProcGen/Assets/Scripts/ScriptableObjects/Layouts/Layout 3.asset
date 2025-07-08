@@ -15,6 +15,9 @@ MonoBehaviour:
   dungeonRoomList:
   - {fileID: 11400000, guid: de82f9814ce7f9e4689063911a05e931, type: 2}
   - {fileID: 11400000, guid: 2810b04b9ceae514599183744375662b, type: 2}
+  - {fileID: 11400000, guid: 0d91a157ad1a84440948c5ab0a63f2f9, type: 2}
+  - {fileID: 11400000, guid: bfe3199f4a7987f418f8223b8ac7983d, type: 2}
+  - {fileID: 11400000, guid: c4ba041c01eca1b4abe8e499723c1369, type: 2}
   roomTypeList: {fileID: 11400000, guid: f0da55397f2229e498752a592243db28, type: 2}
   width: 100
   height: 100

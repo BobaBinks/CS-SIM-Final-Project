@@ -388,8 +388,19 @@ public class GraphBasedGeneration
 
         Vector3Int[] adjacentCellsArray = adjacentCells.ToArray();
 
+        // get tilemaps
         Transform wallsTransform = dungeonRoomInstance.instance.transform.Find("Walls");
-        if(wallsTransform != null)
+        Transform groundTransform = dungeonRoomInstance.instance.transform.Find("Ground");
+
+        if (groundTransform != null)
+        {
+            Tilemap groundMap = groundTransform.GetComponent<Tilemap>();
+
+            if (groundMap != null)
+                groundMap.SetTiles(adjacentCellsArray, groundTiles);
+        }
+
+        if (wallsTransform != null)
         {
             Tilemap wallMap = wallsTransform.GetComponent<Tilemap>();
 
@@ -401,9 +412,10 @@ public class GraphBasedGeneration
             {
                 bool hasWallLeft = wallMap.GetTile(wallCell + Vector3Int.left) != null;
                 bool hasWallRight = wallMap.GetTile(wallCell + Vector3Int.right) != null;
-
                 bool hasWallTop = wallMap.GetTile(wallCell + Vector3Int.up) != null;
                 bool hasWallBottom = wallMap.GetTile(wallCell + Vector3Int.down) != null;
+
+
 
                 TilemapHelper.Corner corner = TilemapHelper.IsCornerEdgeWall(wallCell, wallMap);
 
@@ -450,58 +462,89 @@ public class GraphBasedGeneration
                 }
                 else
                 {
-                    if(edge == TilemapHelper.Edge.BOTTOM)
+                    // check if there is another corridor sharing the corner
+                    if (groundTransform)
                     {
-                        if (corner == TilemapHelper.Corner.BOTTOM_RIGHT)
+                        Tilemap groundMap = groundTransform.GetComponent<Tilemap>();
+                        bool hasGroundLeft = groundMap.GetTile(wallCell + Vector3Int.left) != null;
+                        bool hasGroundRight = groundMap.GetTile(wallCell + Vector3Int.right) != null;
+                        bool hasGroundTop = groundMap.GetTile(wallCell + Vector3Int.up) != null;
+                        bool hasGroundBottom = groundMap.GetTile(wallCell + Vector3Int.down) != null;
+
+                        if((hasGroundRight && hasGroundBottom) || (hasGroundLeft && hasGroundBottom))
                         {
-                            // bottom right corner
-                            wallMap.SetTile(wallCell, corridorTiles.RightVerticalWall);
-                        }
-                        else
-                        {
-                            // bottom left corner
-                            wallMap.SetTile(wallCell, corridorTiles.LeftVerticalWall);
-                        }
-                    }
-                    else if(edge == TilemapHelper.Edge.TOP)
-                    {
-                        if (corner == TilemapHelper.Corner.TOP_LEFT)
-                        {
-                            // top left corner
-                            wallMap.SetTile(wallCell, corridorTiles.LeftVerticalWall);
-                        }
-                        else if (hasWallLeft && hasWallBottom)
-                        {
-                            // top right corner
-                            wallMap.SetTile(wallCell, corridorTiles.RightVerticalWall);
-                        }
-                    }
-                    else if(edge == TilemapHelper.Edge.LEFT)
-                    {
-                        if (corner == TilemapHelper.Corner.TOP_LEFT)
-                        {
-                            // top left corner
+                            // top left or top right
                             wallMap.SetTile(wallCell, corridorTiles.TopHorizontalWall);
                         }
-                        else
+                        else if (hasGroundRight && hasGroundTop)
                         {
-                            // bottom left corner
-                            wallMap.SetTile(wallCell, corridorTiles.BottomHorizontalWall);
+                            // bottom left
+                            wallMap.SetTile(wallCell, corridorTiles.TurningBottomLeftCornerWall);
                         }
-                    }
-                    else if(edge == TilemapHelper.Edge.RIGHT)
-                    {
-                        if (corner == TilemapHelper.Corner.TOP_RIGHT)
+                        else if (hasGroundLeft && hasGroundTop)
                         {
-                            // top right corner
-                            wallMap.SetTile(wallCell, corridorTiles.TopHorizontalWall);
+                            // bottom right
+                            wallMap.SetTile(wallCell, corridorTiles.TurningBottomRightCornerWall);
                         }
                         else
                         {
-                            // bottom left corner
-                            wallMap.SetTile(wallCell, corridorTiles.BottomHorizontalWall);
+                            // if there are no other corridors sharing this corner
+                            if (edge == TilemapHelper.Edge.BOTTOM)
+                            {
+                                if (corner == TilemapHelper.Corner.BOTTOM_RIGHT)
+                                {
+                                    // bottom right corner
+                                    wallMap.SetTile(wallCell, corridorTiles.RightVerticalWall);
+                                }
+                                else
+                                {
+                                    // bottom left corner
+                                    wallMap.SetTile(wallCell, corridorTiles.LeftVerticalWall);
+                                }
+                            }
+                            else if (edge == TilemapHelper.Edge.TOP)
+                            {
+                                if (corner == TilemapHelper.Corner.TOP_LEFT)
+                                {
+                                    // top left corner
+                                    wallMap.SetTile(wallCell, corridorTiles.LeftVerticalWall);
+                                }
+                                else if (hasWallLeft && hasWallBottom)
+                                {
+                                    // top right corner
+                                    wallMap.SetTile(wallCell, corridorTiles.RightVerticalWall);
+                                }
+                            }
+                            else if (edge == TilemapHelper.Edge.LEFT)
+                            {
+                                if (corner == TilemapHelper.Corner.TOP_LEFT)
+                                {
+                                    // top left corner
+                                    wallMap.SetTile(wallCell, corridorTiles.TopHorizontalWall);
+                                }
+                                else
+                                {
+                                    // bottom left corner
+                                    wallMap.SetTile(wallCell, corridorTiles.BottomHorizontalWall);
+                                }
+                            }
+                            else if (edge == TilemapHelper.Edge.RIGHT)
+                            {
+                                if (corner == TilemapHelper.Corner.TOP_RIGHT)
+                                {
+                                    // top right corner
+                                    wallMap.SetTile(wallCell, corridorTiles.TopHorizontalWall);
+                                }
+                                else
+                                {
+                                    // bottom left corner
+                                    wallMap.SetTile(wallCell, corridorTiles.BottomHorizontalWall);
+                                }
+                            }
                         }
                     }
+
+
                 }
             }
         }
@@ -547,14 +590,8 @@ public class GraphBasedGeneration
 
         }
 
-        Transform groundTransform = dungeonRoomInstance.instance.transform.Find("Ground");
-        if (groundTransform != null)
-        {
-            Tilemap groundMap = groundTransform.GetComponent<Tilemap>();
 
-            if (groundMap != null)
-                groundMap.SetTiles(adjacentCellsArray, groundTiles);
-        }
+
 
         return true;
     }
