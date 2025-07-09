@@ -13,8 +13,9 @@ MonoBehaviour:
   m_Name: Room b2117d0b-b39e-4fae-b2e8-d6cce3dc6b20
   m_EditorClassIdentifier: 
   roomType: {fileID: 11400000, guid: 693004aeac50d3649bcb7fc3f80f5674, type: 2}
-  styleLeft: 3
-  styleTop: 361
+  styleLeft: 150
+  styleTop: 360
   guid: b2117d0b-b39e-4fae-b2e8-d6cce3dc6b20
   connectionList:
   - {fileID: 11400000, guid: 2810b04b9ceae514599183744375662b, type: 2}
+  - {fileID: 11400000, guid: bfe3199f4a7987f418f8223b8ac7983d, type: 2}

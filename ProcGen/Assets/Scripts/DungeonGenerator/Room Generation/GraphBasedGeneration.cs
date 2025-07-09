@@ -188,9 +188,6 @@ public class GraphBasedGeneration
                     continue;
                 }
 
-
-
-
                 bool childExisted = placedRooms.ContainsKey(childRoom);
 
                 // try to get the child room instance if it exists
@@ -237,10 +234,6 @@ public class GraphBasedGeneration
                     // replace the wall tiles at the corridor position with floor tiles instead
                     InsertCorridorFloorTileEntranceToRoom(corridorTiles, cellPosition, edge, currRoomInstance);
                 }
-                else
-                {
-                    // if child room instance existed, use A star algorithm to generate a valid non overlapping path
-                }
 
                 // remove edge from available list after room and corridor placement succeeds
                 availableEdges.Remove(edge);
@@ -264,7 +257,6 @@ public class GraphBasedGeneration
                 Debug.LogWarning($"ConnectAndPlaceChildRooms: Failed to place {childRoom.roomType.name} after {maxPlacementFailCount} attempts.");
                 return false;
             }
-
         }
 
         return true;

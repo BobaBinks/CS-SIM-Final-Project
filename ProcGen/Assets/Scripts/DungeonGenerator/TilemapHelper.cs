@@ -329,6 +329,30 @@ public class TilemapHelper
         return true;
     }
 
+    public static Vector3Int GetEdgeDirection(Edge edge)
+    {
+        switch (edge)
+        {
+            case TilemapHelper.Edge.LEFT:
+                {
+                    return Vector3Int.left;
+                }
+            case TilemapHelper.Edge.RIGHT:
+                {
+                    return Vector3Int.right;
+                }
+            case TilemapHelper.Edge.TOP:
+                {
+                    return Vector3Int.up;
+                }
+            case TilemapHelper.Edge.BOTTOM:
+                {
+                    return Vector3Int.down;
+                }
+            default: return Vector3Int.zero;
+        }
+    }
+
     public static Corner IsCornerEdgeWall(Vector3Int wallCell, Tilemap wallMap)
     {
         if (wallMap == null) return Corner.INVALID;
