@@ -31,6 +31,8 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField] int maxPairFail = 5;
     [SerializeField] int maxConnectionFail = 5;
 
+    private AStarPathfinding aStar;
+
     // [Header("Corridor Tiles")]
     public CorridorTiles corridorTiles;
 
@@ -39,60 +41,60 @@ public class DungeonGenerator : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+
+        bool dungeonGenerated = GenerateDungeon();
+
+        if (!dungeonGenerated)
+            return;
+
         FillBackground(backgroundTilemap, backgroundTile, layout);
-        GenerateDungeon();
+
+        // initialize A* grid
+        aStar = new AStarPathfinding();
+        bool aStarGridInitialized = aStar.InitializeGridDimensions(roomsDict, grid);
+
     }
 
     void FillBackground(Tilemap backgroundTilemap, Tile backgroundTile, DungeonLayout layout)
     {
         if (backgroundTile == null || backgroundTilemap == null || layout == null) return;
 
-        int width = (int)((int)layout.width * 1.5f) * 10;
-        int height = (int)((int)layout.height * 1.5f) * 10;
+        BoundsInt combinedBounds;
+        bool combinedBoundsRetrieved = TilemapHelper.GetCombinedBounds(roomsDict, grid, out combinedBounds);
 
-        int halfWidth = width / 2;
-        int halfHeight = height / 2;
+        if (!combinedBoundsRetrieved)
+            return;
 
-        Vector3Int[] grid = new Vector3Int[width * height];
-        TileBase[] tiles = new TileBase[width * height];
+        // expand the bounds
+        combinedBounds = TilemapHelper.ExpandBounds(combinedBounds, 0.75f);
 
-        int index = 0;
-        for(int x = -halfWidth; x < halfWidth; ++x)
+        // set tiles
+        List<Vector3Int> positions = new List<Vector3Int>();
+        List<TileBase> tileBases = new List<TileBase>();
+
+        foreach (Vector3Int pos in combinedBounds.allPositionsWithin)
         {
-            for(int y = -halfHeight; y < halfHeight; ++y)
-            {
-                grid[index] = new Vector3Int(x, y);
-                tiles[index] = backgroundTile;
-                index++;
-            }
+            positions.Add(pos);
+            tileBases.Add(backgroundTile);
         }
 
-        //  backgroundTilemap.BoxFill(
-        //  position: new Vector3Int(0, 0, 0),
-        //  tile: backgroundTile,
-        //  startX: -halfWidth,
-        //  startY: -halfHeight,
-        //  endX: halfWidth,
-        //  endY: halfHeight
-        //);
-
-        backgroundTilemap.SetTiles(grid, tiles);
+        backgroundTilemap.SetTiles(positions.ToArray(), tileBases.ToArray());
     }
-    void GenerateDungeon()
+
+    bool GenerateDungeon()
     {
-        if (layout == null || corridorFloorTilemap == null || roomsGO == null) return;
+        if (layout == null || corridorFloorTilemap == null || roomsGO == null) return false;
 
         int maxAttempts = 5;
         int attempts = 0;
         while (attempts < maxAttempts)
         {
-            if(GraphBasedGeneration.GenerateDungeon(layout, grid, roomsGO, corridorFloorTilemap, corridorWallTilemap , corridorTiles, out roomsDict, maxPlacementFailCount: 3))
-                break;
+            if (GraphBasedGeneration.GenerateDungeon(layout, grid, roomsGO, corridorFloorTilemap, corridorWallTilemap, corridorTiles, out roomsDict, maxPlacementFailCount: 3))
+                return true;
 
             attempts += 1;
             Debug.Log($"Failed to generate dungeon: attempt {attempts}/{maxAttempts}");
         }
-   
+        return false;
     }
-
 }

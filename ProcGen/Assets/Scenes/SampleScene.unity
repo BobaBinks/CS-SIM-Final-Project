@@ -694,7 +694,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144e96b864bd3ea4f8ef8b515e25ea28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layout: {fileID: 11400000, guid: 406eaed9fd7be8645ad2df945d27c1b7, type: 2}
+  layout: {fileID: 11400000, guid: 98fac352ccb103b4e9c70aa734d28ae3, type: 2}
   grid: {fileID: 441024815}
   roomsGO: {fileID: 337827882}
   corridorFloorTilemap: {fileID: 2090260285}

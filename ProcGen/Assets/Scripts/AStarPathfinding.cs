@@ -1,10 +1,13 @@
 using UnityEngine;
 using System.Collections.Generic;
-public class AStarPathfinding: MonoBehaviour
+using UnityEngine.Tilemaps;
+using System;
+
+public class AStarPathfinding
 {
     int width;
     int height;
-
+    BoundsInt combinedBounds;
     List<bool> gridCells;
     // generate the 1D array representing the grid
     // initialize all cells in this array as occupied
@@ -23,64 +26,59 @@ public class AStarPathfinding: MonoBehaviour
                     // convert that grid position to the index in 1D grid array (y * width + x)
                     // set that index's value to floor/traversable
 
-    public bool  InitializeGridDimensions(List<DungeonRoomInstance> rooms)
+    public bool InitializeGridDimensions(Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict, Grid grid)
     {
-        if (rooms == null || rooms.Count < 1)
+        if (roomsDict == null || roomsDict.Count < 1)
             return false;
 
+        BoundsInt combinedBounds;
+        bool combinedBoundsRetrieved = TilemapHelper.GetCombinedBounds(roomsDict, grid, out combinedBounds);
 
+        if (!combinedBoundsRetrieved)
+            return false;
+
+        // number of cells in grid
+        width = combinedBounds.size.x;
+        height = combinedBounds.size.y;
+
+        int arraySize = width * height;
+
+        // init grid
+        gridCells = new List<bool>(arraySize);
+        for (int i = 0; i < arraySize; i++)
+        {
+            gridCells.Add(true);
+        }
+
+        this.combinedBounds = combinedBounds;
         return true;
     }
 
     public int ConvertCellToIndex(Vector3Int cell)
     {
-        if (width <= 0 || height <= 0) return -1;
+        if (width <= 0 || height <= 0 || combinedBounds == null) return -1;
 
-        // compute offset based on whether width/height are even or odd
-        Vector2Int offset = CalculateOffset(width, height);
+            // compute offset based on whether width/height are even or odd
 
-        if (offset == Vector2Int.one * -1)
-            return -1;
+            int x = cell.x - combinedBounds.min.x;
+            int y = cell.y - combinedBounds.min.y;
 
-        // map from (-width/2 - width/2) to (0 - width)
-        int x = cell.x + offset.x;
+            // out of bounds check
+            if (x < 0 || x >= width || y < 0 || y >= height)
+                return -1;
 
-        // map from (-height/2 - height/2) to (0 - height)
-        int y = cell.y + offset.y;
-
-        // out of bounds check
-        if (x < 0 || x >= width || y < 0 || y >= height)
-            return -1;
-
-        return y * width + x;
+            return y * width + x;
     }
 
-    public Vector3Int ConvertIndexToCell(int index, out bool success)
+    public Vector3Int ConvertIndexToCell(int index)
     {
-        success = false;
+        if (index < 0 || index >= width * height)
+            throw new ArgumentOutOfRangeException(nameof(index), "Index is out of bounds");
 
         int x = index % width;
         int y = index / width;
 
-        // compute offset based on whether width/height are even or odd
-        Vector2Int offset = CalculateOffset(width, height);
-
-        if (offset == Vector2Int.one * -1)
-            return Vector3Int.zero;
-
-        return new Vector3Int(x - offset.x, y - offset.y);
-    }
-
-    public Vector2Int CalculateOffset(int width, int height)
-    {
-        if (width <= 0 || height <= 0)
-            return Vector2Int.one * -1;
-
-        // compute offset based on whether width/height are even or odd
-        int xOffset = width % 2 == 0 ? (width - 1) / 2 : width / 2;
-        int yOffset = height % 2 == 0 ? (height - 1) / 2 : height / 2;
-
-        return new Vector2Int(xOffset, yOffset);
+        return new Vector3Int(x + combinedBounds.min.x, y + combinedBounds.min.y);
     }
 
     // iterate through corridor floor tiles

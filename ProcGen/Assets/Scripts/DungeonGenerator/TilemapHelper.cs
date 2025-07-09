@@ -329,6 +329,61 @@ public class TilemapHelper
         return true;
     }
 
+    public static bool GetCombinedBounds(Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict, Grid grid, out BoundsInt combinedBounds)
+    {
+        combinedBounds = new BoundsInt();
+
+        if (roomsDict == null)
+            return false;
+
+        bool first = true;
+        foreach (var kvp in roomsDict)
+        {
+            DungeonRoomInstance dungeonRoomInstance = kvp.Value;
+            if (dungeonRoomInstance.wallMap == null)
+                continue;
+
+            // get wall tilemap
+            Tilemap wallMap = dungeonRoomInstance.wallMap;
+            wallMap.CompressBounds();
+
+            BoundsInt roomBounds = wallMap.cellBounds;
+            Vector3Int roomOffset = dungeonRoomInstance.GetPositionInCell(grid);
+            roomBounds.position += roomOffset;
+
+            if (first)
+            {
+                first = false;
+                combinedBounds = roomBounds;
+            }
+            else
+            {
+                combinedBounds.xMin = Mathf.Min(combinedBounds.xMin, roomBounds.xMin);
+                combinedBounds.yMin = Mathf.Min(combinedBounds.yMin, roomBounds.yMin);
+                combinedBounds.xMax = Mathf.Max(combinedBounds.xMax, roomBounds.xMax);
+                combinedBounds.yMax = Mathf.Max(combinedBounds.yMax, roomBounds.yMax);
+            }
+        }
+
+        return true;
+    }
+
+    public static BoundsInt ExpandBounds(BoundsInt bounds, float offset = 0.5f)
+    {
+        offset = Mathf.Clamp(offset, 0, 1);
+
+        // expand the bounds
+        int xOffset = Mathf.CeilToInt(bounds.size.x * offset);
+        int yOffset = Mathf.CeilToInt(bounds.size.y * offset);
+
+        Vector3Int newMin = bounds.min - new Vector3Int(xOffset, yOffset);
+        Vector3Int newMax = bounds.max + new Vector3Int(xOffset, yOffset);
+
+        bounds.SetMinMax(newMin, newMax);
+
+        return bounds;
+    }
+
     public static Vector3Int GetEdgeDirection(Edge edge)
     {
         switch (edge)
