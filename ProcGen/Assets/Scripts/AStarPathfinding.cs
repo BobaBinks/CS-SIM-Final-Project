@@ -8,23 +8,84 @@ public class AStarPathfinding
     int width;
     int height;
     BoundsInt combinedBounds;
-    List<bool> gridCells;
-    // generate the 1D array representing the grid
-    // initialize all cells in this array as occupied
-    // the size will be dynamic, width = allRoom width * 2, same for height
-    // because rooms can be in negative position, need to offset, when converting to index, divide width by 2 and add to x as offset
-    // when converting 
+    List<AStarNode> nodes;
 
-    // iterate through each room,
-        // get the ground tilemap and propwithcollision tilemap
-        // iterate through tilesWithin of ground
-            // check propwithcollision tilemap if the cell is occupied
-                // if it is than continue to next cell
-                // else
-                    // check if the tile is null or not on groundtilemap
-                    // if not null,
-                    // convert that grid position to the index in 1D grid array (y * width + x)
-                    // set that index's value to floor/traversable
+    public CorridorTiles corridorTiles;
+    public Tilemap AStarGridTilemap;
+
+    /// <summary>
+    /// Marks traversible cells on the A* grid by checking tiles in dungeon rooms and corridor floor tilemaps.
+    /// </summary>
+    /// <param name="roomsDict">A dictionary mapping each dungeon room to it's corresponding GameObject Instance</param>
+    /// <param name="corridorFloorTilemap">The tilemap containing the corridor floors</param>
+    /// <param name="grid">The Grid used to convert local tile positions to world cell positions</param>
+    /// <returns>True if operation completes successfully, otherwise false.</returns>
+    public bool MarkTraversableCells(Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict, Tilemap corridorFloorTilemap, Grid grid)
+    {
+        if (roomsDict == null || roomsDict.Count < 1)
+            return false;
+
+        // getting traversible tiles in rooms
+        foreach(var kvp in roomsDict)
+        {
+            DungeonRoomInstance roomInstance = kvp.Value;
+
+            if (roomInstance == null || roomInstance.instance == null)
+                continue;
+
+            Vector3Int roomCellPosition = roomInstance.GetPositionInCell(grid);
+
+            // get props map
+            Transform propsWithCollisionTransform = roomInstance.instance.transform.Find("PropsCollision");
+            Tilemap propsWithCollisionTilemap = null;
+
+            if (propsWithCollisionTransform != null)
+            {
+                propsWithCollisionTilemap = propsWithCollisionTransform.GetComponent<Tilemap>();
+            }
+
+            if (propsWithCollisionTilemap == null || roomInstance.groundMap == null)
+                continue;
+
+            foreach(var cell in roomInstance.groundMap.cellBounds.allPositionsWithin)
+            {
+                if (roomInstance.groundMap.GetTile(cell) == null || propsWithCollisionTilemap.GetTile(cell) != null)
+                    continue;
+
+                Vector3Int cellWorldPosition = cell + roomCellPosition;
+                int index = ConvertCellToIndex(cellWorldPosition);
+
+                if (index == -1 || index >= nodes.Count)
+                    continue;
+
+                if(nodes[index] != null)
+                {
+                    nodes[index].occupied = false;
+                    AStarGridTilemap.SetTile(cellWorldPosition, corridorTiles.corridorFloor);
+                }
+
+            }
+        }
+
+        corridorFloorTilemap.CompressBounds();
+        // getting traversible tiles in corridors
+        foreach (var cell in corridorFloorTilemap.cellBounds.allPositionsWithin)
+        {
+            if (corridorFloorTilemap.GetTile(cell) == null)
+                continue;
+
+            int index = ConvertCellToIndex(cell);
+
+            if (index == -1 || index >= nodes.Count)
+                continue;
+
+            nodes[index].occupied = false;
+
+            AStarGridTilemap.SetTile(cell, corridorTiles.corridorFloor);
+        }
+
+        return true;
+    }
 
     public bool InitializeGridDimensions(Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict, Grid grid)
     {
@@ -44,11 +105,17 @@ public class AStarPathfinding
         int arraySize = width * height;
 
         // init grid
-        gridCells = new List<bool>(arraySize);
-        for (int i = 0; i < arraySize; i++)
+        nodes = new List<AStarNode>(arraySize);
+
+        for (int y = combinedBounds.yMin; y < combinedBounds.yMax; y++)
         {
-            gridCells.Add(true);
+            for (int x = combinedBounds.xMin; x < combinedBounds.xMax; x++)
+            {
+                Vector3Int position = new Vector3Int(x, y);
+                nodes.Add(new AStarNode(position));
+            }
         }
+
 
         this.combinedBounds = combinedBounds;
         return true;
@@ -73,7 +140,7 @@ public class AStarPathfinding
     public Vector3Int ConvertIndexToCell(int index)
     {
         if (index < 0 || index >= width * height)
-            throw new ArgumentOutOfRangeException(nameof(index), "Index is out of bounds");
+            throw new ArgumentOutOfRangeException("Index is out of bounds");
 
         int x = index % width;
         int y = index / width;
@@ -81,6 +148,138 @@ public class AStarPathfinding
         return new Vector3Int(x + combinedBounds.min.x, y + combinedBounds.min.y);
     }
 
+    public List<Vector3Int> GetShortestPath(Vector3Int startCell, Vector3Int destinationCell)
+    {
+        if (nodes == null || nodes.Count < 1 || startCell == destinationCell)
+            return null;
+
+        int startIndex = ConvertCellToIndex(startCell);
+        int endIndex = ConvertCellToIndex(destinationCell);
+
+        // check start and end index is valid
+        if (startIndex < 0 || startIndex >= nodes.Count || endIndex < 0 || endIndex >= nodes.Count)
+            return null;
+
+        AStarMinHeap openList = new AStarMinHeap();
+        HashSet<Vector3Int> closedList = new HashSet<Vector3Int>();
+
+        AStarNode startNode = nodes[startIndex];
+        AStarNode endNode = nodes[endIndex];
+        startNode.g = 0;
+        startNode.h = GetManhattenbDistance(startCell, destinationCell);
+        startNode.f = startNode.h + startNode.g;
+        startNode.prevNode = null;
+
+        openList.Insert(startNode);
+
+        while (!openList.IsEmpty())
+        {
+            AStarNode currNode = openList.ExtractMin();
+            closedList.Add(currNode.position);
+
+            if (currNode == endNode)
+                break;
+
+            // get neighbours
+            List<AStarNode> neighbours = GetNeighbours(currNode.position);
+
+            if (neighbours == null)
+                continue;
+
+            foreach(var neighbour in neighbours)
+            {
+                if (neighbour.occupied || closedList.Contains(neighbour.position))
+                    continue;
+
+                int newG = currNode.g + 1;
+
+                // if new path to neighbour is shorter or neighbour not in open list
+                bool notInOpen = !openList.Contains(neighbour.position);
+                if (notInOpen || newG < neighbour.g)
+                {
+                    neighbour.h = GetManhattenbDistance(neighbour.position, destinationCell);
+                    neighbour.g = newG;
+                    neighbour.f = neighbour.g + neighbour.h;
+                    neighbour.prevNode = currNode;
+
+                    if (notInOpen)
+                        openList.Insert(neighbour);
+                    else
+                        openList.Update(neighbour);
+                }
+            }
+
+        }
+
+        return ReconstructPath(endNode);
+    }
     // iterate through corridor floor tiles
     // do same as room
+
+    private int GetManhattenbDistance(Vector3Int startCell, Vector3Int destinationCell) 
+    {
+        return Mathf.Abs(destinationCell.x - startCell.x) + Mathf.Abs(destinationCell.y - startCell.y);
+    }
+
+    public List<Vector3Int> ReconstructPath(AStarNode endNode)
+    {
+        List<Vector3Int> path = new List<Vector3Int>();
+        AStarNode current = endNode;
+        while (current != null)
+        {
+            path.Add(current.position);
+            current = current.prevNode;
+        }
+        path.Reverse();
+        return path;
+    }
+
+    private List<AStarNode> GetNeighbours(Vector3Int centerCell)
+    {
+        if (nodes == null || nodes.Count < 1)
+            return null;
+
+        List<AStarNode> neighbours = new List<AStarNode>();
+
+        // iterate over 3x3 grid around the centerCell
+        for (int xOffset = -1; xOffset <= 1; xOffset++)
+        {
+            for (int yOffset = -1; yOffset <= 1; yOffset++)
+            {
+                // skip the center cell itself
+                if (xOffset == 0 && yOffset == 0)
+                    continue;
+
+                Vector3Int neighbourPos = new Vector3Int(centerCell.x + xOffset, centerCell.y + yOffset);
+                int index = ConvertCellToIndex(neighbourPos);
+
+                if (index >= 0 && index < nodes.Count)
+                {
+                    neighbours.Add(nodes[index]);
+                }
+            }
+        }
+
+        // get the top down left right neighbours
+        //Vector3Int[] directions = new Vector3Int[]
+        //{
+        //    new Vector3Int(-1, 0, 0), // Left
+        //    new Vector3Int(1, 0, 0),  // Right
+        //    new Vector3Int(0, 1, 0),  // Up
+        //    new Vector3Int(0, -1, 0)  // Down
+        //};
+
+        //foreach (var dir in directions)
+        //{
+        //    Vector3Int neighbourPos = centerCell + dir;
+        //    int index = ConvertCellToIndex(neighbourPos);
+
+        //    if (index >= 0 && index < nodes.Count)
+        //    {
+        //        neighbours.Add(nodes[index]);
+        //    }
+        //}
+
+        return neighbours;
+    }
 }

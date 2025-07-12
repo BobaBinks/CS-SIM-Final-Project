@@ -31,12 +31,22 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField] int maxPairFail = 5;
     [SerializeField] int maxConnectionFail = 5;
 
+
     private AStarPathfinding aStar;
+    [SerializeField]
+    private Tilemap aStarGridTilemap;
 
     // [Header("Corridor Tiles")]
     public CorridorTiles corridorTiles;
 
     private Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict;
+
+
+    // debug aStar
+    bool startNodePicked = false;
+    Vector3Int startPosition;
+    Vector3Int endPosition;
+    List<Vector3Int> path;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -51,7 +61,13 @@ public class DungeonGenerator : MonoBehaviour
 
         // initialize A* grid
         aStar = new AStarPathfinding();
+
+        // this just for debugging
+        aStar.AStarGridTilemap = aStarGridTilemap;
+        aStar.corridorTiles = corridorTiles;
+
         bool aStarGridInitialized = aStar.InitializeGridDimensions(roomsDict, grid);
+        aStar.MarkTraversableCells(roomsDict, corridorFloorTilemap, grid);
 
     }
 
@@ -79,6 +95,46 @@ public class DungeonGenerator : MonoBehaviour
         }
 
         backgroundTilemap.SetTiles(positions.ToArray(), tileBases.ToArray());
+    }
+
+    private void Update()
+    {
+        DebugAStarPath();
+    }
+
+    private void DebugAStarPath()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Vector3 mouseWorldPos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector3Int cellPosition = aStarGridTilemap.WorldToCell(mouseWorldPos);
+
+            if (!startNodePicked)
+            {
+                startPosition = cellPosition;
+                startNodePicked = true;
+                Debug.Log("Start Cell: " + startPosition);
+            }
+            else
+            {
+                endPosition = cellPosition;
+                Debug.Log("End Cell: " + endPosition);
+
+                // Now find the path
+                path = aStar.GetShortestPath(startPosition, endPosition);
+
+                if (path != null)
+                {
+                    foreach (var cell in path)
+                    {
+                        aStarGridTilemap.SetTile(cell, corridorTiles.TopHorizontalWall);
+                    }
+                }
+
+                startNodePicked = false;
+            }
+
+        }
     }
 
     bool GenerateDungeon()

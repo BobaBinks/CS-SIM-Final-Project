@@ -66,6 +66,24 @@ public class DungeonRoomInstance
         occupiedCells.UnionWith(cellsToCheck);
         instance = GameObject.Instantiate(prefab, worldPosition, Quaternion.identity, roomsGO.transform);
 
+        if(instance != null)
+        {
+            // update the wall and groundmap to the instantiated one instead of the prefab
+            Transform walls = instance.transform.Find("Walls");
+
+            if (walls != null)
+            {
+                wallMap = walls.GetComponent<Tilemap>();
+            }
+
+            Transform ground = instance.transform.Find("Ground");
+
+            if (ground != null)
+            {
+                groundMap = ground.GetComponent<Tilemap>();
+            }
+        }
+
         return instance != null;
     }
 
