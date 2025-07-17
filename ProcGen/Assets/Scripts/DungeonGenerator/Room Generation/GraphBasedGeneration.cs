@@ -171,7 +171,7 @@ public class GraphBasedGeneration
 
             while (placementAttempts < maxPlacementFailCount)
             {
-                Debug.Log($"Attempt {placementAttempts} / {maxPlacementFailCount}: Connecting {currRoom.roomType.name} - {childRoom.roomType.name}");
+                // Debug.Log($"Attempt {placementAttempts} / {maxPlacementFailCount}: Connecting {currRoom.roomType.name} - {childRoom.roomType.name}");
 
                 // pick a random available edge from curr room
                 int edgeIndex = Random.Range(0, availableEdges.Count);
@@ -206,7 +206,7 @@ public class GraphBasedGeneration
 
                     if (corridorOverlap)
                     {
-                        Debug.Log($"Corridor from {currRoom.roomType.name}'s {edge} edge to {childRoom.roomType.name} could not be placed");
+                        // Debug.Log($"Corridor from {currRoom.roomType.name}'s {edge} edge to {childRoom.roomType.name} could not be placed");
                         placementAttempts++;
                         continue;
                     }
@@ -254,7 +254,7 @@ public class GraphBasedGeneration
 
             if (placementAttempts == maxPlacementFailCount)
             {
-                Debug.LogWarning($"ConnectAndPlaceChildRooms: Failed to place {childRoom.roomType.name} after {maxPlacementFailCount} attempts.");
+                // Debug.LogWarning($"ConnectAndPlaceChildRooms: Failed to place {childRoom.roomType.name} after {maxPlacementFailCount} attempts.");
                 return false;
             }
         }
@@ -746,7 +746,7 @@ public class GraphBasedGeneration
 
         if (TilemapHelper.CheckOverlap(cellsToCheck, occupiedCells))
         {
-            Debug.Log("Corridor overlap");
+            // Debug.Log("Corridor overlap");
             return true;
         }
 

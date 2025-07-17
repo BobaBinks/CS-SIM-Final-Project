@@ -61,7 +61,7 @@ public class PatrolState : BaseState<EnemyAI>
             float distanceToTargetPath = (path[currentPathIndex] - owner.transform.position).sqrMagnitude;
 
             //  check if reach destination
-            if (distanceToTargetPath < 0.01f)
+            if (distanceToTargetPath < 0.001f)
             {
                 // if reach end of path
                 if(currentPathIndex == path.Count - 1)
@@ -82,21 +82,23 @@ public class PatrolState : BaseState<EnemyAI>
             {
                 Vector2 direction = (path[currentPathIndex] - owner.transform.position).normalized;
                 owner.rigidBody.MovePosition(owner.rigidBody.position + direction * owner.MoveSpeed * Time.fixedDeltaTime);
-                //owner.transform.position += direction * owner.MoveSpeed * (float)deltaTime;
+
                 owner.spriteFlipper.FlipByDirection(direction);
             }
         }
     }
 
+
     private void GetWaypointPath(EnemyAI owner, Vector3 waypointPosition)
     {
-        path = aStarPathfinder.GetShortestWorldPath(owner.transform.position, currentWaypointTarget.position);
+        path = aStarPathfinder.GetShortestWorldPath(owner.transform.position, waypointPosition);
 
-        if (path == null)
+        if (path == null || path.Count == 0)
         {
             owner.Sm.SetNextState("idle");
             return;
         }
+        owner._pathDebugList = path;
         currentPathIndex = 0;
     }
 }

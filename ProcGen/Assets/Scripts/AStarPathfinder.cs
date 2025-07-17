@@ -224,9 +224,7 @@ public class AStarPathfinder
                         openList.Update(neighbour);
                 }
             }
-
         }
-
         return ReconstructPath(endNode);
     }
     // iterate through corridor floor tiles

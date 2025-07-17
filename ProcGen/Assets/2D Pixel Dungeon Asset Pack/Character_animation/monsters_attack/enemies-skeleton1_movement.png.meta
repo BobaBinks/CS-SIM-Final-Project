@@ -169,12 +169,12 @@ TextureImporter:
       name: enemies-skeleton1_movement_0
       rect:
         serializedVersion: 2
-        x: 8
-        y: 2
-        width: 12
-        height: 17
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 9
+        y: 3
+        width: 10
+        height: 15
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -191,12 +191,12 @@ TextureImporter:
       name: enemies-skeleton1_movement_1
       rect:
         serializedVersion: 2
-        x: 39
-        y: 2
-        width: 14
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 40
+        y: 3
+        width: 12
+        height: 16
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -213,12 +213,12 @@ TextureImporter:
       name: enemies-skeleton1_movement_2
       rect:
         serializedVersion: 2
-        x: 71
-        y: 2
-        width: 16
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 72
+        y: 3
+        width: 14
+        height: 16
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -235,12 +235,12 @@ TextureImporter:
       name: enemies-skeleton1_movement_3
       rect:
         serializedVersion: 2
-        x: 102
-        y: 2
-        width: 17
-        height: 17
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 103
+        y: 3
+        width: 15
+        height: 15
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -257,12 +257,12 @@ TextureImporter:
       name: enemies-skeleton1_movement_4
       rect:
         serializedVersion: 2
-        x: 134
-        y: 2
-        width: 17
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 135
+        y: 3
+        width: 15
+        height: 14
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -279,12 +279,12 @@ TextureImporter:
       name: enemies-skeleton1_movement_5
       rect:
         serializedVersion: 2
-        x: 166
-        y: 2
-        width: 16
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 167
+        y: 3
+        width: 14
+        height: 16
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -301,12 +301,12 @@ TextureImporter:
       name: enemies-skeleton1_movement_6
       rect:
         serializedVersion: 2
-        x: 200
-        y: 2
-        width: 12
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 201
+        y: 3
+        width: 10
+        height: 16
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -323,12 +323,12 @@ TextureImporter:
       name: enemies-skeleton1_movement_7
       rect:
         serializedVersion: 2
-        x: 232
-        y: 2
-        width: 12
-        height: 18
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 233
+        y: 3
+        width: 10
+        height: 16
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -345,12 +345,12 @@ TextureImporter:
       name: enemies-skeleton1_movement_8
       rect:
         serializedVersion: 2
-        x: 263
-        y: 2
-        width: 13
-        height: 17
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 264
+        y: 3
+        width: 11
+        height: 15
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -367,12 +367,12 @@ TextureImporter:
       name: enemies-skeleton1_movement_9
       rect:
         serializedVersion: 2
-        x: 295
-        y: 2
-        width: 13
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 296
+        y: 3
+        width: 11
+        height: 14
+      alignment: 7
+      pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       customData: 
       outline: []
@@ -389,7 +389,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 34ba811cb07b4b345b1e0647c59f84bb
     internalID: 0
     vertices: []
     indices: 

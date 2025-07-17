@@ -147,7 +147,7 @@ Transform:
   m_GameObject: {fileID: 101180290}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.895424, y: -1.7279387, z: -0.15394914}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -193,7 +193,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 144e96b864bd3ea4f8ef8b515e25ea28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  layout: {fileID: 11400000, guid: 98fac352ccb103b4e9c70aa734d28ae3, type: 2}
+  layout: {fileID: 11400000, guid: 2a5de2c73b17cb5498de4a7383aa46db, type: 2}
   grid: {fileID: 441024815}
   roomsGO: {fileID: 337827882}
   corridorFloorTilemap: {fileID: 2090260285}

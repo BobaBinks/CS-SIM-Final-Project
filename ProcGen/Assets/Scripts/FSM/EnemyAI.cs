@@ -19,6 +19,8 @@ public abstract class EnemyAI: MonoBehaviour
     [SerializeField]
     private float moveSpeed = 3.5f;
 
+    public List<Vector3> _pathDebugList;
+
     public float MaxHealthPoints 
     {
         get { return maxHealthPoints; }
@@ -72,5 +74,19 @@ public abstract class EnemyAI: MonoBehaviour
             Sm.SetInitialState("patrol");
         else
             Sm.SetInitialState("idle");
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (_pathDebugList == null || _pathDebugList.Count == 0)
+            return;
+
+        for(int i = 0; i < _pathDebugList.Count; ++i)
+        {
+            if (i == _pathDebugList.Count - 1)
+                break;
+
+            Gizmos.DrawLine(_pathDebugList[i], _pathDebugList[i + 1]);
+        }
     }
 }
