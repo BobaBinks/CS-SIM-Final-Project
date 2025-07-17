@@ -52,7 +52,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -90,7 +90,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -298,7 +298,13 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      enemies-skeleton2_idle_0: 7628897034881489312
+      enemies-skeleton2_idle_1: -8491562820440888638
+      enemies-skeleton2_idle_2: 2686526470064077805
+      enemies-skeleton2_idle_3: -2135807368638690799
+      enemies-skeleton2_idle_4: 2245012447047401249
+      enemies-skeleton2_idle_5: -6896398003092638265
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

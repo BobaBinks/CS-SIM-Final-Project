@@ -360,7 +360,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1968005121
 Transform:
   m_ObjectHideFlags: 0
@@ -4940,10 +4940,6 @@ PrefabInstance:
     - target: {fileID: 4919706249774079086, guid: c415022d468830345af01ae08b46d056, type: 3}
       propertyPath: m_Name
       value: MediumRoom
-      objectReference: {fileID: 0}
-    - target: {fileID: 4919706249774079086, guid: c415022d468830345af01ae08b46d056, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8145137603444316973, guid: c415022d468830345af01ae08b46d056, type: 3}
       propertyPath: m_LocalPosition.x

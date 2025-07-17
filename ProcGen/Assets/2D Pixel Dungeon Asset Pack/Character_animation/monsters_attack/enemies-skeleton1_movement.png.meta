@@ -64,7 +64,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -102,7 +102,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -398,7 +398,17 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      enemies-skeleton1_movement_0: 8344996603595648298
+      enemies-skeleton1_movement_1: -3622375319434387972
+      enemies-skeleton1_movement_2: 6003855414469629586
+      enemies-skeleton1_movement_3: -6371975131579091987
+      enemies-skeleton1_movement_4: 1826128173701959310
+      enemies-skeleton1_movement_5: 4309256519656259746
+      enemies-skeleton1_movement_6: 7282550495675773793
+      enemies-skeleton1_movement_7: -7446333505391661814
+      enemies-skeleton1_movement_8: -7163712858298438575
+      enemies-skeleton1_movement_9: 9058711910429238280
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

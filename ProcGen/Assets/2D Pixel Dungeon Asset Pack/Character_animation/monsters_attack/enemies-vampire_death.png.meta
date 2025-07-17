@@ -76,7 +76,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -114,7 +114,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -498,7 +498,21 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      enemies-vampire_death_0: -923307111090866757
+      enemies-vampire_death_1: 8913812048917822411
+      enemies-vampire_death_10: 4404237878519249409
+      enemies-vampire_death_11: 920658968894446176
+      enemies-vampire_death_12: -7350887874683511925
+      enemies-vampire_death_13: -1279182169951451124
+      enemies-vampire_death_2: 5956196191719413925
+      enemies-vampire_death_3: 794094799421589820
+      enemies-vampire_death_4: -6012288014565241867
+      enemies-vampire_death_5: -9049025914868024525
+      enemies-vampire_death_6: 5806025726046563585
+      enemies-vampire_death_7: 2687168333418352839
+      enemies-vampire_death_8: -2088022810532382372
+      enemies-vampire_death_9: -6362477907139459544
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

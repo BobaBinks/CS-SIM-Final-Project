@@ -82,7 +82,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -120,7 +120,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -548,7 +548,23 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      enemies-vampire_attack_0: -1504920921590492608
+      enemies-vampire_attack_1: 6855850799596563317
+      enemies-vampire_attack_10: 4833526267645814463
+      enemies-vampire_attack_11: -5871181338760522799
+      enemies-vampire_attack_12: 7034237963876338747
+      enemies-vampire_attack_13: 419345295281829956
+      enemies-vampire_attack_14: -514250168565923810
+      enemies-vampire_attack_15: -4339379894817324602
+      enemies-vampire_attack_2: -352618880566230290
+      enemies-vampire_attack_3: -841246744002725692
+      enemies-vampire_attack_4: 3500261410471563590
+      enemies-vampire_attack_5: 8418569869855122448
+      enemies-vampire_attack_6: -1062452806172271487
+      enemies-vampire_attack_7: -5897677253065433615
+      enemies-vampire_attack_8: -6709773080114916982
+      enemies-vampire_attack_9: -9214107590161749736
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

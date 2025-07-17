@@ -88,7 +88,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -126,7 +126,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -598,7 +598,25 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      enemies-skeleton2_death2_0: -5057053637975086529
+      enemies-skeleton2_death2_1: 51805724190797710
+      enemies-skeleton2_death2_10: 7447569044800073769
+      enemies-skeleton2_death2_11: -6178802435356256144
+      enemies-skeleton2_death2_12: 8554857959151949261
+      enemies-skeleton2_death2_13: 2289413867255628333
+      enemies-skeleton2_death2_14: 7184637484794183739
+      enemies-skeleton2_death2_15: 4634878211253724949
+      enemies-skeleton2_death2_16: 4898076744201906384
+      enemies-skeleton2_death2_17: -4773652583051826823
+      enemies-skeleton2_death2_2: 6105898905684195552
+      enemies-skeleton2_death2_3: -2330272121553737870
+      enemies-skeleton2_death2_4: -7146953212077636899
+      enemies-skeleton2_death2_5: 7875715250040379485
+      enemies-skeleton2_death2_6: 2297209770377574754
+      enemies-skeleton2_death2_7: 5040038920065895217
+      enemies-skeleton2_death2_8: -8922314668893637918
+      enemies-skeleton2_death2_9: 8423485307124713560
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

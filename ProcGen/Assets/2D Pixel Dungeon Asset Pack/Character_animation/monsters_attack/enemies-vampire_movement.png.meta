@@ -58,7 +58,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -96,7 +96,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -348,7 +348,15 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      enemies-vampire_movement_0: -2168655384976774199
+      enemies-vampire_movement_1: 8965175214542997927
+      enemies-vampire_movement_2: -3738762902930035113
+      enemies-vampire_movement_3: 2100464449051817614
+      enemies-vampire_movement_4: -8187684412701654721
+      enemies-vampire_movement_5: 429374533021563476
+      enemies-vampire_movement_6: -3659946452370719798
+      enemies-vampire_movement_7: -5394975323375022170
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

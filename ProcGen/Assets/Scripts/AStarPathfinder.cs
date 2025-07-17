@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine.Tilemaps;
 using System;
 
-public class AStarPathfinding
+public class AStarPathfinder
 {
     int width;
     int height;
@@ -11,7 +11,7 @@ public class AStarPathfinding
     List<AStarNode> nodes;
 
     public CorridorTiles corridorTiles;
-    public Tilemap AStarGridTilemap;
+    public Tilemap AStarGridTilemap { get; private set; }
 
     /// <summary>
     /// Marks traversible cells on the A* grid by checking tiles in dungeon rooms and corridor floor tilemaps.
@@ -148,7 +148,23 @@ public class AStarPathfinding
         return new Vector3Int(x + combinedBounds.min.x, y + combinedBounds.min.y);
     }
 
-    public List<Vector3Int> GetShortestPath(Vector3Int startCell, Vector3Int destinationCell)
+    public void SetAStarGridTilemap(Tilemap tilemap)
+    {
+        AStarGridTilemap = tilemap;
+    }
+
+    public List<Vector3> GetShortestWorldPath(Vector3 startPos, Vector3 endPos)
+    {
+        // get current position in cell
+        Vector3Int ownerCellPosition = AStarGridTilemap.WorldToCell(startPos);
+        Vector3Int destinationCellPosition = AStarGridTilemap.WorldToCell(endPos);
+
+        // get initial path
+        List<Vector3Int> pathCells = GetShortestCellPath(ownerCellPosition, destinationCellPosition);
+        return pathCells == null ? null : ConvertPathToWorldPositions(pathCells);
+    }
+
+    public List<Vector3Int> GetShortestCellPath(Vector3Int startCell, Vector3Int destinationCell)
     {
         if (nodes == null || nodes.Count < 1 || startCell == destinationCell)
             return null;
@@ -234,6 +250,21 @@ public class AStarPathfinding
         return path;
     }
 
+    public List<Vector3> ConvertPathToWorldPositions(List<Vector3Int> path)
+    {
+        if (path == null || AStarGridTilemap == null)
+            return null;
+
+        List<Vector3> convertedPath = new List<Vector3>();
+        foreach(var cell in path)
+        {
+            Vector3 worldPosition = AStarGridTilemap.GetCellCenterWorld(cell);
+            convertedPath.Add(worldPosition);
+        }
+
+        return convertedPath;
+    }
+
     private List<AStarNode> GetNeighbours(Vector3Int centerCell)
     {
         if (nodes == null || nodes.Count < 1)
@@ -242,43 +273,43 @@ public class AStarPathfinding
         List<AStarNode> neighbours = new List<AStarNode>();
 
         // iterate over 3x3 grid around the centerCell
-        for (int xOffset = -1; xOffset <= 1; xOffset++)
-        {
-            for (int yOffset = -1; yOffset <= 1; yOffset++)
-            {
-                // skip the center cell itself
-                if (xOffset == 0 && yOffset == 0)
-                    continue;
-
-                Vector3Int neighbourPos = new Vector3Int(centerCell.x + xOffset, centerCell.y + yOffset);
-                int index = ConvertCellToIndex(neighbourPos);
-
-                if (index >= 0 && index < nodes.Count)
-                {
-                    neighbours.Add(nodes[index]);
-                }
-            }
-        }
-
-        // get the top down left right neighbours
-        //Vector3Int[] directions = new Vector3Int[]
+        //for (int xOffset = -1; xOffset <= 1; xOffset++)
         //{
-        //    new Vector3Int(-1, 0, 0), // Left
-        //    new Vector3Int(1, 0, 0),  // Right
-        //    new Vector3Int(0, 1, 0),  // Up
-        //    new Vector3Int(0, -1, 0)  // Down
-        //};
-
-        //foreach (var dir in directions)
-        //{
-        //    Vector3Int neighbourPos = centerCell + dir;
-        //    int index = ConvertCellToIndex(neighbourPos);
-
-        //    if (index >= 0 && index < nodes.Count)
+        //    for (int yOffset = -1; yOffset <= 1; yOffset++)
         //    {
-        //        neighbours.Add(nodes[index]);
+        //        // skip the center cell itself
+        //        if (xOffset == 0 && yOffset == 0)
+        //            continue;
+
+        //        Vector3Int neighbourPos = new Vector3Int(centerCell.x + xOffset, centerCell.y + yOffset);
+        //        int index = ConvertCellToIndex(neighbourPos);
+
+        //        if (index >= 0 && index < nodes.Count)
+        //        {
+        //            neighbours.Add(nodes[index]);
+        //        }
         //    }
         //}
+
+        // get the top down left right neighbours
+        Vector3Int[] directions = new Vector3Int[]
+        {
+            new Vector3Int(-1, 0, 0), // Left
+            new Vector3Int(1, 0, 0),  // Right
+            new Vector3Int(0, 1, 0),  // Up
+            new Vector3Int(0, -1, 0)  // Down
+        };
+
+        foreach (var dir in directions)
+        {
+            Vector3Int neighbourPos = centerCell + dir;
+            int index = ConvertCellToIndex(neighbourPos);
+
+            if (index >= 0 && index < nodes.Count)
+            {
+                neighbours.Add(nodes[index]);
+            }
+        }
 
         return neighbours;
     }

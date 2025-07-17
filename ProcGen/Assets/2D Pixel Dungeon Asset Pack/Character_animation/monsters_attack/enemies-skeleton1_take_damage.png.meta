@@ -49,7 +49,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -87,7 +87,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -273,7 +273,12 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      enemies-skeleton1_take_damage_0: 7666235040366950098
+      enemies-skeleton1_take_damage_1: 8440171878526134781
+      enemies-skeleton1_take_damage_2: 2823758145083881778
+      enemies-skeleton1_take_damage_3: -3810878733040411979
+      enemies-skeleton1_take_damage_4: -711776192163282291
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
