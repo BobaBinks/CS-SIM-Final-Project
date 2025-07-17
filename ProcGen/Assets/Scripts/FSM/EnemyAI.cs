@@ -1,8 +1,8 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-[RequireComponent(typeof(SpriteFlipper),typeof(Rigidbody2D))]
-public abstract class EnemyAI: MonoBehaviour
+[RequireComponent(typeof(PathMovement))]
+public abstract class EnemyAI: CharacterBase
 {
     public Animator animator;
     public StateMachine<EnemyAI> Sm { get; set; }
@@ -10,33 +10,11 @@ public abstract class EnemyAI: MonoBehaviour
     [HideInInspector]
     public List<Transform> wayPoints;
 
-    public SpriteFlipper spriteFlipper { get; protected set; }
-    public Rigidbody2D rigidBody { get; protected set; }
-
-    #region Enemy Stats
-    [SerializeField]
-    private float maxHealthPoints = 100f; // default value for safety
-    [SerializeField]
-    private float moveSpeed = 3.5f;
-
-    public List<Vector3> _pathDebugList;
-
-    public float MaxHealthPoints 
-    {
-        get { return maxHealthPoints; }
-    }
-    public float MoveSpeed
-    {
-        get { return moveSpeed; }
-    }
-
-    public float HealthPoints { get; protected set; }
-    #endregion
+    public PathMovement pathMover { get; protected set; }
 
     public virtual void Start()
     {
-        spriteFlipper = GetComponent<SpriteFlipper>();
-        rigidBody = GetComponent<Rigidbody2D>();
+        pathMover = GetComponent<PathMovement>();
     }
 
     protected virtual void Update()
@@ -76,17 +54,5 @@ public abstract class EnemyAI: MonoBehaviour
             Sm.SetInitialState("idle");
     }
 
-    private void OnDrawGizmos()
-    {
-        if (_pathDebugList == null || _pathDebugList.Count == 0)
-            return;
 
-        for(int i = 0; i < _pathDebugList.Count; ++i)
-        {
-            if (i == _pathDebugList.Count - 1)
-                break;
-
-            Gizmos.DrawLine(_pathDebugList[i], _pathDebugList[i + 1]);
-        }
-    }
 }

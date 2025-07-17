@@ -11,13 +11,13 @@ public class PatrolState : BaseState<EnemyAI>
 
     public PatrolState(string stateId) : base(stateId)
     {
-        if(GameManager.Instance.aStarPathfinder != null)
-            aStarPathfinder = GameManager.Instance.aStarPathfinder;
         currentWaypointTarget = null;
     }
 
     public override void EnterState(EnemyAI owner)
     {
+        if (GameManager.Instance.aStarPathfinder != null)
+            aStarPathfinder = GameManager.Instance.aStarPathfinder;
 
         owner.animator.Play("SkeletonWarriorMoving");
         Debug.Log("Entering Patrol State");
@@ -54,51 +54,29 @@ public class PatrolState : BaseState<EnemyAI>
                 }
 
                 // get initial path
-                GetWaypointPath(owner, currentWaypointTarget.transform.position);
-                return;
+                if(!owner.pathMover.SetPathTo(currentWaypointTarget.transform.position, aStarPathfinder))
+                {
+                    owner.Sm.SetNextState("idle");
+                }
             }
 
-            float distanceToTargetPath = (path[currentPathIndex] - owner.transform.position).sqrMagnitude;
-
             //  check if reach destination
-            if (distanceToTargetPath < 0.001f)
+            else if (owner.pathMover.IsPathComplete())
             {
-                // if reach end of path
-                if(currentPathIndex == path.Count - 1)
-                {
-                    currentWaypointIndex = (currentWaypointIndex + 1) % owner.wayPoints.Count;
-                    currentWaypointTarget = owner.wayPoints[currentWaypointIndex];
+                currentWaypointIndex = (currentWaypointIndex + 1) % owner.wayPoints.Count;
+                currentWaypointTarget = owner.wayPoints[currentWaypointIndex];
 
-                    // update new path
-                    GetWaypointPath(owner, currentWaypointTarget.transform.position);
-                    return;
-                }
-                else
+                // update new path
+                if(!owner.pathMover.SetPathTo(currentWaypointTarget.transform.position, aStarPathfinder))
                 {
-                    currentPathIndex++;
+                    owner.Sm.SetNextState("idle");
+                    return;
                 }
             }
             else
             {
-                Vector2 direction = (path[currentPathIndex] - owner.transform.position).normalized;
-                owner.rigidBody.MovePosition(owner.rigidBody.position + direction * owner.MoveSpeed * Time.fixedDeltaTime);
-
-                owner.spriteFlipper.FlipByDirection(direction);
+                owner.pathMover.MoveAlongPath(deltaTime, owner.MoveSpeed);
             }
         }
-    }
-
-
-    private void GetWaypointPath(EnemyAI owner, Vector3 waypointPosition)
-    {
-        path = aStarPathfinder.GetShortestWorldPath(owner.transform.position, waypointPosition);
-
-        if (path == null || path.Count == 0)
-        {
-            owner.Sm.SetNextState("idle");
-            return;
-        }
-        owner._pathDebugList = path;
-        currentPathIndex = 0;
     }
 }

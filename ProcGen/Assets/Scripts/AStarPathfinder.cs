@@ -156,17 +156,17 @@ public class AStarPathfinder
     public List<Vector3> GetShortestWorldPath(Vector3 startPos, Vector3 endPos)
     {
         // get current position in cell
-        Vector3Int ownerCellPosition = AStarGridTilemap.WorldToCell(startPos);
+        Vector3Int startCellPosition = AStarGridTilemap.WorldToCell(startPos);
         Vector3Int destinationCellPosition = AStarGridTilemap.WorldToCell(endPos);
 
         // get initial path
-        List<Vector3Int> pathCells = GetShortestCellPath(ownerCellPosition, destinationCellPosition);
+        List<Vector3Int> pathCells = GetShortestCellPath(startCellPosition, destinationCellPosition);
         return pathCells == null ? null : ConvertPathToWorldPositions(pathCells);
     }
 
     public List<Vector3Int> GetShortestCellPath(Vector3Int startCell, Vector3Int destinationCell)
     {
-        if (nodes == null || nodes.Count < 1 || startCell == destinationCell)
+        if (nodes == null || nodes.Count < 1)
             return null;
 
         int startIndex = ConvertCellToIndex(startCell);
