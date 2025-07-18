@@ -4941,6 +4941,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MediumRoom
       objectReference: {fileID: 0}
+    - target: {fileID: 4919706249774079086, guid: c415022d468830345af01ae08b46d056, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8145137603444316973, guid: c415022d468830345af01ae08b46d056, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -5049,10 +5053,6 @@ PrefabInstance:
     - target: {fileID: 2676160786299312215, guid: c768599035c7a8440814bc4400f90735, type: 3}
       propertyPath: m_Name
       value: EntranceRoom1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2676160786299312215, guid: c768599035c7a8440814bc4400f90735, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4332997720770285178, guid: c768599035c7a8440814bc4400f90735, type: 3}
       propertyPath: m_LocalPosition.x

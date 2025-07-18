@@ -1,13 +1,18 @@
 using UnityEngine;
 using System.Collections.Generic;
+using Unity.Cinemachine;
 
 public class GameManager : MonoBehaviour
 {
     DungeonGenerator dungeonGenerator;
     EnemySpawnManager enemySpawnManager;
     public AStarPathfinder aStarPathfinder { get; private set; }
-    [SerializeField]
-    private Transform enemiesTransform;
+
+    [SerializeField] private Transform enemiesTransform;
+
+    [SerializeField] GameObject playerGO;
+
+    [SerializeField] CinemachineCamera cinemachineCamera;
 
     public static GameManager Instance { get; private set; }
 
@@ -52,10 +57,55 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        // spawn enemies? only spawn enemies in rooms in the next depth from the player in the graph?
+        // spawn enemies
         Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict = dungeonGenerator.GetDungeonRooms();
         enemySpawnManager.SpawnEnemiesInRooms(roomsDict);
+
+        // spawn player
+        bool playerSpawned = SpawnPlayer(roomsDict);
     }
 
+    private bool SpawnPlayer(Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict)
+    {
+        if (roomsDict == null || roomsDict.Count == 0)
+        {
+            return false;
+        }
 
+        DungeonRoomInstance entranceRoom = null;
+
+        foreach(var kvp in roomsDict)
+        {
+            DungeonRoom dungeonRoom = kvp.Key;
+
+            if (dungeonRoom == null)
+                continue;
+
+            if(dungeonRoom.roomType.name == "EntranceRoomType")
+            {
+                entranceRoom = kvp.Value;
+                break;
+            }
+        }
+
+        if (entranceRoom == null || entranceRoom.instance == null)
+        {
+            Debug.Log("GameManager: Dungeon does not have an entrance room to spawn player");
+            return false;
+        }
+
+        // get spawn point in entrance room instance
+        Transform spawnPoint = Helper.FindChildWithTag(entranceRoom.instance.transform, "PlayerSpawnPoint");
+
+        // Instantiate player on spawnpoint
+        if (spawnPoint)
+        {
+            GameObject playerGO = GameObject.Instantiate(this.playerGO, spawnPoint.position, Quaternion.identity);
+
+            if(cinemachineCamera)
+                cinemachineCamera.Follow = playerGO.transform;
+            return true;
+        }
+        return false;
+    }
 }

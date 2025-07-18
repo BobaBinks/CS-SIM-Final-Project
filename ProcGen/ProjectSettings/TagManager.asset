@@ -9,6 +9,7 @@ TagManager:
   - PropsNoCollision
   - EnemySpawnPoints
   - EnemyPatrolWaypoints
+  - PlayerSpawnPoint
   layers:
   - Default
   - TransparentFX
