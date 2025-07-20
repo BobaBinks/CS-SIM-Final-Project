@@ -4,9 +4,6 @@ public class PatrolState : BaseState<EnemyAI>
 {
     Transform currentWaypointTarget;
     int currentWaypointIndex;
-    List<Vector3> path;
-    int currentPathIndex;
-
     AStarPathfinder aStarPathfinder;
 
     public PatrolState(string stateId) : base(stateId)
@@ -33,6 +30,11 @@ public class PatrolState : BaseState<EnemyAI>
         if (owner.HealthPoints < 0)
         {
             owner.Sm.SetNextState("death");
+        }
+        else if (owner.player != null && owner.PlayerInChaseRange())
+        {
+            owner.Sm.SetNextState("chase");
+            return;
         }
         else if (owner.wayPoints == null || owner.wayPoints.Count == 0)
         {

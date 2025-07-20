@@ -14,6 +14,8 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] CinemachineCamera cinemachineCamera;
 
+    public Player player { get; private set; }
+
     public static GameManager Instance { get; private set; }
 
     private void Awake()
@@ -57,12 +59,16 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        // spawn enemies
         Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict = dungeonGenerator.GetDungeonRooms();
-        enemySpawnManager.SpawnEnemiesInRooms(roomsDict);
 
         // spawn player
         bool playerSpawned = SpawnPlayer(roomsDict);
+
+        // spawn enemies
+        if(playerSpawned)
+            enemySpawnManager.SpawnEnemiesInRooms(roomsDict);
+
+
     }
 
     private bool SpawnPlayer(Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict)
@@ -102,7 +108,15 @@ public class GameManager : MonoBehaviour
         {
             GameObject playerGO = GameObject.Instantiate(this.playerGO, spawnPoint.position, Quaternion.identity);
 
-            if(cinemachineCamera)
+            player = playerGO.GetComponent<Player>();
+
+            if (player == null)
+            {
+                Debug.LogError("Spawned player GameObject is missing the Player component.");
+                return false;
+            }
+
+            if (cinemachineCamera)
                 cinemachineCamera.Follow = playerGO.transform;
             return true;
         }

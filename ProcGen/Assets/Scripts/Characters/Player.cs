@@ -7,11 +7,14 @@ public class Player : CharacterBase
     public Rigidbody2D rigidBody { get; protected set; }
     public SpriteFlipper spriteFlipper { get; protected set; }
 
+    public Animator animator { get; protected set; }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         rigidBody = GetComponent<Rigidbody2D>();
         spriteFlipper = GetComponent<SpriteFlipper>();
+        animator = GetComponent<Animator>();
     }
 
     // Update is called once per frame

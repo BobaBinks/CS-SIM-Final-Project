@@ -22,6 +22,18 @@ public class IdleState : BaseState<EnemyAI>
     public override void UpdateState(EnemyAI owner, double deltaTime)
     {
         if (owner.HealthPoints < 0)
+        {
             owner.Sm.SetNextState("death");
+            return;
+        }
+
+        if(owner.player != null)
+        {
+            if (owner.PlayerInChaseRange())
+            {
+                owner.Sm.SetNextState("chase");
+                return;
+            }
+        }
     }
 }

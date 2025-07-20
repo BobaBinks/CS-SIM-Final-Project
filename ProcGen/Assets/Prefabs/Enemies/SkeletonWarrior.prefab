@@ -14,7 +14,8 @@ GameObject:
   - component: {fileID: 2981955720865045918}
   - component: {fileID: 1880842243779094505}
   - component: {fileID: -808204680004927067}
-  - component: {fileID: 2608200254635473530}
+  - component: {fileID: 7168743744082912887}
+  - component: {fileID: 2597158904804027222}
   m_Layer: 0
   m_Name: SkeletonWarrior
   m_TagString: Untagged
@@ -126,10 +127,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54a97d2329b9f76409ba5dfd36402f81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 2326609239621507750}
-  wayPoints: []
   maxHealthPoints: 100
   moveSpeed: 0.25
+  animator: {fileID: 2326609239621507750}
+  wayPoints: []
+  attackRange: 0.1
+  chaseRange: 1
 --- !u!114 &1880842243779094505
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169,7 +172,20 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!61 &2608200254635473530
+--- !u!114 &7168743744082912887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1542944116789048575}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c5208290dc0df14f922f67fa81299ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentPathIndex: 0
+--- !u!61 &2597158904804027222
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -203,7 +219,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.01810053, y: 0.040495872}
+  m_Offset: {x: 0, y: 0.075}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0}
@@ -213,5 +229,5 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.113798946, y: 0.080991745}
+  m_Size: {x: 0.15, y: 0.15}
   m_EdgeRadius: 0
