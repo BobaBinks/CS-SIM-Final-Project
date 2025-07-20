@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.InputSystem;
+using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(SpriteFlipper))]
 public class Player : CharacterBase, IDamagable
@@ -8,6 +10,16 @@ public class Player : CharacterBase, IDamagable
     public SpriteFlipper spriteFlipper { get; protected set; }
 
     public Animator animator { get; protected set; }
+
+    public bool attackOnCooldown = false;
+
+    [SerializeField]
+    float attackCooldownTime = 1f;
+
+    public float AttackCooldownTime 
+    {
+        get { return attackCooldownTime; }
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -23,7 +35,9 @@ public class Player : CharacterBase, IDamagable
         
     }
 
-    public void TakeDamage(float damage)
+
+
+    public override void TakeDamage(float damage)
     {
         HealthPoints -= damage;
 

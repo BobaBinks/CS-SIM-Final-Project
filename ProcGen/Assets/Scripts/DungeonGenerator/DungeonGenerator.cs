@@ -76,7 +76,7 @@ public class DungeonGenerator : MonoBehaviour
 
     private void Update()
     {
-        DebugAStarPath();
+        // DebugAStarPath();
     }
 
     public bool GenerateGameEnvironment()

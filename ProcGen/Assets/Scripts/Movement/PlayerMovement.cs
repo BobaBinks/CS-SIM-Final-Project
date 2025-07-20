@@ -20,29 +20,21 @@ public class PlayerMovement : MonoBehaviour
             Vector2 newPosition = player.rigidBody.position + moveDir * player.MoveSpeed * Time.fixedDeltaTime;
             player.rigidBody.MovePosition(newPosition);
             // player.spriteFlipper.FlipByDirection(moveDir);
-
-
-        }
-
-        if (player.animator)
-        {
-            player.animator.SetFloat("X", moveDir.x);
-            player.animator.SetFloat("Y", moveDir.y);
-
-            if (moveDir == Vector2.zero)
-            {
-                player.animator.Play("Idle Blend Tree");
-            }
-            else
-            {
-                player.animator.Play("Walk Blend Tree");
-            }
         }
     }
 
     public void Move(InputAction.CallbackContext context)
     {
         moveDir = context.ReadValue<Vector2>();
+        if (player.animator)
+        {
+            player.animator.SetFloat("X", moveDir.x);
+            player.animator.SetFloat("Y", moveDir.y);
+
+            player.animator.SetBool("Walk", moveDir.sqrMagnitude > 0);
+
+            // player.animator.SetBool("Walk", true);
+        }
     }
 
 }
