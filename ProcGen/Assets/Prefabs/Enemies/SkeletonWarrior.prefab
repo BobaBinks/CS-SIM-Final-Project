@@ -133,6 +133,9 @@ MonoBehaviour:
   wayPoints: []
   attackRange: 0.1
   chaseRange: 1
+  attackSpeed: 1
+  attackCooldown: 4.83
+  attackDamage: 10
 --- !u!114 &1880842243779094505
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(SpriteFlipper))]
-public class Player : CharacterBase
+public class Player : CharacterBase, IDamagable
 {
     public Rigidbody2D rigidBody { get; protected set; }
     public SpriteFlipper spriteFlipper { get; protected set; }
@@ -21,5 +21,20 @@ public class Player : CharacterBase
     void Update()
     {
         
+    }
+
+    public void TakeDamage(float damage)
+    {
+        HealthPoints -= damage;
+
+        Debug.Log($"Player health: {HealthPoints}");
+
+        if (animator)
+        {
+            animator.Play("Player Take Damage");
+        }
+
+        if(HealthPoints < 0)
+            Debug.Log("Player died");
     }
 }

@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(PathMovement))]
-public abstract class EnemyAI: CharacterBase
+public abstract class EnemyAI: CharacterBase, IDamagable
 {
     public Animator animator;
     public StateMachine<EnemyAI> Sm { get; set; }
@@ -12,9 +12,13 @@ public abstract class EnemyAI: CharacterBase
 
     public PathMovement pathMover { get; protected set; }
 
-
     [SerializeField] float attackRange = 2f;
     [SerializeField] float chaseRange = 2f;
+    [SerializeField] float attackSpeed = 1f;
+    [SerializeField] float attackCooldown = 1f;
+    [SerializeField] float attackDamage = 1f;
+    public float AttackTimer { get; set; }
+
     public float AttackRange
     {
         get 
@@ -39,6 +43,41 @@ public abstract class EnemyAI: CharacterBase
         }
     }
 
+    public float AttackSpeed
+    {
+        get
+        {
+            if (attackSpeed > 0)
+            {
+                return attackSpeed;
+            }
+            return 0;
+        }
+    }
+
+    public float AttackCooldown
+    {
+        get
+        {
+            if (attackCooldown > 0)
+            {
+                return attackCooldown;
+            }
+            return 0;
+        }
+    }
+
+    public float AttackDamage
+    {
+        get
+        {
+            if (attackDamage > 0)
+            {
+                return attackDamage;
+            }
+            return 0;
+        }
+    }
     public Player player { get; private set; }
 
     public virtual void Start()
@@ -75,6 +114,12 @@ public abstract class EnemyAI: CharacterBase
         return distanceSquared < ChaseRange * ChaseRange;
     }
 
+    public virtual void DealDamage()
+    {
+        if (player != null)
+            player.TakeDamage(AttackDamage);
+    }
+
     public virtual void Initialize()
     {
         HealthPoints = maxHealthPoints;
@@ -101,6 +146,7 @@ public abstract class EnemyAI: CharacterBase
 
         Sm = new StateMachine<EnemyAI>(this);
         Sm.AddState(new IdleState("idle"));
+        Sm.AddState(new AttackState("attack"));
         Sm.AddState(new PatrolState("patrol"));
         Sm.AddState(new ChaseState("chase"));
         Sm.AddState(new DeathState("death"));
@@ -127,4 +173,6 @@ public abstract class EnemyAI: CharacterBase
             Gizmos.DrawWireSphere(transform.position, chaseRange);
         }
     }
+
+
 }

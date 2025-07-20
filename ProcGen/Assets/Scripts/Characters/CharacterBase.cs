@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public abstract class CharacterBase : MonoBehaviour
+public abstract class CharacterBase : MonoBehaviour, IDamagable
 {
     [SerializeField] protected float maxHealthPoints = 100f;
     [SerializeField] protected float moveSpeed = 3.5f;
@@ -14,15 +14,6 @@ public abstract class CharacterBase : MonoBehaviour
         HealthPoints = maxHealthPoints;
     }
 
-    public virtual void TakeDamage(float amount)
-    {
-        HealthPoints -= amount;
-        if (HealthPoints <= 0)
-        {
-            Die();
-        }
-    }
-
     protected virtual void Die()
     {
         Debug.Log($"{gameObject.name} died.");
@@ -31,6 +22,16 @@ public abstract class CharacterBase : MonoBehaviour
     public virtual void Heal(float amount)
     {
         HealthPoints = Mathf.Min(HealthPoints + amount, maxHealthPoints);
+    }
+
+    public virtual void TakeDamage(float damage)
+    {
+        HealthPoints -= damage;
+
+        if (HealthPoints < 0)
+        {
+            Debug.Log($"{name} Died");
+        }
     }
 }
 
