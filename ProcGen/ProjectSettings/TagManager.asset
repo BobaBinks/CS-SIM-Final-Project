@@ -10,11 +10,12 @@ TagManager:
   - EnemySpawnPoints
   - EnemyPatrolWaypoints
   - PlayerSpawnPoint
+  - Enemies
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Characters
   - Water
   - UI
   - 

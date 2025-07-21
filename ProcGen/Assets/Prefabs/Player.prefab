@@ -97,6 +97,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7048280233664347193}
   - component: {fileID: 1415385628239506842}
+  - component: {fileID: 2247790008549537514}
   m_Layer: 0
   m_Name: SouthWest
   m_TagString: Untagged
@@ -132,10 +133,10 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 55
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -165,6 +166,18 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.2, y: 0.75}
   m_EdgeRadius: 0
+--- !u!114 &2247790008549537514
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1323702738073743894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4037f55c8fbf2e04f90fca398decd1e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1526743961172931298
 GameObject:
   m_ObjectHideFlags: 0
@@ -175,6 +188,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2347807644979246407}
   - component: {fileID: 3667865773571419296}
+  - component: {fileID: 2741212542109883173}
   m_Layer: 0
   m_Name: NorthWest
   m_TagString: Untagged
@@ -210,10 +224,10 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 55
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -243,6 +257,18 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.2, y: 0.75}
   m_EdgeRadius: 0
+--- !u!114 &2741212542109883173
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1526743961172931298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4037f55c8fbf2e04f90fca398decd1e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6421146688310240538
 GameObject:
   m_ObjectHideFlags: 0
@@ -252,6 +278,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4276656762197899359}
+  - component: {fileID: 4621277171588223000}
   m_Layer: 0
   m_Name: SwordCollider
   m_TagString: Untagged
@@ -278,6 +305,22 @@ Transform:
   - {fileID: 7048280233664347193}
   m_Father: {fileID: 8557040090992165823}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4621277171588223000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6421146688310240538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ae15a8678fb6e644b7b51cf0a36e18f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  northEastCollider: {fileID: 3203976759713791600}
+  northWestCollider: {fileID: 3667865773571419296}
+  southEastCollider: {fileID: 5056339032671706547}
+  southWestCollider: {fileID: 1415385628239506842}
 --- !u!1 &6437245812858904970
 GameObject:
   m_ObjectHideFlags: 0
@@ -288,6 +331,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2027013478491008278}
   - component: {fileID: 3203976759713791600}
+  - component: {fileID: 1903278766531879969}
   m_Layer: 0
   m_Name: NorthEast
   m_TagString: Untagged
@@ -323,10 +367,10 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 55
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -356,6 +400,18 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.2, y: 0.75}
   m_EdgeRadius: 0
+--- !u!114 &1903278766531879969
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6437245812858904970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4037f55c8fbf2e04f90fca398decd1e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &7037849121420780988
 GameObject:
   m_ObjectHideFlags: 0
@@ -366,6 +422,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4444796841368303860}
   - component: {fileID: 5056339032671706547}
+  - component: {fileID: 5052021690381031995}
   m_Layer: 0
   m_Name: SouthEast
   m_TagString: Untagged
@@ -401,10 +458,10 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 55
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2
@@ -434,6 +491,18 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.2, y: 0.75}
   m_EdgeRadius: 0
+--- !u!114 &5052021690381031995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7037849121420780988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4037f55c8fbf2e04f90fca398decd1e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8904351689062017599
 GameObject:
   m_ObjectHideFlags: 0
@@ -604,8 +673,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealthPoints: 100
-  moveSpeed: 3.5
+  moveSpeed: 1
   attackOnCooldown: 0
+  baseSwordDamage: 10
   attackCooldownTime: 1
 --- !u!114 &5942640568300672563
 MonoBehaviour:
@@ -735,7 +805,7 @@ BoxCollider2D:
   m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 68e7e2fbc8d164347998ce6830c5fc92, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0

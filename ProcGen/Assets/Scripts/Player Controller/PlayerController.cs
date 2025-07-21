@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour
     Player player;
     Vector2 moveDir;
     Vector2 lookDir;
+    Vector2 attackDir;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -23,8 +24,6 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-
-
         if (moveDir != Vector2.zero)
         {
             Vector2 newPosition = player.rigidBody.position + moveDir * player.MoveSpeed * Time.fixedDeltaTime;
@@ -51,7 +50,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        Debug.Log($"LookDIr: {lookDir}");
+        // Debug.Log($"LookDIr: {lookDir}");
     }
 
     public void Move(InputAction.CallbackContext context)
@@ -64,21 +63,6 @@ public class PlayerController : MonoBehaviour
 
             player.animator.SetBool("Walk", true);
         }
-    }
-
-    public void Look(InputAction.CallbackContext context)
-    {
-        //Vector2 input = context.ReadValue<Vector2>();
-        //if(input != Vector2.zero)
-        //{
-        //    lookDir = input;
-        //    if (player.animator)
-        //    {
-        //        player.animator.SetFloat("X", lookDir.x);
-        //        player.animator.SetFloat("Y", lookDir.y);
-        //    }
-        //}
-
     }
 
     public void Attack(InputAction.CallbackContext context)
@@ -95,6 +79,71 @@ public class PlayerController : MonoBehaviour
     public void DealDamage()
     {
         player.animator.SetBool("Attack", false);
+
+        // get the sword Collider container transform
+        Transform swordColliderParent = player.transform.Find("SwordCollider");
+
+        if (!swordColliderParent || swordColliderParent.childCount == 0)
+        {
+            Debug.Log("Could not find sword collider parent or it has no child");
+            return;
+        }
+
+        Transform swordDirectionColliderTransform = null;
+        // figure out which dir NE,NW,SE,SW
+
+        string direction = GetStringDirection(new Vector2(player.animator.GetFloat("X"),
+                                                            player.animator.GetFloat("Y")));
+
+        if (string.IsNullOrEmpty(direction))
+        {
+            Debug.Log("Could not determine the direction");
+            return;
+        }
+
+        swordDirectionColliderTransform = swordColliderParent.Find(direction);
+
+        if (!swordDirectionColliderTransform)
+        {
+            Debug.Log("Could not find sword collider transform");
+            return;
+        }
+
+        SwordDirectionalCollider swordDirectionalCollider = swordDirectionColliderTransform.GetComponent<SwordDirectionalCollider>();
+
+        if(!swordDirectionalCollider)
+        {
+            Debug.Log("sword collider gameobject has not swordDirectionalCollider component");
+            return;
+        }
+
+        swordDirectionalCollider.DealDamage(player.BaseSwordDamage);
+    }
+
+    private string GetStringDirection(Vector2 direction)
+    {
+        if (direction.x > 0 && direction.y > 0) return "NorthEast";
+        if (direction.x < 0 && direction.y > 0) return "NorthWest";
+        if (direction.x < 0 && direction.y < 0) return "SouthWest";
+        return "SouthEast";
+    }
+
+    private void ToggleSwordCollider(SwordDirectionalCollider collider, Transform swordColliderParent)
+    {
+        if (collider == null || swordColliderParent == null)
+            return;
+
+        collider.gameObject.SetActive(true);
+
+        // deactivate the other direcitonal colliders
+        for (int i = 0; i < swordColliderParent.childCount; ++i)
+        {
+            SwordDirectionalCollider currCollider = swordColliderParent.GetChild(i).GetComponent<SwordDirectionalCollider>();
+            if (currCollider == null || currCollider == collider)
+                continue;
+
+            currCollider.gameObject.SetActive(false);
+        }
     }
 
     private IEnumerator DelayAttack()
