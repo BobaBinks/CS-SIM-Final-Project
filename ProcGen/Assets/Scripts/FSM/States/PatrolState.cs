@@ -27,7 +27,7 @@ public class PatrolState : BaseState<EnemyAI>
 
     public override void UpdateState(EnemyAI owner, double deltaTime)
     {
-        if (owner.HealthPoints < 0)
+        if (owner.HealthPoints <= 0)
         {
             owner.Sm.SetNextState("death");
         }

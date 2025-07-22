@@ -10,16 +10,10 @@ public class SkeletonWarrior : EnemyAI
 
     public override void TakeDamage(float damage)
     {
-        HealthPoints -= damage;
-        
+        base.TakeDamage(damage);
 
-
-        if (HealthPoints < 0)
-        {
-            Debug.Log($"{name} Died");
-            // call died function
-            return;
-        }
+        if(healthBar)
+            healthBar.fillAmount = HealthPoints / MaxHealthPoints;
 
         if (animator)
         {

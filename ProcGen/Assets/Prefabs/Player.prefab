@@ -673,7 +673,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealthPoints: 100
-  moveSpeed: 1
+  moveSpeed: 1.5
   attackOnCooldown: 0
   baseSwordDamage: 10
   attackCooldownTime: 1

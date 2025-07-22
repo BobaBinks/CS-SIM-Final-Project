@@ -28,7 +28,7 @@ public abstract class CharacterBase : MonoBehaviour, IDamagable
     {
         HealthPoints -= damage;
 
-        if (HealthPoints < 0)
+        if (HealthPoints <= 0)
         {
             Debug.Log($"{name} Died");
         }

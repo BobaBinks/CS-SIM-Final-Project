@@ -38,6 +38,9 @@ public class Player : CharacterBase, IDamagable
     {
         HealthPoints -= damage;
 
+        if (UIManager.Instance)
+            UIManager.Instance.SetHealthBar(HealthPoints, MaxHealthPoints);
+
         Debug.Log($"Player health: {HealthPoints}");
 
         if (animator)

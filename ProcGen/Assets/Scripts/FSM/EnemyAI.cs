@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 [RequireComponent(typeof(PathMovement))]
@@ -10,8 +11,17 @@ public abstract class EnemyAI: CharacterBase, IDamagable
     [HideInInspector]
     public List<Transform> wayPoints;
 
+    #region UI
+    [Header("UI")]
+    [SerializeField] protected Image healthBar;
+
+    #endregion
+
     public PathMovement pathMover { get; protected set; }
 
+
+    #region Additional Stats
+    [Header("Additional Stats")]
     [SerializeField] float attackRange = 2f;
     [SerializeField] float chaseRange = 2f;
     [SerializeField] float attackSpeed = 1f;
@@ -78,11 +88,15 @@ public abstract class EnemyAI: CharacterBase, IDamagable
             return 0;
         }
     }
+    #endregion
+
     public Player player { get; private set; }
 
     public virtual void Start()
     {
         pathMover = GetComponent<PathMovement>();
+        if (healthBar)
+            healthBar.fillAmount = HealthPoints / MaxHealthPoints;
     }
 
     protected virtual void Update()
