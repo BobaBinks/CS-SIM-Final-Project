@@ -34,14 +34,6 @@ public class Player : CharacterBase, IDamagable
         animator = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
-
-
     public override void TakeDamage(float damage)
     {
         HealthPoints -= damage;

@@ -7,4 +7,23 @@ public class SkeletonWarrior : EnemyAI
         base.DealDamage();
         animator.CrossFade("SkeletonWarriorIdle", 1f);
     }
+
+    public override void TakeDamage(float damage)
+    {
+        HealthPoints -= damage;
+        
+
+
+        if (HealthPoints < 0)
+        {
+            Debug.Log($"{name} Died");
+            // call died function
+            return;
+        }
+
+        if (animator)
+        {
+            animator.Play("SkeletonWarriorTakeDamage");
+        }
+    }
 }

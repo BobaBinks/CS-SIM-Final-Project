@@ -271,44 +271,69 @@ public class AStarPathfinder
         List<AStarNode> neighbours = new List<AStarNode>();
 
         // iterate over 3x3 grid around the centerCell
-        //for (int xOffset = -1; xOffset <= 1; xOffset++)
-        //{
-        //    for (int yOffset = -1; yOffset <= 1; yOffset++)
-        //    {
-        //        // skip the center cell itself
-        //        if (xOffset == 0 && yOffset == 0)
-        //            continue;
-
-        //        Vector3Int neighbourPos = new Vector3Int(centerCell.x + xOffset, centerCell.y + yOffset);
-        //        int index = ConvertCellToIndex(neighbourPos);
-
-        //        if (index >= 0 && index < nodes.Count)
-        //        {
-        //            neighbours.Add(nodes[index]);
-        //        }
-        //    }
-        //}
-
-        // get the top down left right neighbours
-        Vector3Int[] directions = new Vector3Int[]
+        for (int xOffset = -1; xOffset <= 1; xOffset++)
         {
-            new Vector3Int(-1, 0, 0), // Left
-            new Vector3Int(1, 0, 0),  // Right
-            new Vector3Int(0, 1, 0),  // Up
-            new Vector3Int(0, -1, 0)  // Down
-        };
-
-        foreach (var dir in directions)
-        {
-            Vector3Int neighbourPos = centerCell + dir;
-            int index = ConvertCellToIndex(neighbourPos);
-
-            if (index >= 0 && index < nodes.Count)
+            for (int yOffset = -1; yOffset <= 1; yOffset++)
             {
-                neighbours.Add(nodes[index]);
+                // skip the center cell itself
+                if (xOffset == 0 && yOffset == 0)
+                    continue;
+
+                if (IsDiagonalMoveBlocked(centerCell, xOffset, yOffset))
+                    continue;
+
+                Vector3Int neighbourPos = new Vector3Int(centerCell.x + xOffset, centerCell.y + yOffset);
+                int index = ConvertCellToIndex(neighbourPos);
+
+                if (index >= 0 && index < nodes.Count)
+                {
+                    neighbours.Add(nodes[index]);
+                }
             }
         }
 
+        // get the top down left right neighbours
+        //Vector3Int[] directions = new Vector3Int[]
+        //{
+        //    new Vector3Int(-1, 0, 0), // Left
+        //    new Vector3Int(1, 0, 0),  // Right
+        //    new Vector3Int(0, 1, 0),  // Up
+        //    new Vector3Int(0, -1, 0)  // Down
+        //};
+
+        //foreach (var dir in directions)
+        //{
+        //    Vector3Int neighbourPos = centerCell + dir;
+        //    int index = ConvertCellToIndex(neighbourPos);
+
+        //    if (index >= 0 && index < nodes.Count)
+        //    {
+        //        neighbours.Add(nodes[index]);
+        //    }
+        //}
+
         return neighbours;
+    }
+
+    bool IsDiagonalMoveBlocked(Vector3Int center, int xOffset, int yOffset)
+    {
+        // not diagonal
+        if (Mathf.Abs(xOffset) != 1 || Mathf.Abs(yOffset) != 1)
+            return false;
+
+        Vector3Int sideA = new Vector3Int(center.x + xOffset, center.y, 0);
+        Vector3Int sideB = new Vector3Int(center.x, center.y + yOffset, 0);
+
+        return !IsValidNeighbour(sideA) || !IsValidNeighbour(sideB);
+    }
+
+    bool IsValidNeighbour(Vector3Int position)
+    {
+        if (nodes == null || nodes.Count < 1)
+            return false;
+        // check bottom cell is walkable
+        int index = ConvertCellToIndex(position);
+
+        return index >= 0 && index < nodes.Count && !nodes[index].occupied;
     }
 }
