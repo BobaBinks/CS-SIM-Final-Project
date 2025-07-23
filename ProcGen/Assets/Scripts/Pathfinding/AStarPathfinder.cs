@@ -47,9 +47,14 @@ public class AStarPathfinder
             if (propsWithCollisionTilemap == null || roomInstance.groundMap == null)
                 continue;
 
-            foreach(var cell in roomInstance.groundMap.cellBounds.allPositionsWithin)
+            Tilemap wallMap = roomInstance.wallMap;
+            foreach (var cell in roomInstance.groundMap.cellBounds.allPositionsWithin)
             {
                 if (roomInstance.groundMap.GetTile(cell) == null || propsWithCollisionTilemap.GetTile(cell) != null)
+                    continue;
+
+                // this to check if there are walls inside the rooms excluding the outer walls
+                if (wallMap && wallMap.GetTile(cell) != null)
                     continue;
 
                 Vector3Int cellWorldPosition = cell + roomCellPosition;
