@@ -6,6 +6,8 @@ public class PatrolState : BaseState<EnemyAI>
     int currentWaypointIndex;
     AStarPathfinder aStarPathfinder;
 
+
+
     public PatrolState(string stateId) : base(stateId)
     {
         currentWaypointTarget = null;

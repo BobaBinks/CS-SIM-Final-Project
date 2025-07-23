@@ -4142,7 +4142,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8145137603444316973}
   m_Layer: 0
-  m_Name: MediumRoom 1
+  m_Name: MediumRoom1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Collections;
 
 [RequireComponent(typeof(PathMovement))]
 public abstract class EnemyAI: CharacterBase, IDamagable
@@ -14,11 +15,10 @@ public abstract class EnemyAI: CharacterBase, IDamagable
     #region UI
     [Header("UI")]
     [SerializeField] protected Image healthBar;
-
     #endregion
 
     public PathMovement pathMover { get; protected set; }
-
+    public bool canUpdatePath = true;
 
     #region Additional Stats
     [Header("Additional Stats")]
@@ -27,6 +27,7 @@ public abstract class EnemyAI: CharacterBase, IDamagable
     [SerializeField] float attackSpeed = 1f;
     [SerializeField] float attackCooldown = 1f;
     [SerializeField] float attackDamage = 1f;
+    [SerializeField] float pathUpdateCooldown = 3f;
     public float AttackTimer { get; set; }
 
     public float AttackRange
@@ -84,6 +85,18 @@ public abstract class EnemyAI: CharacterBase, IDamagable
             if (attackDamage > 0)
             {
                 return attackDamage;
+            }
+            return 0;
+        }
+    }
+
+    public float PathUpdateCooldown
+    {
+        get
+        {
+            if (pathUpdateCooldown > 0)
+            {
+                return pathUpdateCooldown;
             }
             return 0;
         }
@@ -188,5 +201,13 @@ public abstract class EnemyAI: CharacterBase, IDamagable
         }
     }
 
+
+
+    public IEnumerator DelayPathUpdate(float delay)
+    {
+        canUpdatePath = false;
+        yield return new WaitForSeconds(delay);
+        canUpdatePath = true;
+    }
 
 }

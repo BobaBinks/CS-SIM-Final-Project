@@ -276,6 +276,10 @@ public class GraphBasedGeneration
             room2 == null ||
             occupiedCells == null ||
             roomsGO == null || corridorWidth == 0) return false;
+
+
+
+
         // identify direction of corridor end
 
         // gets the last 2 corridor strips
