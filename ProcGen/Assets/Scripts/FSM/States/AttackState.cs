@@ -45,7 +45,7 @@ public class AttackState : BaseState<EnemyAI>
             if(owner.AttackTimer < 0)
             {
                 owner.AttackTimer = owner.AttackCooldown;
-                owner.animator.Play("SkeletonWarriorAttack");
+                owner.animator.Play(owner.AttackAnimationName);
             }
         }
     }

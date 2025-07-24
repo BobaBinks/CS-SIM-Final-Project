@@ -1,6 +1,6 @@
 using UnityEngine;
-using System.Collections.Generic;
-public class SkeletonWarrior : EnemyAI
+
+public class Vampire : EnemyAI
 {
     public override void DealDamage()
     {
@@ -12,7 +12,7 @@ public class SkeletonWarrior : EnemyAI
     {
         base.TakeDamage(damage);
 
-        if(healthBar)
+        if (healthBar)
             healthBar.fillAmount = HealthPoints / MaxHealthPoints;
 
         if (animator)

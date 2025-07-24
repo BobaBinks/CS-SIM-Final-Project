@@ -3,11 +3,7 @@ using System.Collections.Generic;
 public class ChaseState : BaseState<EnemyAI>
 {
     AStarPathfinder aStarPathfinder;
-
     Vector3 savedPlayerPosition;
-
-    public bool canUpdatePath = true;
-    float updateCooldown = 3f;
     public ChaseState(string stateId) : base(stateId)
     {
 
@@ -24,7 +20,7 @@ public class ChaseState : BaseState<EnemyAI>
             // set intial path
             savedPlayerPosition = owner.transform.position;
             owner.pathMover.SetPathTo(savedPlayerPosition, aStarPathfinder);
-            owner.animator.Play("SkeletonWarriorMoving");
+            owner.animator.Play(owner.MoveAnimationName);
         }
     }
 
@@ -53,19 +49,14 @@ public class ChaseState : BaseState<EnemyAI>
             return;
         }
 
-        if (owner.canUpdatePath)
+        // check if path is outdated
+        float differenceSquared = (savedPlayerPosition - owner.player.transform.position).sqrMagnitude;
+        if (differenceSquared > owner.AttackRange * owner.AttackRange)
         {
-            // check if path is outdated
-            float differenceSquared = (savedPlayerPosition - owner.player.transform.position).sqrMagnitude;
-            if (differenceSquared > owner.AttackRange * owner.AttackRange)
-            {
-                // update path
-                savedPlayerPosition = savedPlayerPosition = owner.player.transform.position;
-                owner.pathMover.SetPathTo(savedPlayerPosition, aStarPathfinder);
-                owner.StartCoroutine(owner.DelayPathUpdate(owner.PathUpdateCooldown));
-                return;
-            }
-
+            // update path
+            savedPlayerPosition = owner.player.transform.position;
+            owner.pathMover.SetPathTo(savedPlayerPosition, aStarPathfinder);
+            return;
         }
 
         if (owner.pathMover.IsPathComplete())

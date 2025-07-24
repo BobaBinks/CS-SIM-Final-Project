@@ -12,13 +12,27 @@ public abstract class EnemyAI: CharacterBase, IDamagable
     [HideInInspector]
     public List<Transform> wayPoints;
 
+    #region Animations
+    [Header("Animation Settings")]
+    [SerializeField] private string attackAnimationName = "SkeletonWarriorAttack";
+    [SerializeField] private string moveAnimationName = "SkeletonWarriorMoving";
+    [SerializeField] private string idleAnimationName = "SkeletonWarriorIdle";
+    [SerializeField] private string deathAnimationName = "SkeletonWarriorDeath";
+    [SerializeField] private string takeDamageAnimationName = "SkeletonWarriorTakeDamage";
+
+    public string AttackAnimationName => attackAnimationName;
+    public string MoveAnimationName => moveAnimationName;
+    public string IdleAnimationName => idleAnimationName;
+    public string DeathAnimationName => deathAnimationName;
+    public string TakeDamageAnimationName => takeDamageAnimationName;
+    #endregion
+
     #region UI
     [Header("UI")]
     [SerializeField] protected Image healthBar;
     #endregion
 
     public PathMovement pathMover { get; protected set; }
-    public bool canUpdatePath = true;
 
     #region Additional Stats
     [Header("Additional Stats")]
@@ -200,14 +214,4 @@ public abstract class EnemyAI: CharacterBase, IDamagable
             Gizmos.DrawWireSphere(transform.position, chaseRange);
         }
     }
-
-
-
-    public IEnumerator DelayPathUpdate(float delay)
-    {
-        canUpdatePath = false;
-        yield return new WaitForSeconds(delay);
-        canUpdatePath = true;
-    }
-
 }

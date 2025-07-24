@@ -18,7 +18,7 @@ public class PatrolState : BaseState<EnemyAI>
         if (GameManager.Instance.aStarPathfinder != null)
             aStarPathfinder = GameManager.Instance.aStarPathfinder;
 
-        owner.animator.Play("SkeletonWarriorMoving");
+        owner.animator.Play(owner.MoveAnimationName);
         Debug.Log("Entering Patrol State");
     }
 

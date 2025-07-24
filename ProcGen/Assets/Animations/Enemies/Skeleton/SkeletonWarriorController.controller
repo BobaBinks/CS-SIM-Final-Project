@@ -59,7 +59,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: SkeletonWarrior
+  m_Name: SkeletonWarriorController
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: isMoving
@@ -171,7 +171,7 @@ AnimatorStateMachine:
     m_Position: {x: 650, y: 210, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -6070211581892830270}
-    m_Position: {x: 320, y: 340, z: 0}
+    m_Position: {x: 320, y: 270, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 7274357007322622281}
     m_Position: {x: 600, y: 330, z: 0}

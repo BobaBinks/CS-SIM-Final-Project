@@ -22,7 +22,7 @@ public class SwordDirectionalCollider : MonoBehaviour
             if (character != null && !charactersInCollider.Contains(character))
             {
                 charactersInCollider.Add(character);
-                Debug.Log($"{character.name} entered sword collider.");
+                // Debug.Log($"{character.name} entered sword collider.");
             }
         }
     }

@@ -132,12 +132,19 @@ MonoBehaviour:
   moveSpeed: 0.25
   animator: {fileID: 2326609239621507750}
   wayPoints: []
+  attackAnimationName: SkeletonWarriorAttack
+  moveAnimationName: SkeletonWarriorMoving
+  idleAnimationName: SkeletonWarriorIdle
+  deathAnimationName: SkeletonWarriorDeath
+  takeDamageAnimationName: SkeletonWarriorTakeDamage
   healthBar: {fileID: 5421989760066303642}
+  canUpdatePath: 1
   attackRange: 0.1
   chaseRange: 1
   attackSpeed: 1
   attackCooldown: 4.83
   attackDamage: 10
+  pathUpdateCooldown: 3
 --- !u!114 &1880842243779094505
 MonoBehaviour:
   m_ObjectHideFlags: 0
