@@ -214,4 +214,33 @@ public abstract class EnemyAI: CharacterBase, IDamagable
             Gizmos.DrawWireSphere(transform.position, chaseRange);
         }
     }
+
+    public override void Die()
+    {
+        base.Die();
+
+        if (healthBar)
+        {
+            healthBar.gameObject.SetActive(false);
+        }
+
+        if (animator)
+        {
+            animator.enabled = false;
+        }
+    }
+
+    public void Despawn()
+    {
+        StartCoroutine(DespawnCoroutine(5f));
+    }
+
+    IEnumerator DespawnCoroutine(float despawnTime)
+    {
+        if (despawnTime < 0)
+            despawnTime = 1;
+        yield return new WaitForSeconds(despawnTime);
+
+        GameObject.Destroy(this.gameObject);
+    }
 }

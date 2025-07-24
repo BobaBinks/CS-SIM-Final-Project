@@ -14,7 +14,7 @@ public abstract class CharacterBase : MonoBehaviour, IDamagable
         HealthPoints = maxHealthPoints;
     }
 
-    protected virtual void Die()
+    public virtual void Die()
     {
         Debug.Log($"{gameObject.name} died.");
     }

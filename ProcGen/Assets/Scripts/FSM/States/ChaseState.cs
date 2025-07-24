@@ -55,7 +55,7 @@ public class ChaseState : BaseState<EnemyAI>
         {
             // update path
             savedPlayerPosition = owner.player.transform.position;
-            owner.pathMover.SetPathTo(savedPlayerPosition, aStarPathfinder);
+            owner.pathMover.UpdatePath(savedPlayerPosition, aStarPathfinder);
             return;
         }
 
@@ -67,5 +67,12 @@ public class ChaseState : BaseState<EnemyAI>
 
         // move along path
         owner.pathMover.MoveAlongPath(deltaTime, owner.MoveSpeed);
+
+        // ensure correct animation is playing after any interruption like taking damage
+        AnimatorStateInfo stateInfo = owner.animator.GetCurrentAnimatorStateInfo(0);
+        if (!stateInfo.IsName(owner.MoveAnimationName))
+        {
+            owner.animator.Play(owner.MoveAnimationName);
+        }
     }
 }

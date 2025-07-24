@@ -44,6 +44,33 @@ public class PathMovement : MonoBehaviour
         return currentPath != null && currentPath.Count > 0;
     }
 
+    public bool UpdatePath(Vector3 destination, AStarPathfinder pathFinder)
+    {
+        if (pathFinder == null)
+            return false;
+
+        // get updated path starting from next step
+        int nextIndex = currentPathIndex + 1;
+
+        // if there is no next step, get new path
+        if (nextIndex >= currentPath.Count)
+        {
+            return SetPathTo(destination, pathFinder);
+        }
+
+
+        List<Vector3> newPath = pathFinder.GetShortestWorldPath(currentPath[nextIndex], destination);
+        if (newPath == null || newPath.Count == 0)
+            return false;
+
+        newPath.Insert(0, currentPath[currentPathIndex]);
+
+        currentPath = newPath;
+        currentPathIndex = 0;
+
+        return true;
+    }
+
     public bool IsPathComplete()
     {
         return currentPath == null || currentPathIndex >= currentPath.Count;

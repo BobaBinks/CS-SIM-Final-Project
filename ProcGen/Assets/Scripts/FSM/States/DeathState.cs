@@ -9,6 +9,7 @@ public class DeathState : BaseState<EnemyAI>
 
     public override void EnterState(EnemyAI owner)
     {
+        owner.Die();
         owner.animator.Play(owner.DeathAnimationName);
         Debug.Log("Entering Death State");
     }
