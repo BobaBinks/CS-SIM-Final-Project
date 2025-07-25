@@ -41,7 +41,6 @@ public abstract class EnemyAI: CharacterBase, IDamagable
     [SerializeField] float attackSpeed = 1f;
     [SerializeField] float attackCooldown = 1f;
     [SerializeField] float attackDamage = 1f;
-    [SerializeField] float pathUpdateCooldown = 3f;
     public float AttackTimer { get; set; }
 
     public float AttackRange
@@ -103,18 +102,12 @@ public abstract class EnemyAI: CharacterBase, IDamagable
             return 0;
         }
     }
+    #endregion
 
-    public float PathUpdateCooldown
-    {
-        get
-        {
-            if (pathUpdateCooldown > 0)
-            {
-                return pathUpdateCooldown;
-            }
-            return 0;
-        }
-    }
+    #region Stat Curves
+    [SerializeField] AnimationCurve damageCurve;
+    [SerializeField] AnimationCurve healthCurve;
+    [SerializeField] AnimationCurve speedCurve;
     #endregion
 
     public Player player { get; private set; }

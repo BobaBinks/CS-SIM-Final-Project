@@ -10,7 +10,8 @@ public class EnemySpawnManager : MonoBehaviour
     [SerializeField]
     Transform enemyContainerTransform;
 
-    
+    [SerializeField]
+    private AnimationCurve difficultyCurve;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -23,6 +24,8 @@ public class EnemySpawnManager : MonoBehaviour
     {
         
     }
+
+
 
     public void SpawnEnemiesInRooms(Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict)
     {

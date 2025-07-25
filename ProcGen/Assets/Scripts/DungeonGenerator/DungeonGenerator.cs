@@ -38,7 +38,7 @@ public class DungeonGenerator : MonoBehaviour
     public CorridorTiles corridorTiles;
 
     private Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict;
-
+    private Dictionary<DungeonRoom, int> roomDepthDict;
 
     // debug aStar
     bool startNodePicked = false;
@@ -164,6 +164,57 @@ public class DungeonGenerator : MonoBehaviour
             }
 
         }
+    }
+
+    public bool CreateRoomGraph()
+    {
+        roomDepthDict = new Dictionary<DungeonRoom, int>();
+
+        if (roomsDict == null ||
+            roomsDict.Count == 0 ||
+            layout == null ||
+            layout.dungeonRoomList == null ||
+            layout.dungeonRoomList.Count == 0)
+            return false;
+
+        Queue<DungeonRoom> roomsToCheck = new Queue<DungeonRoom>();
+
+        // find entrance room
+        // get entrance room
+        DungeonRoom entranceRoom = layout.dungeonRoomList.Find((x) => { return x.roomType.name == "EntranceRoomType"; });
+
+        // checks if entrance room is present in the layout
+        if (entranceRoom == null)
+        {
+            Debug.Log("DungeonGenerator(CreateRoomGraph): Could not find entrance room in layout!");
+            return false;
+        }
+
+        // start with entrance room, depth 0
+        roomsToCheck.Enqueue(entranceRoom);
+        roomDepthDict[entranceRoom] = 0;
+
+        while(roomsToCheck.Count > 0)
+        {
+            DungeonRoom currRoom = roomsToCheck.Dequeue();
+            int currRoomDepth = roomDepthDict[currRoom];
+
+            if (currRoom.connectionList == null)
+                continue;
+
+            // add children into queue, setting their depth to parent depth + 1
+            // repeat with other children
+            foreach (var room in currRoom.connectionList)
+            {
+                if (room == null || roomDepthDict.ContainsKey(room))
+                    continue;
+
+                roomDepthDict[room] = currRoomDepth + 1;
+                roomsToCheck.Enqueue(room);
+            }
+        }
+
+        return true;
     }
 
     bool GenerateDungeon()

@@ -60,6 +60,13 @@ public class GameManager : MonoBehaviour
         }
 
         Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict = dungeonGenerator.GetDungeonRooms();
+        bool roomGraphCreated = dungeonGenerator.CreateRoomGraph();
+
+        if (!roomGraphCreated)
+        {
+            Debug.Log($"Failed to create room graph.");
+            return;
+        }
 
         // spawn player
         bool playerSpawned = SpawnPlayer(roomsDict);
@@ -67,8 +74,6 @@ public class GameManager : MonoBehaviour
         // spawn enemies
         if(playerSpawned)
             enemySpawnManager.SpawnEnemiesInRooms(roomsDict);
-
-
     }
 
     private bool SpawnPlayer(Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict)
