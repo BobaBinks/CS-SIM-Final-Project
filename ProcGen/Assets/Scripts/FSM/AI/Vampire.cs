@@ -17,7 +17,7 @@ public class Vampire : EnemyAI
 
         if (animator)
         {
-            animator.Play(TakeDamageAnimationName);
+            // animator.Play(TakeDamageAnimationName);
         }
     }
 }

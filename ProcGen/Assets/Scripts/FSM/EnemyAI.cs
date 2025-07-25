@@ -223,11 +223,6 @@ public abstract class EnemyAI: CharacterBase, IDamagable
         {
             healthBar.gameObject.SetActive(false);
         }
-
-        if (animator)
-        {
-            animator.enabled = false;
-        }
     }
 
     public void Despawn()

@@ -36,19 +36,16 @@ public class Player : CharacterBase, IDamagable
 
     public override void TakeDamage(float damage)
     {
-        HealthPoints -= damage;
+        base.TakeDamage(damage);
 
         if (UIManager.Instance)
             UIManager.Instance.SetHealthBar(HealthPoints, MaxHealthPoints);
 
         Debug.Log($"Player health: {HealthPoints}");
 
-        if (animator)
+        if(HealthPoints <= 0)
         {
-            animator.Play("Player Take Damage");
+            // game end
         }
-
-        if(HealthPoints < 0)
-            Debug.Log("Player died");
     }
 }

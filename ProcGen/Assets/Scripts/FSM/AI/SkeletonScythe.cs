@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
-public class SkeletonWarrior : EnemyAI
+public class SkeletonScythe : EnemyAI
 {
 
     public override void TakeDamage(float damage)
