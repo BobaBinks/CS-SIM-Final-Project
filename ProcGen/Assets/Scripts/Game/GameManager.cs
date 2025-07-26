@@ -68,12 +68,23 @@ public class GameManager : MonoBehaviour
             return;
         }
 
+        // map difficulty to depth?
+        // get the max depth - that is 1 on the animation curve
+        // get current depth / max depth and find the associated value in the animation curve. that is your multiplier
+
+        // use this multiplier for other curves like health and damage
+
         // spawn player
         bool playerSpawned = SpawnPlayer(roomsDict);
 
         // spawn enemies
         if(playerSpawned)
             enemySpawnManager.SpawnEnemiesInRooms(roomsDict);
+    }
+
+    private void Update()
+    {
+        
     }
 
     private bool SpawnPlayer(Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict)
