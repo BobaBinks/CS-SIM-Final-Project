@@ -3329,6 +3329,7 @@ GameObject:
   m_Component:
   - component: {fileID: 815090594848635418}
   - component: {fileID: 2074219935671565351}
+  - component: {fileID: -2742163669398640096}
   m_Layer: 0
   m_Name: SmallRoom2
   m_TagString: Untagged
@@ -3403,6 +3404,18 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.893294, y: 1.9018832}
   m_EdgeRadius: 0
+--- !u!114 &-2742163669398640096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8857899514772582789}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aca3e8b949b17204fa03c73fca1b6244, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8867743376245554004
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,0 +1,116 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3912003942156759255
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6770390200951461498}
+  - component: {fileID: 2415091088102212771}
+  - component: {fileID: 8149777084855191499}
+  - component: {fileID: 5614104904988341736}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6770390200951461498
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3912003942156759255}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2415091088102212771
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3912003942156759255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6810129f808503a448d34ddc2d8511f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemiesTransform: {fileID: 0}
+  playerGO: {fileID: 8904351689062017599, guid: bdee2ed56a5a309409a924d129720061, type: 3}
+  cinemachineCamera: {fileID: 0}
+--- !u!114 &8149777084855191499
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3912003942156759255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 144e96b864bd3ea4f8ef8b515e25ea28, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  layout: {fileID: 11400000, guid: 98fac352ccb103b4e9c70aa734d28ae3, type: 2}
+  grid: {fileID: 0}
+  roomsGO: {fileID: 0}
+  corridorFloorTilemap: {fileID: 0}
+  corridorWallTilemap: {fileID: 0}
+  backgroundTilemap: {fileID: 0}
+  backgroundTile: {fileID: 11400000, guid: 4b308138de7f21e46aa5acdc3b1b4085, type: 2}
+  maxCorridorPathIterations: 50
+  maxPairFail: 5
+  maxConnectionFail: 5
+  aStarGridTilemap: {fileID: 0}
+  corridorTiles: {fileID: 11400000, guid: a20d254c69a70e743a539bd34df0a987, type: 2}
+--- !u!114 &5614104904988341736
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3912003942156759255}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ee7cf2da0e724d47864950abc4acf60, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  enemyPrefabs:
+  - {fileID: 1542944116789048575, guid: 7847e8e57de49f64fb4b0461025ca355, type: 3}
+  - {fileID: 1101100757501871219, guid: afa1b356b2f43c14f802f83ccfdb7e4c, type: 3}
+  - {fileID: 7946332952389457233, guid: addb9479505196644b208c9fb85db03c, type: 3}
+  enemyContainerTransform: {fileID: 0}
+  difficultyCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2.3379354
+      outSlope: 2.3379354
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.034525096
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

@@ -198,120 +198,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &101180290
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 101180291}
-  - component: {fileID: 101180292}
-  - component: {fileID: 101180294}
-  - component: {fileID: 101180293}
-  m_Layer: 0
-  m_Name: GameManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &101180291
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 101180290}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &101180292
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 101180290}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6810129f808503a448d34ddc2d8511f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemiesTransform: {fileID: 285634607}
-  playerGO: {fileID: 8904351689062017599, guid: bdee2ed56a5a309409a924d129720061, type: 3}
-  cinemachineCamera: {fileID: 1580226805}
---- !u!114 &101180293
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 101180290}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ee7cf2da0e724d47864950abc4acf60, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyPrefabs:
-  - {fileID: 1542944116789048575, guid: 7847e8e57de49f64fb4b0461025ca355, type: 3}
-  - {fileID: 1101100757501871219, guid: afa1b356b2f43c14f802f83ccfdb7e4c, type: 3}
-  - {fileID: 1101100757501871219, guid: afa1b356b2f43c14f802f83ccfdb7e4c, type: 3}
-  enemyContainerTransform: {fileID: 285634607}
-  difficultyCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 2
-      outSlope: 2
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 2.3379354
-      outSlope: 2.3379354
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.034525096
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
---- !u!114 &101180294
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 101180290}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 144e96b864bd3ea4f8ef8b515e25ea28, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  layout: {fileID: 11400000, guid: 98fac352ccb103b4e9c70aa734d28ae3, type: 2}
-  grid: {fileID: 441024815}
-  roomsGO: {fileID: 337827882}
-  corridorFloorTilemap: {fileID: 2090260285}
-  corridorWallTilemap: {fileID: 359962206}
-  backgroundTilemap: {fileID: 206238012}
-  backgroundTile: {fileID: 11400000, guid: 4b308138de7f21e46aa5acdc3b1b4085, type: 2}
-  maxCorridorPathIterations: 50
-  maxPairFail: 5
-  maxConnectionFail: 5
-  aStarGridTilemap: {fileID: 1905119002}
-  corridorTiles: {fileID: 11400000, guid: a20d254c69a70e743a539bd34df0a987, type: 2}
 --- !u!1 &206238011
 GameObject:
   m_ObjectHideFlags: 0
@@ -1922,6 +1808,99 @@ Transform:
   m_Children: []
   m_Father: {fileID: 441024816}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &3821192875130482398
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2415091088102212771, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: enemiesTransform
+      value: 
+      objectReference: {fileID: 285634607}
+    - target: {fileID: 2415091088102212771, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: cinemachineCamera
+      value: 
+      objectReference: {fileID: 1580226805}
+    - target: {fileID: 3912003942156759255, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: m_Name
+      value: GameManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 5614104904988341736, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: enemyContainerTransform
+      value: 
+      objectReference: {fileID: 285634607}
+    - target: {fileID: 6770390200951461498, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6770390200951461498, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6770390200951461498, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6770390200951461498, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6770390200951461498, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6770390200951461498, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6770390200951461498, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6770390200951461498, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6770390200951461498, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6770390200951461498, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8149777084855191499, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: grid
+      value: 
+      objectReference: {fileID: 441024815}
+    - target: {fileID: 8149777084855191499, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: roomsGO
+      value: 
+      objectReference: {fileID: 337827882}
+    - target: {fileID: 8149777084855191499, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: aStarGridTilemap
+      value: 
+      objectReference: {fileID: 1905119002}
+    - target: {fileID: 8149777084855191499, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: backgroundTilemap
+      value: 
+      objectReference: {fileID: 206238012}
+    - target: {fileID: 8149777084855191499, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: corridorWallTilemap
+      value: 
+      objectReference: {fileID: 359962206}
+    - target: {fileID: 8149777084855191499, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: corridorFloorTilemap
+      value: 
+      objectReference: {fileID: 2090260285}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1931,7 +1910,7 @@ SceneRoots:
   - {fileID: 441024816}
   - {fileID: 2021771425}
   - {fileID: 1969103669}
-  - {fileID: 101180291}
+  - {fileID: 3821192875130482398}
   - {fileID: 285634607}
   - {fileID: 1580226806}
   - {fileID: 785978908}

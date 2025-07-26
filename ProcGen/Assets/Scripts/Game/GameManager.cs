@@ -18,6 +18,9 @@ public class GameManager : MonoBehaviour
 
     public static GameManager Instance { get; private set; }
 
+    public DungeonGenerator DungeonGenerator => dungeonGenerator;
+    public EnemySpawnManager EnemySpawnManager => enemySpawnManager;
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -78,8 +81,11 @@ public class GameManager : MonoBehaviour
         bool playerSpawned = SpawnPlayer(roomsDict);
 
         // spawn enemies
-        if(playerSpawned)
-            enemySpawnManager.SpawnEnemiesInRooms(roomsDict);
+        //if(playerSpawned)
+        //    enemySpawnManager.SpawnEnemiesInRooms(roomsDict);
+
+        if (playerSpawned)
+            enemySpawnManager.RegisterSpawnEvent();
     }
 
     private void Update()

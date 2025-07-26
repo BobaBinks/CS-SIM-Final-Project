@@ -1270,6 +1270,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4332997720770285178}
   - component: {fileID: 4439394195628513873}
+  - component: {fileID: 3436858728418380545}
   m_Layer: 0
   m_Name: EntranceRoom1
   m_TagString: Untagged
@@ -1343,6 +1344,18 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1.592666, y: 1.5926659}
   m_EdgeRadius: 0
+--- !u!114 &3436858728418380545
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2676160786299312215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aca3e8b949b17204fa03c73fca1b6244, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &9159450023557265680
 GameObject:
   m_ObjectHideFlags: 0
