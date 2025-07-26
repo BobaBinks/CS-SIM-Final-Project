@@ -34,22 +34,44 @@ public class EnemySpawnManager : MonoBehaviour
         if (!GameManager.Instance || !GameManager.Instance.DungeonGenerator)
             return;
         Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict = GameManager.Instance.DungeonGenerator.GetDungeonRooms();
-        if (roomsDict == null || roomsDict.Count == 0)
+        Dictionary<DungeonRoom, int> roomDepthDict = GameManager.Instance.DungeonGenerator.GetRoomDepthDict();
+        if (roomsDict == null || roomsDict.Count == 0 || roomDepthDict == null || roomDepthDict.Count != roomsDict.Count)
             return;
 
-        // check if roomGO in roomsDict
+        int roomDepth = 0;
+
+        // check if roomGO in roomsDict and grab its depth
         foreach(var kvp in roomsDict)
         {
             DungeonRoom dungeonRoom = kvp.Key;
             DungeonRoomInstance roomInstance = kvp.Value;
 
-            // check if room already has enemies spawned to prevent repeat
-            if (roomInstance.instance != roomGO || roomsWithEnemy.Contains(dungeonRoom))
-                continue;
+            if (roomInstance.instance == roomGO)
+            {
+                if (roomDepthDict.ContainsKey(dungeonRoom))
+                    roomDepth = roomDepthDict[dungeonRoom];
+                else
+                    return;
+            }
+        }
 
-            SpawnEnemiesInRoom(roomInstance);
-            roomsWithEnemy.Add(dungeonRoom);
-            break;
+        // get all rooms in the next depth
+        List<DungeonRoom> roomsToSpawnEnemies = new List<DungeonRoom>();
+
+        foreach (var kvp in roomsDict)
+        {
+            DungeonRoom dungeonRoom = kvp.Key;
+            DungeonRoomInstance roomInstance = kvp.Value;
+
+            // ensure rooms does not already have spawned enemies
+            // and check if its depth is +1 of room entered
+            if(!roomsWithEnemy.Contains(dungeonRoom) && 
+                roomDepthDict.ContainsKey(dungeonRoom) && 
+                roomDepthDict[dungeonRoom] == roomDepth + 1)
+            {
+                SpawnEnemiesInRoom(roomInstance);
+                roomsWithEnemy.Add(dungeonRoom);
+            }
         }
     }
 

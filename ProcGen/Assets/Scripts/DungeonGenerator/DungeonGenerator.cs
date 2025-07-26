@@ -92,6 +92,11 @@ public class DungeonGenerator : MonoBehaviour
         return true;
     }
 
+    public Dictionary<DungeonRoom, int> GetRoomDepthDict()
+    {
+        return roomDepthDict;
+    }
+
     public AStarPathfinder InitializeAStarGrid()
     {
         if (roomsDict == null || grid == null)

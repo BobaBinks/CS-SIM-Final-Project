@@ -165,6 +165,8 @@ public abstract class EnemyAI: CharacterBase, IDamagable
 
         Sm = new StateMachine<EnemyAI>(this);
         Sm.AddState(new IdleState("idle"));
+        Sm.AddState(new ChaseState("chase"));
+        Sm.AddState(new AttackState("attack"));
         Sm.AddState(new DeathState("death"));
         Sm.SetInitialState("idle");
     }
