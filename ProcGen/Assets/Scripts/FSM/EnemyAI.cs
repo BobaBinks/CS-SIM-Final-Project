@@ -154,10 +154,10 @@ public abstract class EnemyAI: CharacterBase, IDamagable
             player.TakeDamage(AttackDamage);
     }
 
-    public virtual void Initialize()
+    public virtual void Initialize(int level = 0)
     {
         HealthPoints = maxHealthPoints;
-
+        this.level = level;
         if (GameManager.Instance.player)
         {
             player = GameManager.Instance.player;
@@ -169,12 +169,20 @@ public abstract class EnemyAI: CharacterBase, IDamagable
         Sm.AddState(new AttackState("attack"));
         Sm.AddState(new DeathState("death"));
         Sm.SetInitialState("idle");
+
+        if (Level >= 0 && Level <= 100)
+        {
+            attackDamage = damageCurve.Evaluate(Level);
+            HealthPoints = healthCurve.Evaluate(Level);
+            maxHealthPoints = healthCurve.Evaluate(Level);
+            moveSpeed = speedCurve.Evaluate(Level);
+        }
     }
 
-    public virtual void Initialize(bool shouldPatrol, List<Transform> wayPoints)
+    public virtual void Initialize(bool shouldPatrol, List<Transform> wayPoints, int level = 0)
     {
         HealthPoints = maxHealthPoints;
-
+        this.level = level;
         if (GameManager.Instance.player)
         {
             player = GameManager.Instance.player;
@@ -193,6 +201,14 @@ public abstract class EnemyAI: CharacterBase, IDamagable
             Sm.SetInitialState("patrol");
         else
             Sm.SetInitialState("idle");
+
+        if(Level >= 0 && Level <= 100)
+        {
+            attackDamage = damageCurve.Evaluate(Level);
+            HealthPoints = healthCurve.Evaluate(Level);
+            maxHealthPoints = healthCurve.Evaluate(Level);
+            moveSpeed = speedCurve.Evaluate(Level);
+        }
     }
 
     private void OnDrawGizmos()

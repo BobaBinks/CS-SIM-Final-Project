@@ -125,6 +125,14 @@ public class EnemySpawnManager : MonoBehaviour
         if (!enemyContainerTransform)
             return;
 
+        Player player = GameManager.Instance.player;
+
+        if (!player)
+            return;
+
+        int enemyLevel = player.Level + 2;
+        enemyLevel = Mathf.Clamp(enemyLevel, 0, 100);
+
         List<Transform> waypoints = new List<Transform>();
         if (enemyPatrolWayPointContainer)
         {
@@ -151,13 +159,11 @@ public class EnemySpawnManager : MonoBehaviour
             {
                 if (enemyPatrolWayPointContainer)
                 {
-                    int patrolChance = Random.Range(0, 2);
-                    //ai.Initialize(patrolChance == 0 ? false : true, waypoints);
-                    ai.Initialize(true, waypoints);
+                    ai.Initialize(true, waypoints, enemyLevel);
                 }
                 else
                 {
-                    ai.Initialize();
+                    ai.Initialize(enemyLevel);
                 }
             }
         }

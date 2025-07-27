@@ -12,7 +12,6 @@ public class SpawnEnemiesInNextDepth : MonoBehaviour
     {
         boxCollider2D = GetComponent<BoxCollider2D>();
         boxCollider2D.isTrigger = true;
-
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

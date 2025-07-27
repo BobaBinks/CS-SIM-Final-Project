@@ -7,8 +7,9 @@ public abstract class CharacterBase : MonoBehaviour, IDamagable
 {
     [SerializeField] protected float maxHealthPoints = 100f;
     [SerializeField] protected float moveSpeed = 3.5f;
+    [SerializeField] protected int level = 0;
 
-    public int Level { get; protected set; }
+    public int Level => level;
     public float MaxHealthPoints => maxHealthPoints;
     public float MoveSpeed => moveSpeed;
     public float HealthPoints { get; protected set; }
@@ -19,7 +20,6 @@ public abstract class CharacterBase : MonoBehaviour, IDamagable
     {
         HealthPoints = maxHealthPoints;
         spriteRenderer = GetComponent<SpriteRenderer>();
-        Level = 0;
     }
 
     public virtual void Die()
