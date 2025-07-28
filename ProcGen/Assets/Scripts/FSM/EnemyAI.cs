@@ -12,6 +12,7 @@ public abstract class EnemyAI: CharacterBase, IDamagable
     [HideInInspector]
     public List<Transform> wayPoints;
 
+
     #region Animations
     [Header("Animation Settings")]
     [SerializeField] private string attackAnimationName = "SkeletonWarriorAttack";
@@ -105,6 +106,7 @@ public abstract class EnemyAI: CharacterBase, IDamagable
     #endregion
 
     #region Stat Curves
+    [Header("Stat Curves")]
     [SerializeField] AnimationCurve damageCurve;
     [SerializeField] AnimationCurve healthCurve;
     [SerializeField] AnimationCurve speedCurve;
@@ -233,6 +235,13 @@ public abstract class EnemyAI: CharacterBase, IDamagable
         if (healthBar)
         {
             healthBar.gameObject.SetActive(false);
+            if(healthBar.transform.parent)
+                healthBar.transform.parent.gameObject.SetActive(false);
+        }
+
+        if (collider)
+        {
+            collider.enabled = false;
         }
     }
 

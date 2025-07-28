@@ -229,6 +229,7 @@ MonoBehaviour:
   maxHealthPoints: 100
   moveSpeed: 0.25
   level: 0
+  collider: {fileID: 2799431286504632228}
   animator: {fileID: 5562144630815470002}
   wayPoints: []
   attackAnimationName: SkeletonScytheAttack

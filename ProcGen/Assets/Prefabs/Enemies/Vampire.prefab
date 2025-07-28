@@ -393,6 +393,7 @@ MonoBehaviour:
   maxHealthPoints: 100
   moveSpeed: 0.35
   level: 0
+  collider: {fileID: 7949673695747702908}
   animator: {fileID: 6600795208681754396}
   wayPoints: []
   attackAnimationName: VampireAttack

@@ -131,6 +131,7 @@ MonoBehaviour:
   maxHealthPoints: 100
   moveSpeed: 0.25
   level: 0
+  collider: {fileID: 2597158904804027222}
   animator: {fileID: 2326609239621507750}
   wayPoints: []
   attackAnimationName: SkeletonWarriorAttack

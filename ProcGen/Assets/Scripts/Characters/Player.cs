@@ -11,25 +11,26 @@ public class Player : CharacterBase, IDamagable
 
     public Animator animator { get; protected set; }
 
+    public WeaponManager weaponManager;
+
     public bool attackOnCooldown = false;
-
+    #region Additional Stats
     // [SerializeField] float baseSwordDamage = 10f;
-
     public float BaseSwordDamage { get; private set; }
 
     [SerializeField]
     float attackCooldownTime = 1f;
+    public float AttackCooldownTime
+    {
+        get { return attackCooldownTime; }
+    }
+    #endregion
 
     #region Stat Curves
     [SerializeField] AnimationCurve damageCurve;
     [SerializeField] AnimationCurve healthCurve;
     [SerializeField] AnimationCurve speedCurve;
     #endregion
-
-    public float AttackCooldownTime 
-    {
-        get { return attackCooldownTime; }
-    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -43,8 +44,6 @@ public class Player : CharacterBase, IDamagable
         moveSpeed = speedCurve.Evaluate(Level);
     }
     
-
-
     public override void TakeDamage(float damage)
     {
         base.TakeDamage(damage);

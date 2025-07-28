@@ -29,7 +29,6 @@ public class PlayerController : MonoBehaviour
             Vector2 newPosition = player.rigidBody.position + moveDir * player.MoveSpeed * Time.fixedDeltaTime;
             player.rigidBody.MovePosition(newPosition);
             lookDir = moveDir;
-            // player.spriteFlipper.FlipByDirection(moveDir);
         }
         else
         {
@@ -69,10 +68,17 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started && !player.attackOnCooldown)
         {
-            // play animation
-            player.animator.SetBool("Attack", true);
-            player.attackOnCooldown = true;
-            StartCoroutine(DelayAttack());
+            if(player.weaponManager.CurrentWeaponIsSword())
+            {
+                // play animation
+                player.animator.SetBool("Attack", true);
+                player.attackOnCooldown = true;
+                StartCoroutine(DelayAttack());
+            }
+            else if (player.weaponManager)
+            {
+                player.weaponManager.Fire();
+            }
         }
     }
 
@@ -126,24 +132,6 @@ public class PlayerController : MonoBehaviour
         if (direction.x < 0 && direction.y > 0) return "NorthWest";
         if (direction.x < 0 && direction.y < 0) return "SouthWest";
         return "SouthEast";
-    }
-
-    private void ToggleSwordCollider(SwordDirectionalCollider collider, Transform swordColliderParent)
-    {
-        if (collider == null || swordColliderParent == null)
-            return;
-
-        collider.gameObject.SetActive(true);
-
-        // deactivate the other direcitonal colliders
-        for (int i = 0; i < swordColliderParent.childCount; ++i)
-        {
-            SwordDirectionalCollider currCollider = swordColliderParent.GetChild(i).GetComponent<SwordDirectionalCollider>();
-            if (currCollider == null || currCollider == collider)
-                continue;
-
-            currCollider.gameObject.SetActive(false);
-        }
     }
 
     private IEnumerator DelayAttack()

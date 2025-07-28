@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 
-[RequireComponent(typeof(SpriteRenderer))]
+[RequireComponent(typeof(SpriteRenderer), typeof(Collider))]
 public abstract class CharacterBase : MonoBehaviour, IDamagable
 {
     [SerializeField] protected float maxHealthPoints = 100f;
@@ -15,11 +15,13 @@ public abstract class CharacterBase : MonoBehaviour, IDamagable
     public float HealthPoints { get; protected set; }
 
     private SpriteRenderer spriteRenderer;
+    public Collider2D collider;
 
     protected virtual void Awake()
     {
         HealthPoints = maxHealthPoints;
         spriteRenderer = GetComponent<SpriteRenderer>();
+        collider = GetComponent<Collider2D>();
     }
 
     public virtual void Die()
