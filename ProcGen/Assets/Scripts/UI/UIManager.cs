@@ -1,10 +1,15 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 public class UIManager: MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
 
     [SerializeField] Image healthBar;
+    [SerializeField] Image levelBar;
+    [SerializeField] TextMeshProUGUI healthText;
+    [SerializeField] TextMeshProUGUI xpText;
+    [SerializeField] TextMeshProUGUI levelText;
 
     private void Awake()
     {
@@ -17,11 +22,32 @@ public class UIManager: MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    public void SetHealthBar(float hp, float maxHP)
+    public void SetHealth(float hp, float maxHP)
     {
-        if (!healthBar || float.IsNaN(hp) || float.IsNegative(hp) || float.IsNaN(maxHP) || float.IsNegative(maxHP))
+        if (!healthBar || !healthText || float.IsNaN(hp) || float.IsNegative(hp) || float.IsNaN(maxHP) || float.IsNegative(maxHP))
             return;
         hp = Mathf.Clamp(hp, 0f, maxHP);
         healthBar.fillAmount = hp / maxHP;
+        //healthText.text = $"{(int)hp} / {(int)maxHP}";
+        healthText.text = $"{(int)hp} HP";
+    }
+
+    public void SetLevel(float currentXP, float maxXP, int level)
+    {
+        if (!levelBar ||
+            !levelText ||
+            !xpText ||
+            float.IsNaN(currentXP) ||
+            float.IsNegative(currentXP) ||
+            float.IsNaN(maxXP) ||
+            float.IsNegative(maxXP) ||
+            float.IsNaN(level) ||
+            float.IsNegative(level))
+            return;
+        currentXP = Mathf.Clamp(currentXP, 0f, maxXP);
+        levelBar.fillAmount = currentXP / maxXP;
+        //xpText.text = $"{(int)currentXP} / {(int)maxXP}";
+        xpText.text = $"{(int)currentXP} XP";
+        levelText.text = $"Lvl: {level}";
     }
 }

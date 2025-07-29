@@ -9,6 +9,7 @@ public abstract class CharacterBase : MonoBehaviour, IDamagable
     [SerializeField] protected float moveSpeed = 3.5f;
     [SerializeField] protected int level = 0;
 
+
     public int Level => level;
     public float MaxHealthPoints => maxHealthPoints;
     public float MoveSpeed => moveSpeed;

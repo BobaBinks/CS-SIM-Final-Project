@@ -12,6 +12,7 @@ TagManager:
   - PlayerSpawnPoint
   - Enemies
   - InteractableObjects
+  - Room
   layers:
   - Default
   - TransparentFX
@@ -19,8 +20,8 @@ TagManager:
   - Characters
   - Water
   - UI
-  - 
-  - 
+  - Room
+  - Player
   - 
   - 
   - 

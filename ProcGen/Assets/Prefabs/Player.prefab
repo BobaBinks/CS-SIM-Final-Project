@@ -568,7 +568,7 @@ GameObject:
   - component: {fileID: -489500495017137297}
   - component: {fileID: 942270507479377552}
   - component: {fileID: 4320681605191368791}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -727,6 +727,7 @@ MonoBehaviour:
   collider: {fileID: -489500495017137297}
   weaponManager: {fileID: 4320681605191368791}
   attackOnCooldown: 0
+  currentXp: 0
   attackCooldownTime: 1
   damageCurve:
     serializedVersion: 2
@@ -758,17 +759,17 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 100
-      inSlope: 0
-      outSlope: 0
+      inSlope: 2
+      outSlope: 2
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
       time: 100
-      value: 300
-      inSlope: 2
-      outSlope: 2
+      value: 200
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
@@ -796,6 +797,30 @@ MonoBehaviour:
       tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  levelXPCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 10
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 100
+      value: 1000
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2

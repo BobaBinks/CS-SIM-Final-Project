@@ -12,7 +12,6 @@ public abstract class EnemyAI: CharacterBase, IDamagable
     [HideInInspector]
     public List<Transform> wayPoints;
 
-
     #region Animations
     [Header("Animation Settings")]
     [SerializeField] private string attackAnimationName = "SkeletonWarriorAttack";
@@ -110,6 +109,7 @@ public abstract class EnemyAI: CharacterBase, IDamagable
     [SerializeField] AnimationCurve damageCurve;
     [SerializeField] AnimationCurve healthCurve;
     [SerializeField] AnimationCurve speedCurve;
+    [SerializeField] AnimationCurve xpRewardCurve;
     #endregion
 
     public Player player { get; private set; }
@@ -242,6 +242,13 @@ public abstract class EnemyAI: CharacterBase, IDamagable
         if (collider)
         {
             collider.enabled = false;
+        }
+
+        // reward player xp
+        GameManager manager = GameManager.Instance;
+        if (manager && manager.player)
+        {
+            manager.player.GainXP(xpRewardCurve.Evaluate(Level));
         }
     }
 
