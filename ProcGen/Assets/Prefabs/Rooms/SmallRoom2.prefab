@@ -3410,7 +3410,7 @@ GameObject:
   - component: {fileID: 193331847713492112}
   m_Layer: 0
   m_Name: InteractableObjects
-  m_TagString: Untagged
+  m_TagString: InteractableObjects
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

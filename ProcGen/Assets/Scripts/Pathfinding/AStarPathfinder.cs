@@ -48,6 +48,11 @@ public class AStarPathfinder
                 continue;
 
             Tilemap wallMap = roomInstance.wallMap;
+            List<Vector3Int> interactableObjectCellPositions;
+            bool interactableObjectsObtained = GetInteractbleObjectsPositions(roomInstance, out interactableObjectCellPositions);
+
+
+            // mark traversible cells
             foreach (var cell in roomInstance.groundMap.cellBounds.allPositionsWithin)
             {
                 if (roomInstance.groundMap.GetTile(cell) == null || propsWithCollisionTilemap.GetTile(cell) != null)
@@ -55,6 +60,9 @@ public class AStarPathfinder
 
                 // this to check if there are walls inside the rooms excluding the outer walls
                 if (wallMap && wallMap.GetTile(cell) != null)
+                    continue;
+
+                if (interactableObjectCellPositions.Contains(cell))
                     continue;
 
                 Vector3Int cellWorldPosition = cell + roomCellPosition;
@@ -90,6 +98,48 @@ public class AStarPathfinder
         }
 
         return true;
+    }
+
+    /// <summary>
+    /// Gets the cell positions of the interactable objects in the interactable object container in the room
+    /// </summary>
+    /// <param name="roomInstance"></param>
+    /// <param name="grid"></param>
+    /// <param name="interactableObjects"></param>
+    /// <returns></returns>
+    private bool GetInteractbleObjectsPositions(DungeonRoomInstance roomInstance,out List<Vector3Int> interactableObjects)
+    {
+        interactableObjects = new List<Vector3Int>();
+
+        if (roomInstance == null || roomInstance.instance == null)
+            return false;
+
+        Transform roomTransform = roomInstance.instance.transform;
+        Transform interactableObjectTransform = null;
+
+        // Search for interactable object parent transform in this room
+        for(int i = 0; i < roomTransform.childCount; ++i)
+        {
+            Transform child = roomTransform.GetChild(i);
+            if (child.CompareTag("InteractableObjects"))
+            {
+                interactableObjectTransform = child;
+                break;
+            }
+        }
+
+        if (interactableObjectTransform != null)
+        {
+            // Search for interactable object transforms in this room
+            for (int i = 0; i < interactableObjectTransform.childCount; ++i)
+            {
+                Transform child = interactableObjectTransform.GetChild(i);
+                Vector3Int cellPos = roomInstance.groundMap.WorldToCell(child.position);
+                interactableObjects.Add(cellPos);
+            }
+        }
+
+        return interactableObjects.Count > 0;
     }
 
     public bool InitializeGridDimensions(Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict, Grid grid)

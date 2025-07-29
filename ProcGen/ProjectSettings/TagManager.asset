@@ -11,6 +11,7 @@ TagManager:
   - EnemyPatrolWaypoints
   - PlayerSpawnPoint
   - Enemies
+  - InteractableObjects
   layers:
   - Default
   - TransparentFX
