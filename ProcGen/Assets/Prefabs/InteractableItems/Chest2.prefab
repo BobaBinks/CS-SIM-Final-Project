@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7509167900052692429}
   - component: {fileID: 4126454255971581004}
   - component: {fileID: 2773748585376248163}
+  - component: {fileID: -8495602501819898083}
   m_Layer: 0
   m_Name: Chest2
   m_TagString: Untagged
@@ -57,7 +58,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -75,9 +76,9 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 3
+  m_SortingLayerID: 2001358401
+  m_SortingLayer: 3
+  m_SortingOrder: 0
   m_Sprite: {fileID: -2843431537666986790, guid: 0ff8b48e69fd4934b879c613a3ca2572, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -99,7 +100,7 @@ Animator:
   m_GameObject: {fileID: 5048133881220833408}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 90e80002546e7e74e9fc8ddc7360fdcd, type: 2}
+  m_Controller: {fileID: 9100000, guid: 49afb6442b3ddf14d88b0f2a8f153d3c, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -157,3 +158,18 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 0.12322329, y: 0.114029095}
   m_EdgeRadius: 0
+--- !u!114 &-8495602501819898083
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5048133881220833408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a87c158b11058e4082dbc2cd6db71ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  animator: {fileID: 4126454255971581004}
+  lootPrefabs:
+  - {fileID: 8997409563462928087, guid: c5211567b57440b4b9a5caa0aaa94a62, type: 3}

@@ -30,11 +30,6 @@ public abstract class CharacterBase : MonoBehaviour, IDamagable
         Debug.Log($"{gameObject.name} died.");
     }
 
-    public virtual void Heal(float amount)
-    {
-        HealthPoints = Mathf.Min(HealthPoints + amount, maxHealthPoints);
-    }
-
     public virtual void TakeDamage(float damage)
     {
         if (HealthPoints <= 0)

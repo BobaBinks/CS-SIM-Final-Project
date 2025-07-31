@@ -7,7 +7,6 @@ public class PlayerController : MonoBehaviour
     Player player;
     Vector2 moveDir;
     Vector2 lookDir;
-    Vector2 attackDir;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -48,8 +47,6 @@ public class PlayerController : MonoBehaviour
                 player.animator.SetFloat("Y", lookDir.y);
             }
         }
-
-        // Debug.Log($"LookDIr: {lookDir}");
     }
 
     public void Move(InputAction.CallbackContext context)

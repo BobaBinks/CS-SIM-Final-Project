@@ -131,14 +131,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: SmallRoom1
       objectReference: {fileID: 0}
-    - target: {fileID: 5700840401221419603, guid: 5fe4839c1d311ff43b7c2464932c2465, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6954096310998355392, guid: 5fe4839c1d311ff43b7c2464932c2465, type: 3}
-      propertyPath: m_ColliderPaths.Array.size
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7842731036805224687, guid: 5fe4839c1d311ff43b7c2464932c2465, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -201,14 +193,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: MediumRoom1
       objectReference: {fileID: 0}
-    - target: {fileID: 4919706249774079086, guid: c415022d468830345af01ae08b46d056, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5471263022484720400, guid: c415022d468830345af01ae08b46d056, type: 3}
-      propertyPath: m_ColliderPaths.Array.size
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8145137603444316973, guid: c415022d468830345af01ae08b46d056, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -267,17 +251,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8154566089540507197}
     m_Modifications:
-    - target: {fileID: 188334869562500898, guid: 9ca68259a7bcbff42a9807f7e98c7c45, type: 3}
-      propertyPath: m_ColliderPaths.Array.size
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 1571851198102107654, guid: 9ca68259a7bcbff42a9807f7e98c7c45, type: 3}
       propertyPath: m_Name
       value: MediumRoom3
-      objectReference: {fileID: 0}
-    - target: {fileID: 1571851198102107654, guid: 9ca68259a7bcbff42a9807f7e98c7c45, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5915194804373894871, guid: 9ca68259a7bcbff42a9807f7e98c7c45, type: 3}
       propertyPath: m_LocalPosition.x
@@ -341,10 +317,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: MediumRoom2
       objectReference: {fileID: 0}
-    - target: {fileID: 1190616717308053101, guid: 5374d20707fd8f046b4d595f29386380, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 3492420428297163821, guid: 5374d20707fd8f046b4d595f29386380, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -383,10 +355,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3492420428297163821, guid: 5374d20707fd8f046b4d595f29386380, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5272497935662711964, guid: 5374d20707fd8f046b4d595f29386380, type: 3}
-      propertyPath: m_ColliderPaths.Array.size
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -534,17 +502,9 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8557854870841965945, guid: 8449d982d13786f4b976e82d78546646, type: 3}
-      propertyPath: m_ColliderPaths.Array.size
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 8857899514772582789, guid: 8449d982d13786f4b976e82d78546646, type: 3}
       propertyPath: m_Name
       value: SmallRoom2
-      objectReference: {fileID: 0}
-    - target: {fileID: 8857899514772582789, guid: 8449d982d13786f4b976e82d78546646, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -567,14 +527,6 @@ PrefabInstance:
     - target: {fileID: 38285871427953897, guid: 1def50ee8a394ce40bd0b2c486016b20, type: 3}
       propertyPath: m_Name
       value: BossRoom1
-      objectReference: {fileID: 0}
-    - target: {fileID: 38285871427953897, guid: 1def50ee8a394ce40bd0b2c486016b20, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2058989604965441403, guid: 1def50ee8a394ce40bd0b2c486016b20, type: 3}
-      propertyPath: m_ColliderPaths.Array.size
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2550412247956844984, guid: 1def50ee8a394ce40bd0b2c486016b20, type: 3}
       propertyPath: m_LocalPosition.x
@@ -634,17 +586,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8154566089540507197}
     m_Modifications:
-    - target: {fileID: 2662982336132093668, guid: c768599035c7a8440814bc4400f90735, type: 3}
-      propertyPath: m_ColliderPaths.Array.size
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2676160786299312215, guid: c768599035c7a8440814bc4400f90735, type: 3}
       propertyPath: m_Name
       value: EntranceRoom1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2676160786299312215, guid: c768599035c7a8440814bc4400f90735, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4332997720770285178, guid: c768599035c7a8440814bc4400f90735, type: 3}
       propertyPath: m_LocalPosition.x

@@ -50,5 +50,20 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Floor
+    uniqueID: 3748358297
+    locked: 0
+  - name: Walls
+    uniqueID: 3978156935
+    locked: 0
+  - name: Decor/Props
+    uniqueID: 2001358401
+    locked: 0
+  - name: Characters
+    uniqueID: 2239863673
+    locked: 0
+  - name: UI
+    uniqueID: 1630234665
+    locked: 0
   m_RenderingLayers:
   - Default

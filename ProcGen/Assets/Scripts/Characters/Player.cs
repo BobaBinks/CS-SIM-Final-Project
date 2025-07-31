@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 using System.Collections;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(SpriteFlipper))]
-public class Player : CharacterBase, IDamagable
+public class Player : CharacterBase, IDamagable, IHealable
 {
     public Rigidbody2D rigidBody { get; protected set; }
     public SpriteFlipper spriteFlipper { get; protected set; }
@@ -75,26 +75,42 @@ public class Player : CharacterBase, IDamagable
         moveSpeed = speedCurve.Evaluate(Level);
         maxHealthPoints = healthCurve.Evaluate(Level);
         HealthPoints = maxHealthPoints;
-
-        if (UIManager.Instance)
-        {
-            UIManager.Instance.SetHealth(HealthPoints, MaxHealthPoints);
-            UIManager.Instance.SetLevel(currentXp, levelXPCurve.Evaluate(Level), Level);
-        }
+        UpdateHealthBar();
+        UpdateXP();
     }
 
     public override void TakeDamage(float damage)
     {
         base.TakeDamage(damage);
 
-        if (UIManager.Instance)
-            UIManager.Instance.SetHealth(HealthPoints, MaxHealthPoints);
+        UpdateHealthBar();
 
         Debug.Log($"Player health: {HealthPoints}");
 
         if(HealthPoints <= 0)
         {
             // game end
+        }
+    }
+
+    public void Heal(float amount)
+    {
+        HealthPoints = Mathf.Min(HealthPoints + amount, maxHealthPoints);
+        UpdateHealthBar();
+    }
+
+    public void UpdateHealthBar()
+    {
+        if (UIManager.Instance)
+            UIManager.Instance.SetHealth(HealthPoints, MaxHealthPoints);
+    }
+
+    public void UpdateXP()
+    {
+        if (UIManager.Instance)
+        {
+            UIManager.Instance.SetHealth(HealthPoints, MaxHealthPoints);
+            UIManager.Instance.SetLevel(currentXp, levelXPCurve.Evaluate(Level), Level);
         }
     }
 }
