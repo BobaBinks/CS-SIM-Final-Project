@@ -173,3 +173,4 @@ MonoBehaviour:
   animator: {fileID: 4126454255971581004}
   lootPrefabs:
   - {fileID: 8997409563462928087, guid: c5211567b57440b4b9a5caa0aaa94a62, type: 3}
+  - {fileID: 1997767607769864545, guid: 855e4198111e95a4dad84e51453a24b9, type: 3}

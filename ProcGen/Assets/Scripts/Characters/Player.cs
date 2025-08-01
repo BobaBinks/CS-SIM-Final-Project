@@ -32,6 +32,8 @@ public class Player : CharacterBase, IDamagable, IHealable
     [SerializeField] AnimationCurve healthCurve;
     [SerializeField] AnimationCurve speedCurve;
     [SerializeField] AnimationCurve levelXPCurve;
+
+    public AnimationCurve LevelXPCurve => levelXPCurve;
     #endregion
 
     #region Events
@@ -61,7 +63,8 @@ public class Player : CharacterBase, IDamagable, IHealable
 
         currentXp += xp;
         Debug.Log($"{xp} XP gained");
-        if(currentXp >= xpRequirements)
+        UpdateXP();
+        if (currentXp >= xpRequirements)
         {
             level += 1;
             currentXp = currentXp - xpRequirements;
@@ -109,7 +112,6 @@ public class Player : CharacterBase, IDamagable, IHealable
     {
         if (UIManager.Instance)
         {
-            UIManager.Instance.SetHealth(HealthPoints, MaxHealthPoints);
             UIManager.Instance.SetLevel(currentXp, levelXPCurve.Evaluate(Level), Level);
         }
     }

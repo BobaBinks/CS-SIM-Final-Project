@@ -62,6 +62,9 @@ TagManager:
   - name: Characters
     uniqueID: 2239863673
     locked: 0
+  - name: Projectiles
+    uniqueID: 577863485
+    locked: 0
   - name: UI
     uniqueID: 1630234665
     locked: 0
