@@ -14,6 +14,8 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField]
     private GameObject roomsGO;
 
+    #region Tiles/Tilemaps
+    [Header("Tiles/Tilemaps")]
     [SerializeField]
     private Tilemap corridorFloorTilemap;
 
@@ -26,31 +28,37 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField]
     private Tile backgroundTile;
 
+    [Header("Corridor Tiles")]
+    public CorridorTiles corridorTiles;
+    #endregion
+
     [Header("RandomWalk Parameters")]
     [SerializeField] int maxCorridorPathIterations = 50;
     [SerializeField] int maxPairFail = 5;
     [SerializeField] int maxConnectionFail = 5;
 
-    [SerializeField]
-    private Tilemap aStarGridTilemap;
-
-    // [Header("Corridor Tiles")]
-    public CorridorTiles corridorTiles;
-
     private Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict;
     private Dictionary<DungeonRoom, int> roomDepthDict;
 
+    #region ASTAR
     // debug aStar
+    [SerializeField]
+    private Tilemap aStarGridTilemap;
+
     bool startNodePicked = false;
     Vector3Int startPosition;
     Vector3Int endPosition;
     List<Vector3Int> path;
+    #endregion
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    #region GraphRewriting
+    [SerializeField] GraphRewriteRuleList graphRewriteRuleList;
+    GraphRewriteRuleList GraphRewriteRuleList => graphRewriteRuleList;
+    #endregion
 
-    void FillBackground(Tilemap backgroundTilemap, Tile backgroundTile, DungeonLayout layout)
+    void FillBackground(Tilemap backgroundTilemap, Tile backgroundTile)
     {
-        if (backgroundTile == null || backgroundTilemap == null || layout == null) return;
+        if (backgroundTile == null || backgroundTilemap == null) return;
 
         BoundsInt combinedBounds;
         bool combinedBoundsRetrieved = TilemapHelper.GetCombinedBounds(roomsDict, grid, out combinedBounds);
@@ -81,7 +89,18 @@ public class DungeonGenerator : MonoBehaviour
 
     public bool GenerateGameEnvironment()
     {
-        bool dungeonGenerated = GenerateDungeon();
+        // APPLY GRAPH REWRITE BEFORE GENERATION
+        if (!GraphRewriteRuleList)
+            return false;
+
+        GraphRewriter graphRewriter = new GraphRewriter(GraphRewriteRuleList);
+        List<DungeonRoom> modifiedGraph;
+        bool rewriteSuccessful = graphRewriter.RewriteGraph(layout, out modifiedGraph);
+
+        if (!rewriteSuccessful)
+            return false;
+
+        bool dungeonGenerated = GenerateDungeon(modifiedGraph);
 
         if (!dungeonGenerated)
         {
@@ -222,9 +241,9 @@ public class DungeonGenerator : MonoBehaviour
         return true;
     }
 
-    bool GenerateDungeon()
+    bool GenerateDungeon(List<DungeonRoom> layout)
     {
-        if (layout == null || corridorFloorTilemap == null || roomsGO == null) return false;
+        if (layout == null || layout.Count == 0 || corridorFloorTilemap == null || roomsGO == null) return false;
 
         int maxAttempts = 5;
         int attempts = 0;
@@ -232,7 +251,7 @@ public class DungeonGenerator : MonoBehaviour
         {
             if (GraphBasedGeneration.GenerateDungeon(layout, grid, roomsGO, corridorFloorTilemap, corridorWallTilemap, corridorTiles, out roomsDict, maxPlacementFailCount: 3))
             {
-                FillBackground(backgroundTilemap, backgroundTile, layout);
+                FillBackground(backgroundTilemap, backgroundTile);
                 return true;
             }
 

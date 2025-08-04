@@ -2210,6 +2210,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 441024815}
     - target: {fileID: 8149777084855191499, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: layout
+      value: 
+      objectReference: {fileID: 11400000, guid: 2a5de2c73b17cb5498de4a7383aa46db, type: 2}
+    - target: {fileID: 8149777084855191499, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
       propertyPath: roomsGO
       value: 
       objectReference: {fileID: 337827882}
@@ -2229,6 +2233,10 @@ PrefabInstance:
       propertyPath: corridorFloorTilemap
       value: 
       objectReference: {fileID: 2090260285}
+    - target: {fileID: 8149777084855191499, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: graphRewriteRuleList
+      value: 
+      objectReference: {fileID: 11400000, guid: b59237c65fd309e4ea4d0ef90438500c, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

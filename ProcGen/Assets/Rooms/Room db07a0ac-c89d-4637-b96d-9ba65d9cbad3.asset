@@ -9,15 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a9de447d357abb44aad3f32a7560c0e3, type: 3}
-  m_Name: Layout 4
+  m_Script: {fileID: 11500000, guid: d5a2eaf5079873b488dbb64689f70336, type: 3}
+  m_Name: Room db07a0ac-c89d-4637-b96d-9ba65d9cbad3
   m_EditorClassIdentifier: 
-  dungeonRoomList:
-  - {fileID: 11400000, guid: 3becebb82586ab84d822bad75ebce101, type: 2}
+  roomType: {fileID: 11400000, guid: a6d07507b8405db4cb3736b0d73dd07d, type: 2}
+  styleLeft: 564
+  styleTop: 340
+  guid: db07a0ac-c89d-4637-b96d-9ba65d9cbad3
+  connectionList:
   - {fileID: 11400000, guid: 1e750195b1eecfa4f8e3406b55926f4d, type: 2}
-  - {fileID: 11400000, guid: 33319b6ef81b31e4ca365df279d0aea1, type: 2}
   - {fileID: 11400000, guid: 00745278560853346a5354effc02b76c, type: 2}
-  roomTypeList: {fileID: 11400000, guid: f0da55397f2229e498752a592243db28, type: 2}
-  width: 50
-  height: 50
-  minGapBetweenRooms: 5

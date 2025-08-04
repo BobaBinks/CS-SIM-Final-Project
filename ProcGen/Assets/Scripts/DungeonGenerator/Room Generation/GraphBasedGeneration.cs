@@ -5,7 +5,7 @@ using System.Linq;
 
 public class GraphBasedGeneration
 {
-    public static bool GenerateDungeon(DungeonLayout layout, Grid grid, GameObject roomsGO, Tilemap corridorFloorTilemap, Tilemap corridorWallmap, CorridorTiles corridorTiles,out Dictionary<DungeonRoom, DungeonRoomInstance> placedRooms, int maxPlacementFailCount = 5, int maxPrefabFailCount = 5, int corridorWidth = 5)
+    public static bool GenerateDungeon(List<DungeonRoom> layout, Grid grid, GameObject roomsGO, Tilemap corridorFloorTilemap, Tilemap corridorWallmap, CorridorTiles corridorTiles,out Dictionary<DungeonRoom, DungeonRoomInstance> placedRooms, int maxPlacementFailCount = 5, int maxPrefabFailCount = 5, int corridorWidth = 5, int width = 50, int height = 50)
     {
         // reset the dungeon
         // clear all children in roomGO
@@ -25,7 +25,7 @@ public class GraphBasedGeneration
         Queue<DungeonRoom> childPlacementQueue = new Queue<DungeonRoom>();
 
         // get entrance room
-        DungeonRoom entranceRoom = layout.dungeonRoomList.Find((x) => { return x.roomType.name == "EntranceRoomType"; });
+        DungeonRoom entranceRoom = layout.Find((x) => { return x.roomType.name == "EntranceRoomType"; });
 
         // checks if entrance room is present in the layout
         if (entranceRoom == null)
@@ -49,8 +49,12 @@ public class GraphBasedGeneration
         DungeonRoomInstance entranceRoomInstance = GetOrCreateDungeonRoomInstance(entranceRoom, placedRooms);
         placedRooms.Add(entranceRoom, entranceRoomInstance);
 
-        int randomX = Random.Range(0, layout.width);
-        int randomY = Random.Range(0, layout.height);
+        // defualt to 10 if set input widht and height is negative
+        width = Mathf.Max(width, 10);
+        height = Mathf.Max(height, 10);
+
+        int randomX = Random.Range(0, width);
+        int randomY = Random.Range(0, height);
 
         // if could not instantiate the entrance room then stop generation
         if (!entranceRoomInstance.InstantiateInstance(new Vector3Int(randomX, randomY), grid, roomsGO, occupiedCells))
@@ -704,13 +708,13 @@ public class GraphBasedGeneration
 
         return placedRooms[room];
     }
-    private static Dictionary<DungeonRoom, Dictionary<TilemapHelper.Edge, bool>> CreateEdgeTracker(DungeonLayout layout)
+    private static Dictionary<DungeonRoom, Dictionary<TilemapHelper.Edge, bool>> CreateEdgeTracker(List<DungeonRoom> layout)
     {
         if(layout == null) return null;
 
         Dictionary<DungeonRoom, Dictionary<TilemapHelper.Edge, bool>> roomEdgeOccupiedTracker = new Dictionary<DungeonRoom, Dictionary<TilemapHelper.Edge, bool>>();
         // populate the edge tracker
-        foreach (DungeonRoom room in layout.dungeonRoomList)
+        foreach (DungeonRoom room in layout)
         {
             Dictionary<TilemapHelper.Edge, bool> roomEdges = new Dictionary<TilemapHelper.Edge, bool> {{ TilemapHelper.Edge.LEFT, false },
                                                                             { TilemapHelper.Edge.RIGHT, false },
