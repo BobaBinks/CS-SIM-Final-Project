@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using System;
 public class Vampire : EnemyAI
 {
     public override void DealDamage()
@@ -19,5 +19,11 @@ public class Vampire : EnemyAI
         {
             // animator.Play(TakeDamageAnimationName);
         }
+    }
+
+    public override void Die()
+    {
+        base.Die();
+        Boss.OnBossDie?.Invoke();
     }
 }

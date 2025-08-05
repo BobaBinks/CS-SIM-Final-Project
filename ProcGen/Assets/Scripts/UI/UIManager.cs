@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.InputSystem;
+
 public class UIManager: MonoBehaviour
 {
     public static UIManager Instance { get; private set; }
@@ -10,6 +12,7 @@ public class UIManager: MonoBehaviour
     [SerializeField] TextMeshProUGUI healthText;
     [SerializeField] TextMeshProUGUI xpText;
     [SerializeField] TextMeshProUGUI levelText;
+    [SerializeField] GameObject pauseMenu;
 
     private void Awake()
     {
@@ -19,7 +22,13 @@ public class UIManager: MonoBehaviour
             return;
         }
         Instance = this;
-        DontDestroyOnLoad(gameObject);
+        // DontDestroyOnLoad(gameObject);
+    }
+
+    public void TogglePauseMenu()
+    {
+        if (pauseMenu)
+            pauseMenu.SetActive(!pauseMenu.activeSelf);
     }
 
     public void SetHealth(float hp, float maxHP)
@@ -50,4 +59,6 @@ public class UIManager: MonoBehaviour
         xpText.text = $"{(int)currentXP} XP";
         levelText.text = $"Lvl: {level}";
     }
+
+
 }

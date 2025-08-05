@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
         Instance = this;
         dungeonGenerator = GetComponent<DungeonGenerator>();
         enemySpawnManager = GetComponent<EnemySpawnManager>();
-        DontDestroyOnLoad(gameObject);
+        // DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
@@ -92,6 +92,13 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         
+    }
+
+    public void TogglePause()
+    {
+        Time.timeScale = Time.timeScale == 0f ? 1f : 0f;
+        if (UIManager.Instance)
+            UIManager.Instance.TogglePauseMenu();
     }
 
     private bool SpawnPlayer(Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict)

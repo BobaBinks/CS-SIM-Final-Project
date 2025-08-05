@@ -79,6 +79,12 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void Pause(InputAction.CallbackContext context)
+    {
+        if (UIManager.Instance)
+            UIManager.Instance.TogglePauseMenu();
+    }
+
     public void DealDamage()
     {
         player.animator.SetBool("Attack", false);
