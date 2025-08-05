@@ -5,14 +5,11 @@ using System.Collections;
 
 public class DungeonGenerator : MonoBehaviour
 {
-    [SerializeField]
-    private DungeonLayout layout;
+    [SerializeField] private List<DungeonLayout> layouts;
+    [SerializeField] private Grid grid;
+    [SerializeField] private GameObject roomsGO;
 
-    [SerializeField]
-    private Grid grid;
-
-    [SerializeField]
-    private GameObject roomsGO;
+    private DungeonLayout selectedLayout;
 
     #region Tiles/Tilemaps
     [Header("Tiles/Tilemaps")]
@@ -89,13 +86,17 @@ public class DungeonGenerator : MonoBehaviour
 
     public bool GenerateGameEnvironment()
     {
+        selectedLayout = layouts[Random.Range(0, layouts.Count)];
+
+        Debug.Log($"Selected Layout: {selectedLayout.name}");
+
         // APPLY GRAPH REWRITE BEFORE GENERATION
         if (!GraphRewriteRuleList)
             return false;
 
         GraphRewriter graphRewriter = new GraphRewriter(GraphRewriteRuleList);
         List<DungeonRoom> modifiedGraph;
-        bool rewriteSuccessful = graphRewriter.RewriteGraph(layout, out modifiedGraph);
+        bool rewriteSuccessful = graphRewriter.RewriteGraph(selectedLayout, out modifiedGraph);
 
         if (!rewriteSuccessful)
             return false;
@@ -190,22 +191,21 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
-    public bool CreateRoomGraph()
+    public bool CreateRoomGraph(List<DungeonRoom> layout)
     {
         roomDepthDict = new Dictionary<DungeonRoom, int>();
 
         if (roomsDict == null ||
             roomsDict.Count == 0 ||
             layout == null ||
-            layout.dungeonRoomList == null ||
-            layout.dungeonRoomList.Count == 0)
+            layout.Count == 0)
             return false;
 
         Queue<DungeonRoom> roomsToCheck = new Queue<DungeonRoom>();
 
         // find entrance room
         // get entrance room
-        DungeonRoom entranceRoom = layout.dungeonRoomList.Find((x) => { return x.roomType.name == "EntranceRoomType"; });
+        DungeonRoom entranceRoom = layout.Find((x) => { return x.roomType.name == "EntranceRoomType"; });
 
         // checks if entrance room is present in the layout
         if (entranceRoom == null)

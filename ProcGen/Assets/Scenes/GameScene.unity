@@ -2162,9 +2162,21 @@ PrefabInstance:
       value: GameManager
       objectReference: {fileID: 0}
     - target: {fileID: 5614104904988341736, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: bossPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5614104904988341736, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
       propertyPath: enemyContainerTransform
       value: 
       objectReference: {fileID: 285634607}
+    - target: {fileID: 5614104904988341736, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: enemyPrefabs.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5614104904988341736, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: 'bossPrefabs.Array.data[0]'
+      value: 
+      objectReference: {fileID: 7946332952389457233, guid: addb9479505196644b208c9fb85db03c, type: 3}
     - target: {fileID: 6770390200951461498, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -2226,6 +2238,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 206238012}
     - target: {fileID: 8149777084855191499, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: layouts.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8149777084855191499, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
       propertyPath: corridorWallTilemap
       value: 
       objectReference: {fileID: 359962206}
@@ -2237,6 +2253,22 @@ PrefabInstance:
       propertyPath: graphRewriteRuleList
       value: 
       objectReference: {fileID: 11400000, guid: b59237c65fd309e4ea4d0ef90438500c, type: 2}
+    - target: {fileID: 8149777084855191499, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: 'layouts.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 98fac352ccb103b4e9c70aa734d28ae3, type: 2}
+    - target: {fileID: 8149777084855191499, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: 'layouts.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 6878af50254a68741a6d1deb2ff77316, type: 2}
+    - target: {fileID: 8149777084855191499, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: 'layouts.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 406eaed9fd7be8645ad2df945d27c1b7, type: 2}
+    - target: {fileID: 8149777084855191499, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: 'layouts.Array.data[3]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 2a5de2c73b17cb5498de4a7383aa46db, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

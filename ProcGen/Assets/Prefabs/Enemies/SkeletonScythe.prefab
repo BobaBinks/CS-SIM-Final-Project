@@ -238,6 +238,7 @@ MonoBehaviour:
   deathAnimationName: SkeletonScytheDeath
   takeDamageAnimationName: SkeletonScytheTakeDamage
   healthBar: {fileID: 8734932758002336537}
+  canvas: {fileID: 1381197645624753162}
   attackRange: 0.1
   chaseRange: 1
   attackSpeed: 1

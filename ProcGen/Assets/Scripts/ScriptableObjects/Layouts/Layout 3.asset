@@ -16,6 +16,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2810b04b9ceae514599183744375662b, type: 2}
   - {fileID: 11400000, guid: bfe3199f4a7987f418f8223b8ac7983d, type: 2}
   - {fileID: 11400000, guid: c4ba041c01eca1b4abe8e499723c1369, type: 2}
+  - {fileID: 11400000, guid: ae6df944f626af24d876f74ec22af6b7, type: 2}
+  - {fileID: 11400000, guid: c68c139b0b49ccf44a340aaf47150acf, type: 2}
+  - {fileID: 11400000, guid: 1e1e8c3c67d718248bab4f832ef7653b, type: 2}
   roomTypeList: {fileID: 11400000, guid: f0da55397f2229e498752a592243db28, type: 2}
   width: 100
   height: 100

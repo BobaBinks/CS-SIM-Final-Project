@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Unity.Cinemachine;
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
@@ -63,7 +64,7 @@ public class GameManager : MonoBehaviour
         }
 
         Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict = dungeonGenerator.GetDungeonRooms();
-        bool roomGraphCreated = dungeonGenerator.CreateRoomGraph();
+        bool roomGraphCreated = dungeonGenerator.CreateRoomGraph(roomsDict.Keys.ToList());
 
         if (!roomGraphCreated)
         {

@@ -30,6 +30,7 @@ public abstract class EnemyAI: CharacterBase, IDamagable
     #region UI
     [Header("UI")]
     [SerializeField] protected Image healthBar;
+    [SerializeField] protected Canvas canvas;
     #endregion
 
     public PathMovement pathMover { get; protected set; }
@@ -232,11 +233,16 @@ public abstract class EnemyAI: CharacterBase, IDamagable
     {
         base.Die();
 
-        if (healthBar)
+        //if (healthBar)
+        //{
+        //    healthBar.gameObject.SetActive(false);
+        //    if(healthBar.transform.parent)
+        //        healthBar.transform.parent.gameObject.SetActive(false);
+        //}
+
+        if (canvas)
         {
-            healthBar.gameObject.SetActive(false);
-            if(healthBar.transform.parent)
-                healthBar.transform.parent.gameObject.SetActive(false);
+            canvas.gameObject.SetActive(false);
         }
 
         if (collider)

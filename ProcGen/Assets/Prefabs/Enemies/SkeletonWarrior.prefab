@@ -140,6 +140,7 @@ MonoBehaviour:
   deathAnimationName: SkeletonWarriorDeath
   takeDamageAnimationName: SkeletonWarriorTakeDamage
   healthBar: {fileID: 5421989760066303642}
+  canvas: {fileID: 5618639186632895770}
   attackRange: 0.1
   chaseRange: 1
   attackSpeed: 1

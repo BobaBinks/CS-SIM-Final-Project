@@ -6,6 +6,9 @@ public class EnemySpawnManager : MonoBehaviour
     [Header("Enemy prefabs")]
     [SerializeField] List<GameObject> enemyPrefabs = new List<GameObject>();
 
+    [Header("Boss prefabs")]
+    [SerializeField] List<GameObject> bossPrefabs = new List<GameObject>();
+
     [SerializeField] Transform enemyContainerTransform;
 
     [SerializeField] private AnimationCurve difficultyCurve;
@@ -69,7 +72,13 @@ public class EnemySpawnManager : MonoBehaviour
                 roomDepthDict.ContainsKey(dungeonRoom) && 
                 roomDepthDict[dungeonRoom] == roomDepth + 1)
             {
-                SpawnEnemiesInRoom(roomInstance);
+                if (dungeonRoom.roomType.name == "BossRoomType")
+                {
+                    SpawnBossInRoom(roomInstance);
+                }
+                else
+                    SpawnEnemiesInRoom(roomInstance);
+
                 roomsWithEnemy.Add(dungeonRoom);
             }
         }
@@ -109,15 +118,76 @@ public class EnemySpawnManager : MonoBehaviour
             return;
 
         // get the enemy spawn points and waypoints
-        Transform enemySpawnPointContainer = Helper.FindChildWithTag(roomInstance.instance.transform, "EnemySpawnPoints");
-        Transform enemyPatrolWayPointContainer = Helper.FindChildWithTag(roomInstance.instance.transform, "EnemyPatrolWaypoints");
+        Transform enemySpawnPointContainer = GetEnemySpawnPointContainer(roomInstance);
 
-        // if enemy spawn points does not exist, continue
         if (!enemySpawnPointContainer)
             return;
 
-        // else random select a prefab and spawn on spawnpoint
+        Transform enemyPatrolWayPointContainer = GetEnemyWaypointContainer(roomInstance);
+
+        // random select a prefab and spawn on spawnpoint
         SpawnEnemies(enemySpawnPointContainer, enemyPatrolWayPointContainer);
+
+    }
+
+    private void SpawnBossInRoom(DungeonRoomInstance roomInstance)
+    {
+        if (roomInstance == null)
+            return;
+
+        // get the enemy spawn points and waypoints
+        Transform enemySpawnPointContainer = GetEnemySpawnPointContainer(roomInstance);
+
+        if (!enemySpawnPointContainer)
+            return;
+
+        int bossLevel = CalculateEnemyLevel();
+
+        int prefabIndex = Random.Range(0, bossPrefabs.Count);
+
+        Vector3 spawnPosition = enemySpawnPointContainer.GetChild(0).position;
+
+        GameObject enemyGO = GameObject.Instantiate(bossPrefabs[prefabIndex], spawnPosition, Quaternion.identity, enemyContainerTransform);
+
+        EnemyAI ai = enemyGO.GetComponent<EnemyAI>();
+
+        if (ai)
+        {
+            ai.Initialize(bossLevel);
+        }
+    }
+
+    private Transform GetEnemySpawnPointContainer(DungeonRoomInstance roomInstance)
+    {
+        if (roomInstance == null)
+            return null;
+
+        // get the enemy spawn points and waypoints
+        return Helper.FindChildWithTag(roomInstance.instance.transform, "EnemySpawnPoints");
+    }
+
+    private Transform GetEnemyWaypointContainer(DungeonRoomInstance roomInstance)
+    {
+        if (roomInstance == null)
+            return null;
+
+        // get the enemy spawn points and waypoints
+        return Helper.FindChildWithTag(roomInstance.instance.transform, "EnemyPatrolWaypoints");
+    }
+
+    private int CalculateEnemyLevel(int minLevel = 0, int maxLevel = 100, int levelDifference = 2)
+    {
+        minLevel = Mathf.Max(minLevel, 0);
+        maxLevel = Mathf.Max(maxLevel, 0);
+        levelDifference = Mathf.Max(levelDifference, 0);
+
+        Player player = GameManager.Instance.player;
+
+        if (!player)
+            return minLevel;
+
+        int enemyLevel = player.Level + levelDifference;
+        return Mathf.Clamp(enemyLevel, minLevel, maxLevel);
     }
 
     private void SpawnEnemies(Transform enemySpawnPointContainer, Transform enemyPatrolWayPointContainer, int numOfEnemies = 2)
@@ -125,13 +195,7 @@ public class EnemySpawnManager : MonoBehaviour
         if (!enemyContainerTransform)
             return;
 
-        Player player = GameManager.Instance.player;
-
-        if (!player)
-            return;
-
-        int enemyLevel = player.Level + 2;
-        enemyLevel = Mathf.Clamp(enemyLevel, 0, 100);
+        int enemyLevel = CalculateEnemyLevel();
 
         List<Transform> waypoints = new List<Transform>();
         if (enemyPatrolWayPointContainer)
@@ -141,7 +205,6 @@ public class EnemySpawnManager : MonoBehaviour
                 waypoints.Add(enemyPatrolWayPointContainer.GetChild(waypointIndex));
             }
         }
-
 
         for(int enemyCount = 0; enemyCount < numOfEnemies; ++enemyCount)
         {
