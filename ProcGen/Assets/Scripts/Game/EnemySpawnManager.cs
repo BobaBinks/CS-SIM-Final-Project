@@ -13,6 +13,11 @@ public class EnemySpawnManager : MonoBehaviour
 
     [SerializeField] private AnimationCurve difficultyCurve;
 
+    #region Stats
+    [SerializeField] int enemyLevelDifference = 3;
+    [SerializeField] int bossLevelDifference = 5;
+    #endregion
+
     private HashSet<DungeonRoom> roomsWithEnemy;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -84,6 +89,8 @@ public class EnemySpawnManager : MonoBehaviour
         }
     }
 
+
+
     public void SpawnEnemiesInRooms(Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict)
     {
         if (roomsDict == null)
@@ -141,7 +148,8 @@ public class EnemySpawnManager : MonoBehaviour
         if (!enemySpawnPointContainer)
             return;
 
-        int bossLevel = CalculateEnemyLevel();
+        enemyLevelDifference = Mathf.Max(bossLevelDifference, 0);
+        int bossLevel = CalculateEnemyLevel(levelDifference: bossLevelDifference);
 
         int prefabIndex = Random.Range(0, bossPrefabs.Count);
 
@@ -195,7 +203,8 @@ public class EnemySpawnManager : MonoBehaviour
         if (!enemyContainerTransform)
             return;
 
-        int enemyLevel = CalculateEnemyLevel();
+        enemyLevelDifference = Mathf.Max(enemyLevelDifference, 0);
+        int enemyLevel = CalculateEnemyLevel(levelDifference: enemyLevelDifference);
 
         List<Transform> waypoints = new List<Transform>();
         if (enemyPatrolWayPointContainer)

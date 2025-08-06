@@ -13,6 +13,4 @@ MonoBehaviour:
   m_Name: SmallRoomRule1
   m_EditorClassIdentifier: 
   LHS: {fileID: 11400000, guid: 693004aeac50d3649bcb7fc3f80f5674, type: 2}
-  RHS:
-  - {fileID: 11400000, guid: a6d07507b8405db4cb3736b0d73dd07d, type: 2}
-  - {fileID: 11400000, guid: 693004aeac50d3649bcb7fc3f80f5674, type: 2}
+  RHS: {fileID: 11400000, guid: 0822eac8a6348f74ebc5a6b9cd301876, type: 2}

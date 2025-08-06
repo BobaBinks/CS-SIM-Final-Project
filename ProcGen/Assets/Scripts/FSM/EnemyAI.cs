@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Collections;
+using TMPro;
 
 [RequireComponent(typeof(PathMovement))]
 public abstract class EnemyAI: CharacterBase, IDamagable
@@ -30,6 +31,7 @@ public abstract class EnemyAI: CharacterBase, IDamagable
     #region UI
     [Header("UI")]
     [SerializeField] protected Image healthBar;
+    [SerializeField] protected TextMeshProUGUI levelText;
     [SerializeField] protected Canvas canvas;
     #endregion
 
@@ -161,6 +163,8 @@ public abstract class EnemyAI: CharacterBase, IDamagable
     {
         HealthPoints = maxHealthPoints;
         this.level = level;
+        if (levelText)
+            levelText.text = $"Lvl {level}";
         if (GameManager.Instance.player)
         {
             player = GameManager.Instance.player;
@@ -184,20 +188,9 @@ public abstract class EnemyAI: CharacterBase, IDamagable
 
     public virtual void Initialize(bool shouldPatrol, List<Transform> wayPoints, int level = 0)
     {
-        HealthPoints = maxHealthPoints;
-        this.level = level;
-        if (GameManager.Instance.player)
-        {
-            player = GameManager.Instance.player;
-        }
+        Initialize(level);
 
-        Sm = new StateMachine<EnemyAI>(this);
-        Sm.AddState(new IdleState("idle"));
-        Sm.AddState(new AttackState("attack"));
         Sm.AddState(new PatrolState("patrol"));
-        Sm.AddState(new ChaseState("chase"));
-        Sm.AddState(new DeathState("death"));
-
         this.wayPoints = wayPoints;
 
         if (shouldPatrol)
@@ -205,13 +198,6 @@ public abstract class EnemyAI: CharacterBase, IDamagable
         else
             Sm.SetInitialState("idle");
 
-        if(Level >= 0 && Level <= 100)
-        {
-            attackDamage = damageCurve.Evaluate(Level);
-            HealthPoints = healthCurve.Evaluate(Level);
-            maxHealthPoints = healthCurve.Evaluate(Level);
-            moveSpeed = speedCurve.Evaluate(Level);
-        }
     }
 
     private void OnDrawGizmos()

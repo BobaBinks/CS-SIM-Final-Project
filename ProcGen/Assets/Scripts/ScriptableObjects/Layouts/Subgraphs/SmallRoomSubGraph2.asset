@@ -10,10 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a9de447d357abb44aad3f32a7560c0e3, type: 3}
-  m_Name: SmallRoomSubGraph1
+  m_Name: SmallRoomSubGraph2
   m_EditorClassIdentifier: 
   dungeonRoomList:
-  - {fileID: 11400000, guid: 92868cf74cdd5b3418509dcc6594e041, type: 2}
+  - {fileID: 11400000, guid: 5d90d08509867a94fa45089c028b690f, type: 2}
+  - {fileID: 11400000, guid: 6df2bb0ac8743324fb092ba620c5e9fc, type: 2}
   roomTypeList: {fileID: 11400000, guid: f0da55397f2229e498752a592243db28, type: 2}
   width: 100
   height: 100
