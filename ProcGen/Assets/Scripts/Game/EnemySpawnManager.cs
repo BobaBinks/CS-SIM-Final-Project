@@ -229,48 +229,48 @@ public class EnemySpawnManager : MonoBehaviour
         return Mathf.Clamp(enemyLevel, minLevel, maxLevel);
     }
 
-    private void SpawnEnemies(Transform enemySpawnPointContainer, Transform enemyPatrolWayPointContainer, int numOfEnemies = 2)
-    {
-        if (!enemyContainerTransform)
-            return;
+    //private void SpawnEnemies(Transform enemySpawnPointContainer, Transform enemyPatrolWayPointContainer, int numOfEnemies = 2)
+    //{
+    //    if (!enemyContainerTransform)
+    //        return;
 
-        enemyLevelDifference = Mathf.Max(enemyLevelDifference, 0);
-        int enemyLevel = CalculateEnemyLevel(levelDifference: enemyLevelDifference);
+    //    enemyLevelDifference = Mathf.Max(enemyLevelDifference, 0);
+    //    int enemyLevel = CalculateEnemyLevel(levelDifference: enemyLevelDifference);
 
-        List<Transform> waypoints = new List<Transform>();
-        if (enemyPatrolWayPointContainer)
-        {
-            for (int waypointIndex = 0; waypointIndex < enemyPatrolWayPointContainer.childCount; ++waypointIndex)
-            {
-                waypoints.Add(enemyPatrolWayPointContainer.GetChild(waypointIndex));
-            }
-        }
+    //    List<Transform> waypoints = new List<Transform>();
+    //    if (enemyPatrolWayPointContainer)
+    //    {
+    //        for (int waypointIndex = 0; waypointIndex < enemyPatrolWayPointContainer.childCount; ++waypointIndex)
+    //        {
+    //            waypoints.Add(enemyPatrolWayPointContainer.GetChild(waypointIndex));
+    //        }
+    //    }
 
-        for(int enemyCount = 0; enemyCount < numOfEnemies; ++enemyCount)
-        {
-            int prefabIndex = Random.Range(0, enemyPrefabs.Count);
+    //    for(int enemyCount = 0; enemyCount < numOfEnemies; ++enemyCount)
+    //    {
+    //        int prefabIndex = Random.Range(0, enemyPrefabs.Count);
 
-            int spawnPointIndex = Random.Range(0, enemySpawnPointContainer.childCount);
+    //        int spawnPointIndex = Random.Range(0, enemySpawnPointContainer.childCount);
 
-            Vector3 spawnPosition = enemySpawnPointContainer.GetChild(spawnPointIndex).position;
+    //        Vector3 spawnPosition = enemySpawnPointContainer.GetChild(spawnPointIndex).position;
 
-            GameObject enemyGO = GameObject.Instantiate(enemyPrefabs[prefabIndex], spawnPosition, Quaternion.identity, enemyContainerTransform);
+    //        GameObject enemyGO = GameObject.Instantiate(enemyPrefabs[prefabIndex], spawnPosition, Quaternion.identity, enemyContainerTransform);
 
-            EnemyAI ai = enemyGO.GetComponent<EnemyAI>();
+    //        EnemyAI ai = enemyGO.GetComponent<EnemyAI>();
 
-            if (ai)
-            {
-                if (enemyPatrolWayPointContainer)
-                {
-                    ai.Initialize(true, waypoints, enemyLevel);
-                }
-                else
-                {
-                    ai.Initialize(enemyLevel);
-                }
-            }
-        }
-    }
+    //        if (ai)
+    //        {
+    //            if (enemyPatrolWayPointContainer)
+    //            {
+    //                ai.Initialize(true, waypoints, enemyLevel);
+    //            }
+    //            else
+    //            {
+    //                ai.Initialize(enemyLevel);
+    //            }
+    //        }
+    //    }
+    //}
     
     private void SpawnEnemies(Transform enemyPatrolWayPointContainer, Vector3 spawnPosition)
     {

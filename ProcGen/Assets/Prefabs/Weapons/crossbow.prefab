@@ -160,3 +160,4 @@ MonoBehaviour:
   arrowSpawnPoint: {fileID: 4452643190334625003}
   arrowForce: 4
   arrowLifetime: 16.07
+  attackCooldown: 1.03

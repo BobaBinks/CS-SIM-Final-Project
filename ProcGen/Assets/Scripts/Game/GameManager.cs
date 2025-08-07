@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using Unity.Cinemachine;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -54,6 +55,10 @@ public class GameManager : MonoBehaviour
         bool gameEnvironmentGenerated = dungeonGenerator.GenerateGameEnvironment();
         Debug.Log($"Game Environment generated {gameEnvironmentGenerated}");
 
+        if(!gameEnvironmentGenerated)
+        {
+            SceneManager.LoadScene("GameScene");
+        }
         // generate A star grid
         aStarPathfinder = dungeonGenerator.InitializeAStarGrid();
 
@@ -87,6 +92,8 @@ public class GameManager : MonoBehaviour
 
         if (playerSpawned)
             enemySpawnManager.RegisterSpawnEvent();
+
+
     }
 
     private void Update()

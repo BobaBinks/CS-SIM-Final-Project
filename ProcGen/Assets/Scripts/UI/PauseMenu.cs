@@ -1,9 +1,18 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
+
 public class PauseMenu : MonoBehaviour
 {
+    [SerializeField] GameObject controlMenu;
     private void Start()
     {
+        if (controlMenu)
+        {
+            controlMenu.SetActive(false);
+            ControlsMenu.OnBack += ActivatePauseMenu;
+        }
+
         gameObject.SetActive(false);
     }
 
@@ -23,6 +32,26 @@ public class PauseMenu : MonoBehaviour
 
     public void OnRestartPress()
     {
-        SceneManager.LoadScene("GameScene");
+        if(controlMenu)
+            SceneManager.LoadScene("GameScene");
+    }
+
+    public void OnControlMenuPress()
+    {
+        if(controlMenu)
+        {
+            controlMenu.gameObject.SetActive(true);
+            gameObject.SetActive(false);
+        }    
+    }
+
+    public void ActivatePauseMenu()
+    {
+        gameObject.SetActive(true);
+    }
+
+    private void OnDestroy()
+    {
+        ControlsMenu.OnBack -= ActivatePauseMenu;
     }
 }
