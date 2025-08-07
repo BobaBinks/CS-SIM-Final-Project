@@ -5,19 +5,22 @@ using UnityEngine.SceneManagement;
 public class EndGameTransitionMagicCircle : MonoBehaviour
 {
     Collider2D collider;
-    private void Start()
+    private void Awake()
     {
         collider = GetComponent<Collider2D>();
         collider.isTrigger = true;
         Boss.OnBossDie += OnDie;
-        gameObject.SetActive(false);
         collider.enabled = false;
     }
 
     private void OnDie()
     {
-        gameObject.SetActive(true);
         collider.enabled = true;
+    }
+
+    private void OnDestroy()
+    {
+        Boss.OnBossDie -= OnDie;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using UnityEngine.InputSystem;
 using System.Collections;
@@ -93,6 +94,7 @@ public class Player : CharacterBase, IDamagable, IHealable
         if(HealthPoints <= 0)
         {
             // game end
+            SceneManager.LoadScene("Menu");
         }
     }
 

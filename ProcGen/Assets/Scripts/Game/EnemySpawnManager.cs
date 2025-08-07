@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using UnityEngine.Tilemaps;
 
 public class EnemySpawnManager : MonoBehaviour
 {
@@ -25,6 +26,7 @@ public class EnemySpawnManager : MonoBehaviour
     {
         roomsWithEnemy = new HashSet<DungeonRoom>();
         RemoveInvalidEnemyPrefabs(enemyPrefabs);
+        RemoveInvalidEnemyPrefabs(bossPrefabs);
     }
 
     // Update is called once per frame
@@ -90,50 +92,79 @@ public class EnemySpawnManager : MonoBehaviour
     }
 
 
+    //public void SpawnEnemiesInRooms(Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict)
+    //{
+    //    if (roomsDict == null)
+    //        return;
 
-    public void SpawnEnemiesInRooms(Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict)
-    {
-        if (roomsDict == null)
-            return;
+    //    foreach(var kvp in roomsDict)
+    //    {
+    //        // iterate through each room
+    //        DungeonRoomInstance roomInstance = kvp.Value;
 
-        foreach(var kvp in roomsDict)
-        {
-            // iterate through each room
-            DungeonRoomInstance roomInstance = kvp.Value;
+    //        if (roomInstance == null || roomInstance.instance == null)
+    //            continue;
 
-            if (roomInstance == null || roomInstance.instance == null)
-                continue;
+    //        SpawnEnemiesInRoom(roomInstance);
 
-            SpawnEnemiesInRoom(roomInstance);
+    //        //// get the enemy spawn points and waypoints
+    //        //Transform enemySpawnPointContainer = Helper.FindChildWithTag(roomInstance.instance.transform, "EnemySpawnPoints");
+    //        //Transform enemyPatrolWayPointContainer = Helper.FindChildWithTag(roomInstance.instance.transform, "EnemyPatrolWaypoints");
 
-            //// get the enemy spawn points and waypoints
-            //Transform enemySpawnPointContainer = Helper.FindChildWithTag(roomInstance.instance.transform, "EnemySpawnPoints");
-            //Transform enemyPatrolWayPointContainer = Helper.FindChildWithTag(roomInstance.instance.transform, "EnemyPatrolWaypoints");
+    //        //// if enemy spawn points does not exist, continue
+    //        //if (!enemySpawnPointContainer)
+    //        //    continue;
 
-            //// if enemy spawn points does not exist, continue
-            //if (!enemySpawnPointContainer)
-            //    continue;
-
-            //// else random select a prefab and spawn on spawnpoint
-            //SpawnEnemies(enemySpawnPointContainer, enemyPatrolWayPointContainer);
-        }
-    }
+    //        //// else random select a prefab and spawn on spawnpoint
+    //        //SpawnEnemies(enemySpawnPointContainer, enemyPatrolWayPointContainer);
+    //    }
+    //}
 
     public void SpawnEnemiesInRoom(DungeonRoomInstance roomInstance)
     {
         if (roomInstance == null)
             return;
 
-        // get the enemy spawn points and waypoints
-        Transform enemySpawnPointContainer = GetEnemySpawnPointContainer(roomInstance);
-
-        if (!enemySpawnPointContainer)
-            return;
-
         Transform enemyPatrolWayPointContainer = GetEnemyWaypointContainer(roomInstance);
 
+        // pick a cell in the room, convert it to world
+        // convert world to astargrid local position and verify if cell is occupied in its tilemap
+        int failCounter = 0;
+        int maxFailCounter = 5;
+        while(failCounter < maxFailCounter)
+        {
+            Tilemap groundMap = roomInstance.groundMap;
+            groundMap.CompressBounds();
+            int xPos = Random.Range(groundMap.cellBounds.xMin, groundMap.cellBounds.xMax);
+            int yPos = Random.Range(groundMap.cellBounds.yMin, groundMap.cellBounds.yMax);
+
+            if (GameManager.Instance.aStarPathfinder.AStarGridTilemap)
+            {
+                Vector3 positionWorld = groundMap.CellToWorld(new Vector3Int(xPos, yPos));
+                Vector3Int localPosition = GameManager.Instance.aStarPathfinder.AStarGridTilemap.WorldToCell(positionWorld);
+
+                if (GameManager.Instance.aStarPathfinder.AStarGridTilemap.GetTile(localPosition) == null)
+                {
+                    // not a valid position to spawn
+                    failCounter++;
+                    continue;
+                }
+
+                SpawnEnemies(enemyPatrolWayPointContainer, positionWorld);
+                break;
+            }
+        }
+
+        //// get the enemy spawn points and waypoints
+        //Transform enemySpawnPointContainer = GetEnemySpawnPointContainer(roomInstance);
+
+        //if (!enemySpawnPointContainer)
+        //    return;
+
+
+
         // random select a prefab and spawn on spawnpoint
-        SpawnEnemies(enemySpawnPointContainer, enemyPatrolWayPointContainer);
+        //SpawnEnemies(enemySpawnPointContainer, enemyPatrolWayPointContainer);
 
     }
 
@@ -240,7 +271,42 @@ public class EnemySpawnManager : MonoBehaviour
             }
         }
     }
+    
+    private void SpawnEnemies(Transform enemyPatrolWayPointContainer, Vector3 spawnPosition)
+    {
+        if (!enemyContainerTransform)
+            return;
 
+        enemyLevelDifference = Mathf.Max(enemyLevelDifference, 0);
+        int enemyLevel = CalculateEnemyLevel(levelDifference: enemyLevelDifference);
+
+        List<Transform> waypoints = new List<Transform>();
+        if (enemyPatrolWayPointContainer)
+        {
+            for (int waypointIndex = 0; waypointIndex < enemyPatrolWayPointContainer.childCount; ++waypointIndex)
+            {
+                waypoints.Add(enemyPatrolWayPointContainer.GetChild(waypointIndex));
+            }
+        }
+
+        int prefabIndex = Random.Range(0, enemyPrefabs.Count);
+
+        GameObject enemyGO = GameObject.Instantiate(enemyPrefabs[prefabIndex], spawnPosition, Quaternion.identity, enemyContainerTransform);
+
+        EnemyAI ai = enemyGO.GetComponent<EnemyAI>();
+
+        if (ai)
+        {
+            if (enemyPatrolWayPointContainer)
+            {
+                ai.Initialize(true, waypoints, enemyLevel);
+            }
+            else
+            {
+                ai.Initialize(enemyLevel);
+            }
+        }
+    }
     /// <summary>
     /// Removes any GameObjects from the list that do not have an EnemyAI component.
     /// </summary>

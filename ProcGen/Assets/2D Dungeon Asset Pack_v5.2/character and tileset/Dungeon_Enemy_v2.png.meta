@@ -248,7 +248,11 @@ TextureImporter:
     secondaryTextures: []
     spriteCustomMetadata:
       entries: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Dungeon_Enemy_v2_0: 279326659666560431
+      Dungeon_Enemy_v2_1: 554223877389357736
+      Dungeon_Enemy_v2_2: -5039169701063044818
+      Dungeon_Enemy_v2_3: -185288622565617985
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

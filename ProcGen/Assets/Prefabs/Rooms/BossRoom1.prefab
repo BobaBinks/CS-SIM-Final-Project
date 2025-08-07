@@ -11462,9 +11462,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5599470642550399711, guid: e9b058a43c2775a4a9395ba05ce951e9, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6056315865457092313, guid: e9b058a43c2775a4a9395ba05ce951e9, type: 3}
       propertyPath: m_Name
       value: MagicCircle
+      objectReference: {fileID: 0}
+    - target: {fileID: 7067939501431497023, guid: e9b058a43c2775a4a9395ba05ce951e9, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
