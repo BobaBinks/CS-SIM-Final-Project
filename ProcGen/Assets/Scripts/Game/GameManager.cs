@@ -39,6 +39,11 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        CreateGameLevel();
+    }
+
+    public void CreateGameLevel()
+    {
         // generate dungeon
         if (!dungeonGenerator)
         {
@@ -52,17 +57,17 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        bool gameEnvironmentGenerated = dungeonGenerator.GenerateGameEnvironment();
-        Debug.Log($"Game Environment generated {gameEnvironmentGenerated}");
+        dungeonGenerator.GenerateGameEnvironment();
 
-        if(!gameEnvironmentGenerated)
-        {
-            SceneManager.LoadScene("GameScene");
-        }
+        //if(!gameEnvironmentGenerated)
+        //{
+        //    SceneManager.LoadScene("GameScene");
+        //}
+
         // generate A star grid
         aStarPathfinder = dungeonGenerator.InitializeAStarGrid();
 
-        if(aStarPathfinder == null)
+        if (aStarPathfinder == null)
         {
             Debug.Log($"Failed to initialize A star Grid.");
             return;
@@ -77,23 +82,10 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        // map difficulty to depth?
-        // get the max depth - that is 1 on the animation curve
-        // get current depth / max depth and find the associated value in the animation curve. that is your multiplier
-
-        // use this multiplier for other curves like health and damage
+        enemySpawnManager.Reset();
 
         // spawn player
         bool playerSpawned = SpawnPlayer(roomsDict);
-
-        // spawn enemies
-        //if(playerSpawned)
-        //    enemySpawnManager.SpawnEnemiesInRooms(roomsDict);
-
-        if (playerSpawned)
-            enemySpawnManager.RegisterSpawnEvent();
-
-
     }
 
     private void Update()
@@ -143,18 +135,24 @@ public class GameManager : MonoBehaviour
         // Instantiate player on spawnpoint
         if (spawnPoint)
         {
-            GameObject playerGO = GameObject.Instantiate(this.playerGO, spawnPoint.position, Quaternion.identity);
-
-            player = playerGO.GetComponent<Player>();
-
-            if (player == null)
+            if(player == null)
             {
-                Debug.LogError("Spawned player GameObject is missing the Player component.");
-                return false;
+                GameObject playerGO = GameObject.Instantiate(this.playerGO, spawnPoint.position, Quaternion.identity);
+
+                player = playerGO.GetComponent<Player>();
+
+                if (player == null)
+                {
+                    Debug.LogError("Spawned player GameObject is missing the Player component.");
+                    return false;
+                }
+
+                if (cinemachineCamera)
+                    cinemachineCamera.Follow = playerGO.transform;
+                return true;
             }
 
-            if (cinemachineCamera)
-                cinemachineCamera.Follow = playerGO.transform;
+            player.gameObject.transform.position = spawnPoint.position;
             return true;
         }
         return false;

@@ -27,7 +27,8 @@ public class EndGameTransitionMagicCircle : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
-            SceneManager.LoadScene("Menu");
+            //SceneManager.LoadScene("Menu");
+            GameManager.Instance.CreateGameLevel();
         }
     }
 }

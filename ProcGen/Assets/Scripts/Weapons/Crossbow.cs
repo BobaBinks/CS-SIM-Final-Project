@@ -9,12 +9,12 @@ public class Crossbow : BaseWeapon
     [SerializeField] float arrowLifetime = 5f;
     [SerializeField] float attackCooldown = 1f;
 
-    bool onCooldown = false;
+    private float nextFireTime = 0f;
 
 
     public override void Fire()
     {
-        if (onCooldown) return;
+        if (Time.time < nextFireTime) return;
 
         if(arrowPrefab && arrowSpawnPoint)
         {
@@ -31,18 +31,10 @@ public class Crossbow : BaseWeapon
             {
                 rb.AddForce(transform.parent.right * arrowForce, ForceMode2D.Impulse);
             }
-            StartCoroutine(StartCooldown(attackCooldown));
+
+            nextFireTime = Time.time + attackCooldown;
+            
             Debug.Log("Crossbow fired arrow");
         }
-    }
-
-    IEnumerator StartCooldown(float cooldown)
-    {
-        if (float.IsNaN(cooldown) || float.IsNegative(cooldown))
-            cooldown = 1f;
-
-        onCooldown = true;
-        yield return new WaitForSeconds(cooldown);
-        onCooldown = false;
     }
 }

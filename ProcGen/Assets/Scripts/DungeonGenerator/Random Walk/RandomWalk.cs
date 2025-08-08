@@ -66,12 +66,11 @@ public class RandomWalk
         }
 
         // initial steps 
-        initStep = GetRandomSteps(room2Bounds, room1EdgeAxis);
+        initStep = GetRandomSteps();
 
         AddNewFloorCells(ref currCell, initStep, initDir, corridorFloorCells, corridorWidth);
 
-        // stop loop if reach destination
-        int numOfIteration = Random.Range(1, maxIterations);
+        int numOfIteration = Random.Range(0, maxIterations);
         int currIteration = 0;
 
         // if destination not reached and not max iterations yet
@@ -81,7 +80,7 @@ public class RandomWalk
             TilemapHelper.Axis axis = (TilemapHelper.Axis)Random.Range(0, (int)TilemapHelper.Axis.MAX_EXCLUSIVE);
 
             // pick a random number of steps
-            int steps = GetRandomSteps(room2Bounds, axis);
+            int steps = GetRandomSteps();
 
             Vector2Int dir = PickNextDirection(axis, room1EdgeAxis, room1Edge);
 
@@ -101,14 +100,15 @@ public class RandomWalk
     /// Get random steps for corridor generation iteration
     /// </summary>
     /// <returns></returns>
-    private static int GetRandomSteps(BoundsInt room2Bounds, TilemapHelper.Axis chosenAxis, int maxStepsOffset = 3)
+    private static int GetRandomSteps(int minSteps = 5, int maxSteps = 12)
     {
-        if (maxStepsOffset < 0 || room2Bounds.size.x == 0 || room2Bounds.size.y == 0) return 0;
+        minSteps = Mathf.Max(0, minSteps);
+        maxSteps = Mathf.Max(0, maxSteps);
 
-        // min step should based on the size of the room on chosen axis
-        int minSteps = chosenAxis == TilemapHelper.Axis.HORIZONTAL ? room2Bounds.size.x : room2Bounds.size.y;
+        if (minSteps > maxSteps)
+            (minSteps, maxSteps) = (maxSteps, minSteps);
 
-        return Random.Range(minSteps, minSteps + maxStepsOffset);
+        return Random.Range(minSteps, maxSteps + 1);
     }
 
     private static Vector2Int PickNextDirection(TilemapHelper.Axis chosenAxis, TilemapHelper.Axis room1EdgeAxis, TilemapHelper.Edge room1Edge)

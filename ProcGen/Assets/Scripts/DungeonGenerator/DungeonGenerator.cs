@@ -84,32 +84,31 @@ public class DungeonGenerator : MonoBehaviour
         // DebugAStarPath();
     }
 
-    public bool GenerateGameEnvironment()
+    public void GenerateGameEnvironment()
     {
         selectedLayout = layouts[Random.Range(0, layouts.Count)];
 
         Debug.Log($"Selected Layout: {selectedLayout.name}");
 
-        // APPLY GRAPH REWRITE BEFORE GENERATION
-        if (!GraphRewriteRuleList)
-            return false;
 
-        GraphRewriter graphRewriter = new GraphRewriter(GraphRewriteRuleList);
+
         List<DungeonRoom> modifiedGraph;
-        bool rewriteSuccessful = graphRewriter.RewriteGraph(selectedLayout, out modifiedGraph);
 
-        if (!rewriteSuccessful)
-            return false;
 
-        bool dungeonGenerated = GenerateDungeon(modifiedGraph);
-
-        if (!dungeonGenerated)
+        // APPLY GRAPH REWRITE BEFORE GENERATION
+        if (GraphRewriteRuleList)
         {
-            Debug.Log($"Failed to generated dungeon.");
-            return false;
-        }
+            GraphRewriter graphRewriter = new GraphRewriter(GraphRewriteRuleList);
+            bool rewriteSuccessful = graphRewriter.RewriteGraph(selectedLayout, out modifiedGraph);
 
-        return true;
+            if (rewriteSuccessful)
+            {
+                GenerateDungeon(modifiedGraph);
+                return;
+            }
+        }
+        else
+            GenerateDungeon(selectedLayout.dungeonRoomList);
     }
 
     public Dictionary<DungeonRoom, int> GetRoomDepthDict()
@@ -241,24 +240,22 @@ public class DungeonGenerator : MonoBehaviour
         return true;
     }
 
-    bool GenerateDungeon(List<DungeonRoom> layout)
+    void GenerateDungeon(List<DungeonRoom> layout)
     {
-        if (layout == null || layout.Count == 0 || corridorFloorTilemap == null || roomsGO == null) return false;
+        if (layout == null || layout.Count == 0 || corridorFloorTilemap == null || roomsGO == null) return;
 
-        int maxAttempts = 5;
         int attempts = 0;
+        int maxAttempts = 10;
         while (attempts < maxAttempts)
         {
             if (GraphBasedGeneration.GenerateDungeon(layout, grid, roomsGO, corridorFloorTilemap, corridorWallTilemap, corridorTiles, out roomsDict, maxPlacementFailCount: 3))
             {
                 FillBackground(backgroundTilemap, backgroundTile);
-                return true;
+                return;
             }
 
-
-            attempts += 1;
-            Debug.Log($"Failed to generate dungeon: attempt {attempts}/{maxAttempts}");
+            attempts++;
+            Debug.Log($"Dungeon Generation Failed Attempt {attempts}/{maxAttempts}");
         }
-        return false;
     }
 }

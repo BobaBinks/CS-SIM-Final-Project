@@ -29,14 +29,19 @@ public class EnemySpawnManager : MonoBehaviour
         RemoveInvalidEnemyPrefabs(bossPrefabs);
     }
 
+    private void OnEnable()
+    {
+        SpawnEnemiesInNextDepth.OnPlayerEnter += OnPlayerEnter;
+    }
+
+    private void OnDisable()
+    {
+        SpawnEnemiesInNextDepth.OnPlayerEnter -= OnPlayerEnter;
+    }
+
     // Update is called once per frame
     void Update()
     {
-    }
-
-    public void RegisterSpawnEvent()
-    {
-        SpawnEnemiesInNextDepth.OnPlayerEnter += OnPlayerEnter;
     }
 
     public void OnPlayerEnter(GameObject roomGO)
@@ -90,36 +95,6 @@ public class EnemySpawnManager : MonoBehaviour
             }
         }
     }
-
-
-    //public void SpawnEnemiesInRooms(Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict)
-    //{
-    //    if (roomsDict == null)
-    //        return;
-
-    //    foreach(var kvp in roomsDict)
-    //    {
-    //        // iterate through each room
-    //        DungeonRoomInstance roomInstance = kvp.Value;
-
-    //        if (roomInstance == null || roomInstance.instance == null)
-    //            continue;
-
-    //        SpawnEnemiesInRoom(roomInstance);
-
-    //        //// get the enemy spawn points and waypoints
-    //        //Transform enemySpawnPointContainer = Helper.FindChildWithTag(roomInstance.instance.transform, "EnemySpawnPoints");
-    //        //Transform enemyPatrolWayPointContainer = Helper.FindChildWithTag(roomInstance.instance.transform, "EnemyPatrolWaypoints");
-
-    //        //// if enemy spawn points does not exist, continue
-    //        //if (!enemySpawnPointContainer)
-    //        //    continue;
-
-    //        //// else random select a prefab and spawn on spawnpoint
-    //        //SpawnEnemies(enemySpawnPointContainer, enemyPatrolWayPointContainer);
-    //    }
-    //}
-
     public void SpawnEnemiesInRoom(DungeonRoomInstance roomInstance)
     {
         if (roomInstance == null)
@@ -228,49 +203,6 @@ public class EnemySpawnManager : MonoBehaviour
         int enemyLevel = player.Level + levelDifference;
         return Mathf.Clamp(enemyLevel, minLevel, maxLevel);
     }
-
-    //private void SpawnEnemies(Transform enemySpawnPointContainer, Transform enemyPatrolWayPointContainer, int numOfEnemies = 2)
-    //{
-    //    if (!enemyContainerTransform)
-    //        return;
-
-    //    enemyLevelDifference = Mathf.Max(enemyLevelDifference, 0);
-    //    int enemyLevel = CalculateEnemyLevel(levelDifference: enemyLevelDifference);
-
-    //    List<Transform> waypoints = new List<Transform>();
-    //    if (enemyPatrolWayPointContainer)
-    //    {
-    //        for (int waypointIndex = 0; waypointIndex < enemyPatrolWayPointContainer.childCount; ++waypointIndex)
-    //        {
-    //            waypoints.Add(enemyPatrolWayPointContainer.GetChild(waypointIndex));
-    //        }
-    //    }
-
-    //    for(int enemyCount = 0; enemyCount < numOfEnemies; ++enemyCount)
-    //    {
-    //        int prefabIndex = Random.Range(0, enemyPrefabs.Count);
-
-    //        int spawnPointIndex = Random.Range(0, enemySpawnPointContainer.childCount);
-
-    //        Vector3 spawnPosition = enemySpawnPointContainer.GetChild(spawnPointIndex).position;
-
-    //        GameObject enemyGO = GameObject.Instantiate(enemyPrefabs[prefabIndex], spawnPosition, Quaternion.identity, enemyContainerTransform);
-
-    //        EnemyAI ai = enemyGO.GetComponent<EnemyAI>();
-
-    //        if (ai)
-    //        {
-    //            if (enemyPatrolWayPointContainer)
-    //            {
-    //                ai.Initialize(true, waypoints, enemyLevel);
-    //            }
-    //            else
-    //            {
-    //                ai.Initialize(enemyLevel);
-    //            }
-    //        }
-    //    }
-    //}
     
     private void SpawnEnemies(Transform enemyPatrolWayPointContainer, Vector3 spawnPosition)
     {
@@ -326,5 +258,25 @@ public class EnemySpawnManager : MonoBehaviour
                 enemyPrefabs.RemoveAt(i);
             }
         }
+    }
+
+    private void ClearEnemies(GameObject enemiesContainerGO)
+    {
+        if (enemiesContainerGO == null) return;
+
+        for (int childIndex = enemiesContainerGO.transform.childCount - 1; childIndex >= 0; --childIndex)
+        {
+            GameObject.Destroy(enemiesContainerGO.transform.GetChild(childIndex).gameObject);
+        }
+    }
+
+    public void Reset()
+    {
+        ClearEnemies(enemyContainerTransform.gameObject);
+
+        if (roomsWithEnemy != null)
+            roomsWithEnemy.Clear();
+        else
+            roomsWithEnemy = new HashSet<DungeonRoom>();
     }
 }

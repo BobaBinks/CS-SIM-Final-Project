@@ -50,7 +50,7 @@ public class PathMovement : MonoBehaviour
             return false;
 
         // get updated path starting from next step
-        int nextIndex = currentPathIndex + 1;
+        int nextIndex = currentPathIndex;
 
         // if there is no next step, get new path
         if (nextIndex >= currentPath.Count)
