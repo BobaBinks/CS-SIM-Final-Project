@@ -4,6 +4,8 @@ public class ChaseState : BaseState<EnemyAI>
 {
     AStarPathfinder aStarPathfinder;
     Vector3 savedPlayerPosition;
+
+    float pathResetThreshold = 0.1f;
     public ChaseState(string stateId) : base(stateId)
     {
 
@@ -49,19 +51,19 @@ public class ChaseState : BaseState<EnemyAI>
             return;
         }
 
+        if(owner.PlayerInAttackRange())
+        {
+            owner.Sm.SetNextState("attack");
+            return;
+        }
+
         // check if path is outdated
         float differenceSquared = (savedPlayerPosition - owner.player.transform.position).sqrMagnitude;
-        if (differenceSquared > owner.AttackRange * owner.AttackRange)
+        if (differenceSquared > pathResetThreshold * pathResetThreshold)
         {
             // update path
             savedPlayerPosition = owner.player.transform.position;
             owner.pathMover.UpdatePath(savedPlayerPosition, aStarPathfinder);
-            return;
-        }
-
-        if (owner.pathMover.IsPathComplete())
-        {
-            owner.Sm.SetNextState("attack");
             return;
         }
 

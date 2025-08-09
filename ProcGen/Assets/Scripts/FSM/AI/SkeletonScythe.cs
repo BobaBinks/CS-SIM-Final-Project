@@ -9,11 +9,5 @@ public class SkeletonScythe : EnemyAI
 
         if(healthBar)
             healthBar.fillAmount = HealthPoints / MaxHealthPoints;
-
-        if (animator)
-        {
-
-            // animator.Play(TakeDamageAnimationName);
-        }
     }
 }
