@@ -87,6 +87,13 @@ public class PlayerController : MonoBehaviour
 
     public void DealDamage()
     {
+        if (!player || !player.weaponManager)
+        {
+            Debug.Log("PlayerController.DealDamage: Player or WeaponManager does not exist");
+            return;
+        }
+
+
         player.animator.SetBool("Attack", false);
 
         // get the sword Collider container transform
@@ -102,7 +109,7 @@ public class PlayerController : MonoBehaviour
         // figure out which dir NE,NW,SE,SW
 
         string direction = GetStringDirection(new Vector2(player.animator.GetFloat("X"),
-                                                            player.animator.GetFloat("Y")));
+                                                          player.animator.GetFloat("Y")));
 
         if (string.IsNullOrEmpty(direction))
         {
@@ -126,7 +133,12 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        swordDirectionalCollider.DealDamage(player.BaseSwordDamage);
+        // get sword
+        BaseWeapon weapon = player.weaponManager.GetCurrentBaseWeapon();
+        if (!weapon)
+            return;
+
+        swordDirectionalCollider.DealDamage(weapon.GetDamage());
     }
 
     private string GetStringDirection(Vector2 direction)

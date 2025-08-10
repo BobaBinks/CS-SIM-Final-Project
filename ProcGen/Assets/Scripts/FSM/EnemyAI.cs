@@ -109,10 +109,10 @@ public abstract class EnemyAI: CharacterBase, IDamagable
 
     #region Stat Curves
     [Header("Stat Curves")]
-    [SerializeField] AnimationCurve damageCurve;
-    [SerializeField] AnimationCurve healthCurve;
-    [SerializeField] AnimationCurve speedCurve;
-    [SerializeField] AnimationCurve xpRewardCurve;
+    [SerializeField] protected AnimationCurve damageCurve;
+    [SerializeField] protected AnimationCurve healthCurve;
+    [SerializeField] protected AnimationCurve speedCurve;
+    [SerializeField] protected AnimationCurve xpRewardCurve;
     #endregion
 
     public Player player { get; private set; }

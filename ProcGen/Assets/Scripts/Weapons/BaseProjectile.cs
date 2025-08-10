@@ -1,16 +1,13 @@
 using UnityEngine;
 
+[RequireComponent(typeof(Collider2D),typeof(Rigidbody2D))]
 public class BaseProjectile : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
+    protected float damage = 10f;
 
-    // Update is called once per frame
-    void Update()
+    public virtual void InitializeProjectile(float damage = 10f, float lifetime = 5f)
     {
-        
+        this.damage = Mathf.Max(0.01f, damage);
+        Destroy(gameObject, Mathf.Max(0.01f, lifetime));
     }
 }

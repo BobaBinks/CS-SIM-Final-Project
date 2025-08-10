@@ -18,7 +18,6 @@ public class Player : CharacterBase, IDamagable, IHealable
 
     #region Additional Stats
     public float currentXp;
-    public float BaseSwordDamage { get; private set; }
 
     [SerializeField]
     float attackCooldownTime = 1f;
@@ -29,7 +28,6 @@ public class Player : CharacterBase, IDamagable, IHealable
     #endregion
 
     #region Stat Curves
-    [SerializeField] AnimationCurve damageCurve;
     [SerializeField] AnimationCurve healthCurve;
     [SerializeField] AnimationCurve speedCurve;
     [SerializeField] AnimationCurve levelXPCurve;
@@ -47,7 +45,6 @@ public class Player : CharacterBase, IDamagable, IHealable
         spriteFlipper = GetComponent<SpriteFlipper>();
         animator = GetComponent<Animator>();
 
-        BaseSwordDamage = damageCurve.Evaluate(Level);
         maxHealthPoints = healthCurve.Evaluate(Level);
         moveSpeed = speedCurve.Evaluate(Level);
 
@@ -81,6 +78,9 @@ public class Player : CharacterBase, IDamagable, IHealable
         HealthPoints = maxHealthPoints;
         UpdateHealthBar();
         UpdateXP();
+
+        if (weaponManager)
+            weaponManager.SetWeaponLevels(Level);
     }
 
     public override void TakeDamage(float damage)

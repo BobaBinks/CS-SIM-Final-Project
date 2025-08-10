@@ -1,14 +1,16 @@
 using UnityEngine;
-[RequireComponent(typeof(BoxCollider2D))]
-public class Arrow : BaseProjectile
+
+public class EnemyProjectile : BaseProjectile
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        CharacterBase character = collision.GetComponent<CharacterBase>();
+        Player character = collision.GetComponent<Player>();
         if (character && damage > 0)
         {
             character.TakeDamage(damage);
         }
-        Destroy(gameObject);
+
+        if(!collision.CompareTag("Enemies"))
+            Destroy(gameObject);
     }
 }

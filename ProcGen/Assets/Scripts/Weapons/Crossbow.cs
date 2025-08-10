@@ -24,7 +24,7 @@ public class Crossbow : BaseWeapon
             Arrow arrow = arrowGO.GetComponent<Arrow>();
 
             float damage = damageCurve.Evaluate(Level);
-            arrow.InitializeArrow(damage, arrowLifetime);
+            arrow.InitializeProjectile(damage, arrowLifetime);
 
 
             if (rb)

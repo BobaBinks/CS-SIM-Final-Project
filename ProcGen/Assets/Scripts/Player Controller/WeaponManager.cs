@@ -27,6 +27,27 @@ public class WeaponManager : MonoBehaviour
         }
     }
     
+    public void SetWeaponLevels(int level)
+    {
+        if (weaponList == null || weaponList.Count == 0)
+            return;
+
+        foreach(var weapon in weaponList)
+        {
+            Debug.Log($"{weapon.name} old level: {weapon.GetLevel()}");
+            weapon.SetLevel(level);
+            Debug.Log($"{weapon.name} new level: {weapon.GetLevel()}");
+        }
+    }
+
+    public BaseWeapon GetCurrentBaseWeapon()
+    {
+        if (weaponList == null || weaponList.Count == 0 || currentWeaponIndex < 0 || currentWeaponIndex > weaponList.Count - 1)
+            return null;
+
+        return weaponList[currentWeaponIndex];
+    }
+
     public bool CurrentWeaponIsSword()
     {
         return currentWeaponIndex == 0;

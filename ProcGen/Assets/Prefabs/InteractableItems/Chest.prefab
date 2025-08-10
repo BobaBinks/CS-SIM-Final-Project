@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 3756757578177944494}
   - component: {fileID: 5772430553843539589}
   - component: {fileID: -7386116369616284696}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Chest
-  m_TagString: Untagged
+  m_TagString: InteractableObjects
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

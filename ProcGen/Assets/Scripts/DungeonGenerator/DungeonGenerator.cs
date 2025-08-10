@@ -246,7 +246,7 @@ public class DungeonGenerator : MonoBehaviour
 
         int attempts = 0;
         int maxAttempts = 10;
-        while (true)
+        while (attempts < maxAttempts)
         {
             if (GraphBasedGeneration.GenerateDungeon(layout, grid, roomsGO, corridorFloorTilemap, corridorWallTilemap, corridorTiles, out roomsDict, maxPlacementFailCount: 3))
             {
