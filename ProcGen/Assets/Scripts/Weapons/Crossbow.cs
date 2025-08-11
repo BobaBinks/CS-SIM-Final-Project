@@ -26,8 +26,10 @@ public class Crossbow : BaseWeapon
             float damage = damageCurve.Evaluate(Level);
             arrow.InitializeProjectile(damage, arrowLifetime);
 
-            if (SoundManager.Instance)
-                SoundManager.Instance.PlaySoundEffect(SoundManager.SoundEffects.PLAYER_CROSSBOX_SFX, volumeScale: 1);
+            if (SoundManager.Instance && SoundLibrary.Instance)
+                SoundManager.Instance.PlaySoundEffect(
+                    SoundLibrary.Instance.GetAudioClip(SoundLibrary.Player.CROSSBOW_SFX),
+                    volumeScale: 1);
 
             if (rb)
             {

@@ -18,7 +18,9 @@ public class Vampire : EnemyAI
 
     public void PlayBiteSound()
     {
-        if (SoundManager.Instance)
-            SoundManager.Instance.PlaySoundEffect(SoundManager.SoundEffects.BITE, volumeScale: 1);
+        if (SoundManager.Instance && SoundLibrary.Instance)
+            SoundManager.Instance.PlaySoundEffect(
+                SoundLibrary.Instance.GetAudioClip(SoundLibrary.Enemy.BITE),
+                volumeScale: 1);
     }
 }

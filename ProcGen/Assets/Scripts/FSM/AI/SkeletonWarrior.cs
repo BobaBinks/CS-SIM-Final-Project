@@ -10,7 +10,9 @@ public class SkeletonWarrior : EnemyAI
 
     public void PlayAttackSound()
     {
-        if (SoundManager.Instance)
-            SoundManager.Instance.PlaySoundEffect(SoundManager.SoundEffects.ENEMY_PHYSICAL_ATTACK);
+        if (SoundManager.Instance && SoundLibrary.Instance)
+            SoundManager.Instance.PlaySoundEffect(
+                    SoundLibrary.Instance.GetAudioClip(SoundLibrary.Enemy.PHYSICAL_ATTACK)
+                );
     }
 }

@@ -15,7 +15,11 @@ public class SoundManager : MonoBehaviour
         FIREBALL_1,
         TELEPORT,
         ENEMY_PHYSICAL_ATTACK,
-        FOOTSTEPS,
+        PLAYER_FOOTSTEP_1,
+        PLAYER_FOOTSTEP_2,
+        PLAYER_FOOTSTEP_3,
+        PLAYER_FOOTSTEP_4,
+        PLAYER_FOOTSTEP_5,
         SOUND_EFFECT_SIZE,
     };
 
@@ -28,22 +32,21 @@ public class SoundManager : MonoBehaviour
     {
         if (Instance != null && Instance != this)
         {
-            Destroy(gameObject); // Destroy duplicate
+            Destroy(gameObject);
             return;
         }
 
         Instance = this;
     }
 
-    public void PlaySoundEffect(SoundEffects sfx, float volumeScale = 1)
+    public void PlaySoundEffect(AudioClip sfx, float volumeScale = 1)
     {
-        int sfxIndex = (int)sfx;
-        if (sfxIndex < 0 || sfx >= SoundEffects.SOUND_EFFECT_SIZE || sfxSource == null)
+        if (sfx == null)
             return;
 
         volumeScale = Mathf.Clamp(volumeScale, 0, 1);
 
-        sfxSource.PlayOneShot(audioClips[sfxIndex], volumeScale);
+        sfxSource.PlayOneShot(sfx, volumeScale);
     }
 
     public void PlayMusic(AudioClip clip, bool loop = true)

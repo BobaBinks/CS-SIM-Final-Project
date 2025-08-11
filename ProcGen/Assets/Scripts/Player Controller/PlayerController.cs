@@ -72,8 +72,10 @@ public class PlayerController : MonoBehaviour
                 player.attackOnCooldown = true;
                 StartCoroutine(DelayAttack());
 
-                if (SoundManager.Instance)
-                    SoundManager.Instance.PlaySoundEffect(SoundManager.SoundEffects.PLAYER_SWORD_SFX, volumeScale: 1);
+                if (SoundManager.Instance && SoundLibrary.Instance)
+                    SoundManager.Instance.PlaySoundEffect(
+                        SoundLibrary.Instance.GetAudioClip(SoundLibrary.Player.SWORD_SFX),
+                        volumeScale: 1);
             }
             else if (player.weaponManager)
             {

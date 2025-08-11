@@ -67,8 +67,10 @@ public class Player : CharacterBase, IDamagable, IHealable
         string floatingText = $"{xp: 0} XP gained";
         UpdateXP();
 
-        if (SoundManager.Instance)
-            SoundManager.Instance.PlaySoundEffect(SoundManager.SoundEffects.XP_GAIN);
+        if (SoundManager.Instance && SoundLibrary.Instance)
+            SoundManager.Instance.PlaySoundEffect(
+                    SoundLibrary.Instance.GetAudioClip(SoundLibrary.Player.XP_GAIN)
+                );
 
         if (floatingTextPrefab && floatingTextGeneralContainer)
             InstantiateFloatingText(floatingText, floatingTextGeneralContainer.transform, offset: false);
@@ -108,8 +110,10 @@ public class Player : CharacterBase, IDamagable, IHealable
 
         Debug.Log($"Player health: {HealthPoints}");
 
-        if (SoundManager.Instance)
-            SoundManager.Instance.PlaySoundEffect(SoundManager.SoundEffects.PLAYER_HIT, volumeScale: 1);
+        if (SoundManager.Instance && SoundLibrary.Instance)
+            SoundManager.Instance.PlaySoundEffect(
+                SoundLibrary.Instance.GetAudioClip(SoundLibrary.Player.PLAYER_HIT),
+                volumeScale: 1);
 
         if (HealthPoints <= 0)
         {
@@ -127,8 +131,10 @@ public class Player : CharacterBase, IDamagable, IHealable
         if (floatingTextPrefab && floatingTextGeneralContainer)
             InstantiateFloatingText(floatingText, floatingTextGeneralContainer.transform, offset: false);
 
-        if (SoundManager.Instance)
-            SoundManager.Instance.PlaySoundEffect(SoundManager.SoundEffects.HEAL);
+        if (SoundManager.Instance && SoundLibrary.Instance)
+            SoundManager.Instance.PlaySoundEffect(
+                    SoundLibrary.Instance.GetAudioClip(SoundLibrary.Player.HEAL)
+                );
 
         UpdateHealthBar();
     }
@@ -145,5 +151,9 @@ public class Player : CharacterBase, IDamagable, IHealable
         {
             UIManager.Instance.SetLevel(currentXp, levelXPCurve.Evaluate(Level), Level);
         }
+    }
+
+    public void PlayFootSteps()
+    {
     }
 }

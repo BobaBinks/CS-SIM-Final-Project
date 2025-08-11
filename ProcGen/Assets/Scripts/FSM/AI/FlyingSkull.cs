@@ -36,9 +36,11 @@ public class FlyingSkull : EnemyAI
         }
         projectileGO.GetComponent<Rigidbody2D>().linearVelocity = dir * 0.5f; // Example speed
 
-        if (SoundManager.Instance)
+        if (SoundManager.Instance && SoundLibrary.Instance)
         {
-                SoundManager.Instance.PlaySoundEffect(SoundManager.SoundEffects.FIREBALL_1);
+                SoundManager.Instance.PlaySoundEffect(
+                        SoundLibrary.Instance.GetAudioClip(SoundLibrary.Spells.FIREBALL_1)
+                    );
         }
     }
 }
