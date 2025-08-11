@@ -130,17 +130,7 @@ public class AStarPathfinder
                     continue;
 
                 Vector3Int cellWorldPosition = cell + roomCellPosition;
-                int index = ConvertCellToIndex(cellWorldPosition);
-
-                if (index == -1 || index >= nodes.Count)
-                    continue;
-
-                if (nodes[index] != null)
-                {
-                    nodes[index].occupied = false;
-                    MiniMapTilemap.SetTile(cellWorldPosition, corridorTiles.corridorFloor);
-                }
-
+                MiniMapTilemap.SetTile(cellWorldPosition, corridorTiles.corridorFloor);
             }
         }
 
@@ -150,13 +140,6 @@ public class AStarPathfinder
         {
             if (corridorFloorTilemap.GetTile(cell) == null)
                 continue;
-
-            int index = ConvertCellToIndex(cell);
-
-            if (index == -1 || index >= nodes.Count)
-                continue;
-
-            nodes[index].occupied = false;
 
             MiniMapTilemap.SetTile(cell, corridorTiles.corridorFloor);
         }

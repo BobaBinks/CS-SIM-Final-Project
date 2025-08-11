@@ -2673,6 +2673,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 829214014}
   m_CullTransparentMesh: 1
+--- !u!1 &837963201
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 837963202}
+  m_Layer: 0
+  m_Name: SoundManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &837963202
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837963201}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4.833557, y: 3.252812, z: -0.07140676}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &850850270
 GameObject:
   m_ObjectHideFlags: 0
@@ -6754,7 +6785,7 @@ PrefabInstance:
       objectReference: {fileID: 285634607}
     - target: {fileID: 5614104904988341736, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
       propertyPath: enemyPrefabs.Array.size
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5614104904988341736, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
       propertyPath: 'bossPrefabs.Array.data[0]'
@@ -7037,3 +7068,4 @@ SceneRoots:
   - {fileID: 785978908}
   - {fileID: 97013168}
   - {fileID: 1752722929}
+  - {fileID: 837963202}
