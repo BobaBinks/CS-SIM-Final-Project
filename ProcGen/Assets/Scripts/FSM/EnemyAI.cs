@@ -13,6 +13,8 @@ public abstract class EnemyAI: CharacterBase, IDamagable
     [HideInInspector]
     public List<Transform> wayPoints;
 
+    [SerializeField] float maxHearingDistance = 2f;
+
     #region Animations
     [Header("Animation Settings")]
     [SerializeField] private string attackAnimationName = "SkeletonWarriorAttack";
@@ -259,6 +261,28 @@ public abstract class EnemyAI: CharacterBase, IDamagable
             SoundManager.Instance.PlaySoundEffect(
                 SoundLibrary.Instance.GetAudioClip(SoundLibrary.Enemy.HIT),
                 volumeScale: 1);
+    }
+    public void PlayFootSteps()
+    {
+        // calculate distance from enemy to player
+        float distance = Vector3.Distance(transform.position, player.transform.position);
+
+        // volume fades out with distance (1 at close, 0 at max distance)
+        float volume = Mathf.Clamp01(1 - (distance / maxHearingDistance));
+
+        // skip playing if volume is basically inaudible
+        if (volume <= 0.01f) return;
+
+        SoundManager soundManager = SoundManager.Instance;
+        SoundLibrary soundLibrary = SoundLibrary.Instance;
+        if (soundManager && soundLibrary)
+        {
+            int footStepClip = Random.Range((int)SoundLibrary.Enemy.FOOTSTEP_1, (int)SoundLibrary.Enemy.FOOTSTEP_5 + 1);
+
+            AudioClip clip = soundLibrary.GetAudioClip((SoundLibrary.Enemy)footStepClip);
+
+            soundManager.PlaySoundEffect(clip, volumeScale: volume);
+        }
     }
 
     public void Despawn()

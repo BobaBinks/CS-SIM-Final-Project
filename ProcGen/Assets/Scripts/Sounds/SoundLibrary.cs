@@ -24,6 +24,11 @@ public class SoundLibrary: MonoBehaviour
         BITE,
         PHYSICAL_ATTACK,
         HIT,
+        FOOTSTEP_1,
+        FOOTSTEP_2,
+        FOOTSTEP_3,
+        FOOTSTEP_4,
+        FOOTSTEP_5
     }
 
     public enum Spells
