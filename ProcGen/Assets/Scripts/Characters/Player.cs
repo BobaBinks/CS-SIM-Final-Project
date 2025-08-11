@@ -155,5 +155,15 @@ public class Player : CharacterBase, IDamagable, IHealable
 
     public void PlayFootSteps()
     {
+        SoundManager soundManager = SoundManager.Instance;
+        SoundLibrary soundLibrary = SoundLibrary.Instance; 
+        if(soundManager && soundLibrary)
+        {
+            int footStepClip = Random.Range((int)SoundLibrary.Player.FOOTSTEP_1, (int)SoundLibrary.Player.FOOTSTEP_5 + 1);
+
+            AudioClip clip = soundLibrary.GetAudioClip((SoundLibrary.Player)footStepClip);
+
+            soundManager.PlaySoundEffect(clip);
+        }
     }
 }
