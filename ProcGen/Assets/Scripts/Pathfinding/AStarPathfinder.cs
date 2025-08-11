@@ -12,6 +12,7 @@ public class AStarPathfinder
 
     public CorridorTiles corridorTiles;
     public Tilemap AStarGridTilemap { get; private set; }
+    public Tilemap MiniMapTilemap { get; private set; }
 
     /// <summary>
     /// Marks traversible cells on the A* grid by checking tiles in dungeon rooms and corridor floor tilemaps.
@@ -22,7 +23,7 @@ public class AStarPathfinder
     /// <returns>True if operation completes successfully, otherwise false.</returns>
     public bool MarkTraversableCells(Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict, Tilemap corridorFloorTilemap, Grid grid)
     {
-        if (roomsDict == null || roomsDict.Count < 1)
+        if (roomsDict == null || roomsDict.Count < 1 || AStarGridTilemap == null)
             return false;
 
         // getting traversible tiles in rooms
@@ -100,6 +101,68 @@ public class AStarPathfinder
         return true;
     }
 
+    public bool MarkMinimapCells(Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict, Tilemap corridorFloorTilemap, Grid grid)
+    {
+        if (roomsDict == null || roomsDict.Count < 1 || MiniMapTilemap == null)
+            return false;
+
+        // getting traversible tiles in rooms
+        foreach (var kvp in roomsDict)
+        {
+            DungeonRoomInstance roomInstance = kvp.Value;
+
+            if (roomInstance == null || roomInstance.instance == null)
+                continue;
+
+            Vector3Int roomCellPosition = roomInstance.GetPositionInCell(grid);
+
+
+            Tilemap wallMap = roomInstance.wallMap;
+
+            // mark traversible cells
+            foreach (var cell in roomInstance.groundMap.cellBounds.allPositionsWithin)
+            {
+                if (roomInstance.groundMap.GetTile(cell) == null)
+                    continue;
+
+                // this to check if there are walls inside the rooms excluding the outer walls
+                if (wallMap && wallMap.GetTile(cell) != null)
+                    continue;
+
+                Vector3Int cellWorldPosition = cell + roomCellPosition;
+                int index = ConvertCellToIndex(cellWorldPosition);
+
+                if (index == -1 || index >= nodes.Count)
+                    continue;
+
+                if (nodes[index] != null)
+                {
+                    nodes[index].occupied = false;
+                    MiniMapTilemap.SetTile(cellWorldPosition, corridorTiles.corridorFloor);
+                }
+
+            }
+        }
+
+        corridorFloorTilemap.CompressBounds();
+        // getting traversible tiles in corridors
+        foreach (var cell in corridorFloorTilemap.cellBounds.allPositionsWithin)
+        {
+            if (corridorFloorTilemap.GetTile(cell) == null)
+                continue;
+
+            int index = ConvertCellToIndex(cell);
+
+            if (index == -1 || index >= nodes.Count)
+                continue;
+
+            nodes[index].occupied = false;
+
+            MiniMapTilemap.SetTile(cell, corridorTiles.corridorFloor);
+        }
+
+        return true;
+    }
     /// <summary>
     /// Gets the cell positions of the interactable objects in the interactable object container in the room
     /// </summary>
@@ -206,6 +269,11 @@ public class AStarPathfinder
     public void SetAStarGridTilemap(Tilemap tilemap)
     {
         AStarGridTilemap = tilemap;
+    }
+
+    public void SetMiniMapTilemap(Tilemap tilemap)
+    {
+        MiniMapTilemap = tilemap;
     }
 
     public List<Vector3> GetShortestWorldPath(Vector3 startPos, Vector3 endPos)

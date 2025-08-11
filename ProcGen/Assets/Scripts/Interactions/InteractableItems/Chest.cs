@@ -5,6 +5,8 @@ public class Chest : MonoBehaviour, IInteractable
 {
     [SerializeField] Animator animator;
     [SerializeField] List<GameObject> lootPrefabs;
+    [SerializeField] GameObject miniMapIcon;
+
 
     public bool IsOpened { get; private set;}
 
@@ -32,6 +34,9 @@ public class Chest : MonoBehaviour, IInteractable
         // set animation to open
         animator.Play("chestOpen");
         IsOpened = true;
+
+        if (miniMapIcon)
+            miniMapIcon.SetActive(false);
     }
 
     void DropLoot()

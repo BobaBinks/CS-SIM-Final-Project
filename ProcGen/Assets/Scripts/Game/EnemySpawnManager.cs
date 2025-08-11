@@ -113,6 +113,7 @@ public class EnemySpawnManager : MonoBehaviour
             int xPos = Random.Range(groundMap.cellBounds.xMin, groundMap.cellBounds.xMax);
             int yPos = Random.Range(groundMap.cellBounds.yMin, groundMap.cellBounds.yMax);
 
+
             if (GameManager.Instance.aStarPathfinder.AStarGridTilemap)
             {
                 Vector3 positionWorld = groundMap.CellToWorld(new Vector3Int(xPos, yPos));
@@ -124,8 +125,9 @@ public class EnemySpawnManager : MonoBehaviour
                     failCounter++;
                     continue;
                 }
-
-                SpawnEnemies(enemyPatrolWayPointContainer, positionWorld);
+                Vector3 cellCenterPosition = GameManager.Instance.aStarPathfinder.AStarGridTilemap.GetCellCenterLocal(localPosition);
+                cellCenterPosition = GameManager.Instance.aStarPathfinder.AStarGridTilemap.LocalToWorld(cellCenterPosition);
+                SpawnEnemies(enemyPatrolWayPointContainer, cellCenterPosition);
                 break;
             }
         }

@@ -33,6 +33,7 @@ public abstract class EnemyAI: CharacterBase, IDamagable
     [SerializeField] protected Image healthBar;
     [SerializeField] protected TextMeshProUGUI levelText;
     [SerializeField] protected Canvas canvas;
+    [SerializeField] protected GameObject floatingTextContainer;
     #endregion
 
     public PathMovement pathMover { get; protected set; }
@@ -242,6 +243,17 @@ public abstract class EnemyAI: CharacterBase, IDamagable
         {
             manager.player.GainXP(xpRewardCurve.Evaluate(Level));
         }
+    }
+
+    public override void TakeDamage(float damage)
+    {
+        base.TakeDamage(damage);
+
+        if (healthBar)
+            healthBar.fillAmount = HealthPoints / MaxHealthPoints;
+
+        if (floatingTextPrefab && floatingTextContainer)
+            InstantiateFloatingText(damage.ToString("0"), floatingTextContainer.transform, offset: true);
     }
 
     public void Despawn()

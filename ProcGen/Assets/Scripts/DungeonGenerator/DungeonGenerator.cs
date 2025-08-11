@@ -13,17 +13,14 @@ public class DungeonGenerator : MonoBehaviour
 
     #region Tiles/Tilemaps
     [Header("Tiles/Tilemaps")]
-    [SerializeField]
-    private Tilemap corridorFloorTilemap;
+    [SerializeField] private Tilemap corridorFloorTilemap;
+    [SerializeField] private Tilemap corridorWallTilemap;
+    [SerializeField] private Tilemap backgroundTilemap;
+    [SerializeField] private Tilemap aStarGridTilemap;
+    [SerializeField] private Tilemap miniMapTilemap;
 
-    [SerializeField]
-    private Tilemap corridorWallTilemap;
 
-    [SerializeField]
-    private Tilemap backgroundTilemap;
-
-    [SerializeField]
-    private Tile backgroundTile;
+    [SerializeField] private Tile backgroundTile;
 
     [Header("Corridor Tiles")]
     public CorridorTiles corridorTiles;
@@ -38,9 +35,7 @@ public class DungeonGenerator : MonoBehaviour
     private Dictionary<DungeonRoom, int> roomDepthDict;
 
     #region ASTAR
-    // debug aStar
-    [SerializeField]
-    private Tilemap aStarGridTilemap;
+
 
     bool startNodePicked = false;
     Vector3Int startPosition;
@@ -126,8 +121,11 @@ public class DungeonGenerator : MonoBehaviour
         // initialize A* grid
         AStarPathfinder aStar = new AStarPathfinder();
 
-        // this just for debugging
+        aStarGridTilemap.ClearAllTiles();
         aStar.SetAStarGridTilemap(aStarGridTilemap);
+
+        miniMapTilemap.ClearAllTiles();
+        aStar.SetMiniMapTilemap(miniMapTilemap);
         aStar.corridorTiles = corridorTiles;
 
         bool aStarGridInitialized = aStar.InitializeGridDimensions(roomsDict, grid);
@@ -136,10 +134,11 @@ public class DungeonGenerator : MonoBehaviour
             return null;
 
         bool traversableCellsMarked = aStar.MarkTraversableCells(roomsDict, corridorFloorTilemap, grid);
+        bool markMinimapCells = aStar.MarkMinimapCells(roomsDict, corridorFloorTilemap, grid);
 
-        if (!traversableCellsMarked)
+        if (!traversableCellsMarked || !markMinimapCells)
         {
-            Debug.LogError("A* failed to mark traversable cells.");
+            Debug.LogError("A* failed to mark traversable cells or minimap cells.");
             return null;
         }
         return aStar;

@@ -7,6 +7,10 @@ using System.Collections;
 [RequireComponent(typeof(Rigidbody2D), typeof(SpriteFlipper))]
 public class Player : CharacterBase, IDamagable, IHealable
 {
+    [SerializeField] protected GameObject floatingTextLevelUpContainer;
+    [SerializeField] protected GameObject floatingTextWeaponLevelUpContainer;
+    [SerializeField] protected GameObject floatingTextGeneralContainer;
+
     public Rigidbody2D rigidBody { get; protected set; }
     public SpriteFlipper spriteFlipper { get; protected set; }
 
@@ -60,8 +64,12 @@ public class Player : CharacterBase, IDamagable, IHealable
         float xpRequirements = levelXPCurve.Evaluate(level);
 
         currentXp += xp;
-        Debug.Log($"{xp} XP gained");
+        string floatingText = $"{xp: 0} XP gained";
         UpdateXP();
+
+        if (floatingTextPrefab && floatingTextGeneralContainer)
+            InstantiateFloatingText(floatingText, floatingTextGeneralContainer.transform, offset: false);
+
         if (currentXp >= xpRequirements)
         {
             level += 1;
@@ -81,6 +89,12 @@ public class Player : CharacterBase, IDamagable, IHealable
 
         if (weaponManager)
             weaponManager.SetWeaponLevels(Level);
+
+        if (floatingTextPrefab && floatingTextLevelUpContainer && floatingTextWeaponLevelUpContainer)
+        {
+            InstantiateFloatingText("Level +1", floatingTextLevelUpContainer.transform);
+            InstantiateFloatingText("Weapon Levels +1", floatingTextWeaponLevelUpContainer.transform);
+        }
     }
 
     public override void TakeDamage(float damage)
@@ -101,6 +115,11 @@ public class Player : CharacterBase, IDamagable, IHealable
     public void Heal(float amount)
     {
         HealthPoints = Mathf.Min(HealthPoints + amount, maxHealthPoints);
+
+        string floatingText = $"+ {amount:0} HP";
+
+        if (floatingTextPrefab && floatingTextGeneralContainer)
+            InstantiateFloatingText(floatingText, floatingTextGeneralContainer.transform, offset: false);
         UpdateHealthBar();
     }
 

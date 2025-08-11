@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using TMPro;
 
 [RequireComponent(typeof(SpriteRenderer), typeof(Collider))]
 public abstract class CharacterBase : MonoBehaviour, IDamagable
@@ -8,6 +9,7 @@ public abstract class CharacterBase : MonoBehaviour, IDamagable
     [SerializeField] protected float maxHealthPoints = 100f;
     [SerializeField] protected float moveSpeed = 3.5f;
     [SerializeField] protected int level = 0;
+    [SerializeField] protected GameObject floatingTextPrefab;
 
 
     public int Level => level;
@@ -41,6 +43,27 @@ public abstract class CharacterBase : MonoBehaviour, IDamagable
             StartCoroutine(SpriteFlashRedThenFadeToWhite(0.1f, 0.1f));
         }
         HealthPoints -= damage;
+    }
+
+    public void InstantiateFloatingText(string text, Transform parentTransform, bool offset = false)
+    {
+        Vector3 position = parentTransform.position;
+
+        if (offset)
+        {
+            float xOffset = Random.Range(-0.05f, 0.06f);
+            float yOffset = Random.Range(-0.02f, 0.03f);
+            position.x += xOffset;
+            position.y += yOffset;
+        }
+
+        GameObject textGO = Instantiate(floatingTextPrefab, position, Quaternion.identity, parentTransform);
+        if (textGO)
+        {
+            TextMeshProUGUI tmPro = textGO.GetComponent<TextMeshProUGUI>();
+            if (tmPro)
+                tmPro.text = text;
+        }
     }
 
     public IEnumerator SpriteFlashRedThenFadeToWhite(float flashTime, float fadeRate)

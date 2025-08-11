@@ -6,16 +6,6 @@ public class FlyingSkull : EnemyAI
     public Vector3 aimDirection;
     public float leadDistance = 0.3f;
 
-
-    public override void TakeDamage(float damage)
-    {
-        base.TakeDamage(damage);
-
-        if (healthBar)
-            healthBar.fillAmount = HealthPoints / MaxHealthPoints;
-
-    }
-
     public void FireProjectile()
     {
         if (!projectilePrefab)
