@@ -42,6 +42,8 @@ public abstract class CharacterBase : MonoBehaviour, IDamagable
         {
             StartCoroutine(SpriteFlashRedThenFadeToWhite(0.1f, 0.1f));
         }
+
+
         HealthPoints -= damage;
     }
 

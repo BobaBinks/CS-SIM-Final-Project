@@ -432,6 +432,7 @@ MonoBehaviour:
   level: 0
   floatingTextPrefab: {fileID: 8181417569489792160, guid: eb3bc18611b4f33419bdbc4baa0767f2, type: 3}
   collider: {fileID: 7949673695747702908}
+  takeDamageClip: {fileID: 8300000, guid: 8b23b175a78d6b5458322e3a6c9905d0, type: 3}
   animator: {fileID: 6600795208681754396}
   wayPoints: []
   attackAnimationName: VampireAttack
@@ -544,6 +545,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  biteSound: {fileID: 8300000, guid: fd25a15f9797641458336cccfb445343, type: 3}
 --- !u!61 &7949673695747702908
 BoxCollider2D:
   m_ObjectHideFlags: 0

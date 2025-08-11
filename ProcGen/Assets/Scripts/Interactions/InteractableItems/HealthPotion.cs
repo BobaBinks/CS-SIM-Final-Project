@@ -13,6 +13,7 @@ public class HealthPotion : MonoBehaviour
             IHealable player = collision.GetComponent<IHealable>();
             float healAmount = Mathf.Max(heal, 0f);
             player.Heal(healAmount);
+
             Destroy(this.gameObject);
         }
     }

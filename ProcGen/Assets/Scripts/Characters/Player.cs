@@ -67,6 +67,9 @@ public class Player : CharacterBase, IDamagable, IHealable
         string floatingText = $"{xp: 0} XP gained";
         UpdateXP();
 
+        if (SoundManager.Instance)
+            SoundManager.Instance.PlaySoundEffect(SoundManager.SoundEffects.XP_GAIN);
+
         if (floatingTextPrefab && floatingTextGeneralContainer)
             InstantiateFloatingText(floatingText, floatingTextGeneralContainer.transform, offset: false);
 
@@ -105,7 +108,10 @@ public class Player : CharacterBase, IDamagable, IHealable
 
         Debug.Log($"Player health: {HealthPoints}");
 
-        if(HealthPoints <= 0)
+        if (SoundManager.Instance)
+            SoundManager.Instance.PlaySoundEffect(SoundManager.SoundEffects.PLAYER_HIT, volumeScale: 1);
+
+        if (HealthPoints <= 0)
         {
             // game end
             SceneManager.LoadScene("Menu");
@@ -120,6 +126,10 @@ public class Player : CharacterBase, IDamagable, IHealable
 
         if (floatingTextPrefab && floatingTextGeneralContainer)
             InstantiateFloatingText(floatingText, floatingTextGeneralContainer.transform, offset: false);
+
+        if (SoundManager.Instance)
+            SoundManager.Instance.PlaySoundEffect(SoundManager.SoundEffects.HEAL);
+
         UpdateHealthBar();
     }
 

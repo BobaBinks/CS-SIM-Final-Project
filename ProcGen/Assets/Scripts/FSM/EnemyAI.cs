@@ -254,6 +254,9 @@ public abstract class EnemyAI: CharacterBase, IDamagable
 
         if (floatingTextPrefab && floatingTextContainer)
             InstantiateFloatingText(damage.ToString("0"), floatingTextContainer.transform, offset: true);
+
+        if (SoundManager.Instance)
+            SoundManager.Instance.PlaySoundEffect(SoundManager.SoundEffects.HIT, volumeScale: 1);
     }
 
     public void Despawn()

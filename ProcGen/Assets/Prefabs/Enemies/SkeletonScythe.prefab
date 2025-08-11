@@ -231,6 +231,7 @@ MonoBehaviour:
   level: 0
   floatingTextPrefab: {fileID: 8181417569489792160, guid: eb3bc18611b4f33419bdbc4baa0767f2, type: 3}
   collider: {fileID: 2799431286504632228}
+  takeDamageClip: {fileID: 8300000, guid: 8b23b175a78d6b5458322e3a6c9905d0, type: 3}
   animator: {fileID: 5562144630815470002}
   wayPoints: []
   attackAnimationName: SkeletonScytheAttack

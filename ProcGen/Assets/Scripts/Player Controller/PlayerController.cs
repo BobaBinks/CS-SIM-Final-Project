@@ -65,16 +65,20 @@ public class PlayerController : MonoBehaviour
     {
         if (context.started && !player.attackOnCooldown)
         {
-            if(player.weaponManager.CurrentWeaponIsSword())
+            if(player.weaponManager.CurrentWeaponIsSword() && player.animator.GetBool("Walk") == false)
             {
                 // play animation
                 player.animator.SetBool("Attack", true);
                 player.attackOnCooldown = true;
                 StartCoroutine(DelayAttack());
+
+                if (SoundManager.Instance)
+                    SoundManager.Instance.PlaySoundEffect(SoundManager.SoundEffects.PLAYER_SWORD_SFX, volumeScale: 1);
             }
             else if (player.weaponManager)
             {
                 player.weaponManager.Fire();
+
             }
         }
     }

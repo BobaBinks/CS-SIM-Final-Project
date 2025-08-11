@@ -29,6 +29,10 @@ public class EndGameTransitionMagicCircle : MonoBehaviour
         {
             //SceneManager.LoadScene("Menu");
             GameManager.Instance.CreateGameLevel();
+            if (SoundManager.Instance)
+            {
+                SoundManager.Instance.PlaySoundEffect(SoundManager.SoundEffects.TELEPORT);
+            }
         }
     }
 }

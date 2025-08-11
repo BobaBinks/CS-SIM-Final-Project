@@ -35,5 +35,10 @@ public class FlyingSkull : EnemyAI
             enemyProjectile.InitializeProjectile(damage: damageCurve.Evaluate(Level));
         }
         projectileGO.GetComponent<Rigidbody2D>().linearVelocity = dir * 0.5f; // Example speed
+
+        if (SoundManager.Instance)
+        {
+                SoundManager.Instance.PlaySoundEffect(SoundManager.SoundEffects.FIREBALL_1);
+        }
     }
 }
