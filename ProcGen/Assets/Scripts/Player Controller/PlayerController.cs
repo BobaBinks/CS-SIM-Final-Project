@@ -88,7 +88,10 @@ public class PlayerController : MonoBehaviour
     public void Pause(InputAction.CallbackContext context)
     {
         if (UIManager.Instance)
-            UIManager.Instance.TogglePauseMenu();
+        {
+            GameManager.Instance.TogglePause();
+        }
+
     }
 
     public void DealDamage()

@@ -9,11 +9,12 @@ public class PauseMenu : MonoBehaviour
     {
         if (controlMenu)
         {
-            controlMenu.SetActive(false);
+            // controlMenu.SetActive(false);
             ControlsMenu.OnBack += ActivatePauseMenu;
         }
 
-        gameObject.SetActive(false);
+        if (GameManager.Instance)
+            GameManager.Instance.TogglePause();
     }
 
     public void OnResumePress()
@@ -52,6 +53,7 @@ public class PauseMenu : MonoBehaviour
 
     private void OnDestroy()
     {
-        ControlsMenu.OnBack -= ActivatePauseMenu;
+        if(controlMenu)
+            ControlsMenu.OnBack -= ActivatePauseMenu;
     }
 }
