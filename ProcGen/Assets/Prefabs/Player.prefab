@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 3301830340219526278}
   - component: {fileID: 8955276860366785652}
   - component: {fileID: 7752932019537747755}
-  m_Layer: 7
+  m_Layer: 11
   m_Name: Interactor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -181,7 +181,7 @@ GameObject:
   - component: {fileID: 7048280233664347193}
   - component: {fileID: 1415385628239506842}
   - component: {fileID: 2247790008549537514}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: SouthWest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -376,7 +376,7 @@ GameObject:
   - component: {fileID: 2347807644979246407}
   - component: {fileID: 3667865773571419296}
   - component: {fileID: 2741212542109883173}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: NorthWest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -583,7 +583,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4276656762197899359}
   - component: {fileID: 4621277171588223000}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: SwordCollider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -636,7 +636,7 @@ GameObject:
   - component: {fileID: 2027013478491008278}
   - component: {fileID: 3203976759713791600}
   - component: {fileID: 1903278766531879969}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: NorthEast
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -726,7 +726,7 @@ GameObject:
   m_Component:
   - component: {fileID: 713897355730258800}
   - component: {fileID: 4954784173251740105}
-  m_Layer: 7
+  m_Layer: 11
   m_Name: InteractorSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -814,7 +814,7 @@ GameObject:
   - component: {fileID: 4444796841368303860}
   - component: {fileID: 5056339032671706547}
   - component: {fileID: 5052021690381031995}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: SouthEast
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1435,7 +1435,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.058989316, y: -0.19759576}
+  m_Offset: {x: -0.058989316, y: 0.05760914}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -1445,7 +1445,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 0.6443296, y: 0.37742588}
+  m_Size: {x: 0.6443296, y: 0.8878356}
   m_EdgeRadius: 0
 --- !u!114 &942270507479377552
 MonoBehaviour:

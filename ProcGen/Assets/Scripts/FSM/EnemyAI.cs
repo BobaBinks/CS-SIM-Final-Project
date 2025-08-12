@@ -13,6 +13,11 @@ public abstract class EnemyAI: CharacterBase, IDamagable
     [HideInInspector]
     public List<Transform> wayPoints;
 
+    [Header("Line of Sight Parameters")]
+    public bool requireLOS = false;
+    public LayerMask losLayerMask;
+
+
     [SerializeField] float maxHearingDistance = 2f;
 
     #region Animations

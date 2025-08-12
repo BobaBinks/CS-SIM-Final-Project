@@ -215,6 +215,11 @@ MonoBehaviour:
   collider: {fileID: 7892668119722064782}
   animator: {fileID: 2508924050062969880}
   wayPoints: []
+  requireLOS: 1
+  losLayerMask:
+    serializedVersion: 2
+    m_Bits: 2039
+  maxHearingDistance: 2
   attackAnimationName: Skull_Hit
   moveAnimationName: Skull_Run
   idleAnimationName: Skull_Idle

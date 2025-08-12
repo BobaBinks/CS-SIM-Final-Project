@@ -57,12 +57,13 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        dungeonGenerator.GenerateGameEnvironment();
+        bool gameEnvironmentGenerated = dungeonGenerator.GenerateGameEnvironment();
 
-        //if(!gameEnvironmentGenerated)
-        //{
-        //    SceneManager.LoadScene("GameScene");
-        //}
+        if (!gameEnvironmentGenerated)
+        {
+            // return back to menu if generation fails
+            SceneManager.LoadScene("Menu");
+        }
 
         // generate A star grid
         aStarPathfinder = dungeonGenerator.InitializeAStarGrid();
@@ -70,7 +71,7 @@ public class GameManager : MonoBehaviour
         if (aStarPathfinder == null)
         {
             Debug.Log($"Failed to initialize A star Grid.");
-            return;
+            SceneManager.LoadScene("Menu");
         }
 
         Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict = dungeonGenerator.GetDungeonRooms();
@@ -79,13 +80,19 @@ public class GameManager : MonoBehaviour
         if (!roomGraphCreated)
         {
             Debug.Log($"Failed to create room graph.");
-            return;
+            SceneManager.LoadScene("Menu");
         }
 
         enemySpawnManager.Reset();
 
         // spawn player
         bool playerSpawned = SpawnPlayer(roomsDict);
+
+        if(!playerSpawned)
+        {
+            Debug.Log($"Failed to create Player.");
+            SceneManager.LoadScene("Menu");
+        }
     }
 
     private void Update()

@@ -24,10 +24,10 @@ TagManager:
   - Player
   - InteractableObjects
   - MiniMapIcons
-  - 
-  - 
-  - 
-  - 
+  - Enemies
+  - InteractorLayer
+  - SwordColliderLayer
+  - Projectiles
   - 
   - 
   - 

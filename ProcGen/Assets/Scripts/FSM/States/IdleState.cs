@@ -9,8 +9,7 @@ public class IdleState : BaseState<EnemyAI>
     public override void EnterState(EnemyAI owner)
     {
         owner.animator.Play(owner.IdleAnimationName);
-        //owner.animator.SetBool("isIdle", true);
-        Debug.Log("Entering Idle State");
+
     }
 
     public override void ExitState(EnemyAI owner)

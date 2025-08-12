@@ -53,8 +53,33 @@ public class ChaseState : BaseState<EnemyAI>
 
         if(owner.PlayerInAttackRange())
         {
-            owner.Sm.SetNextState("attack");
-            return;
+            if (!owner.requireLOS)
+            {
+                owner.Sm.SetNextState("attack");
+                return;
+            }
+            else
+            {
+                Vector2 ownerPosition = new Vector2(owner.transform.position.x, owner.transform.position.y);
+                Vector2 playerPosition = new Vector2(owner.player.transform.position.x, owner.player.transform.position.y);
+                Vector2 dir = (playerPosition - ownerPosition).normalized;
+
+                FlyingSkull flyingSkull = owner as FlyingSkull;
+
+                if (flyingSkull == null)
+                    return;
+
+                float radius = flyingSkull.GetProjectileRadius();
+                
+                // cast 2d ray
+                RaycastHit2D hit = Physics2D.CircleCast(ownerPosition, radius, dir, distance: 10f, layerMask: owner.losLayerMask);
+
+                if (hit.collider != null && hit.collider.CompareTag("Player"))
+                {
+                    owner.Sm.SetNextState("attack");
+                    return;
+                }
+            }
         }
 
         // check if path is outdated

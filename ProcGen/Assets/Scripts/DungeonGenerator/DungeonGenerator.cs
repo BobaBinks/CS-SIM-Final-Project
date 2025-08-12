@@ -31,12 +31,14 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField] int maxPairFail = 5;
     [SerializeField] int maxConnectionFail = 5;
 
+    [Header("Dungeon Generation Parameters")]
+    [SerializeField] int maxGenerationAttempts = 5;
+    [SerializeField] int maxGraphGenerationAttempts = 5;
+
     private Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict;
     private Dictionary<DungeonRoom, int> roomDepthDict;
 
     #region ASTAR
-
-
     bool startNodePicked = false;
     Vector3Int startPosition;
     Vector3Int endPosition;
@@ -79,31 +81,48 @@ public class DungeonGenerator : MonoBehaviour
         // DebugAStarPath();
     }
 
-    public void GenerateGameEnvironment()
+    public bool GenerateGameEnvironment()
     {
-        selectedLayout = layouts[Random.Range(0, layouts.Count)];
+        int attempts = 0;
+        int maxAttempts = Mathf.Max(maxGenerationAttempts, 1);
 
-        Debug.Log($"Selected Layout: {selectedLayout.name}");
-
-
-
-        List<DungeonRoom> modifiedGraph;
-
-
-        // APPLY GRAPH REWRITE BEFORE GENERATION
-        if (GraphRewriteRuleList)
+        while(attempts < maxAttempts)
         {
-            GraphRewriter graphRewriter = new GraphRewriter(GraphRewriteRuleList);
-            bool rewriteSuccessful = graphRewriter.RewriteGraph(selectedLayout, out modifiedGraph);
+            bool generationSuccessful = false;
 
-            if (rewriteSuccessful)
+            // pick random layout
+            selectedLayout = layouts[Random.Range(0, layouts.Count)];
+
+            Debug.Log($"Selected Layout: {selectedLayout.name}");
+
+            List<DungeonRoom> modifiedGraph;
+
+            // APPLY GRAPH REWRITE BEFORE GENERATION
+            if (GraphRewriteRuleList)
             {
-                GenerateDungeon(modifiedGraph);
-                return;
+                GraphRewriter graphRewriter = new GraphRewriter(GraphRewriteRuleList);
+                bool rewriteSuccessful = graphRewriter.RewriteGraph(selectedLayout, out modifiedGraph);
+
+                // attempt generating rewritten graph
+                if (rewriteSuccessful)
+                {
+                    generationSuccessful = GenerateDungeon(modifiedGraph);
+                }
             }
+            else
+            {
+                // generate original graph if rule list does not exist
+                generationSuccessful = GenerateDungeon(selectedLayout.dungeonRoomList);
+            }
+
+            // if generation succeeded stop reattempts
+            if (generationSuccessful)
+                return true;
+
+            attempts++;
         }
-        else
-            GenerateDungeon(selectedLayout.dungeonRoomList);
+
+        return false;
     }
 
     public Dictionary<DungeonRoom, int> GetRoomDepthDict()
@@ -239,22 +258,24 @@ public class DungeonGenerator : MonoBehaviour
         return true;
     }
 
-    void GenerateDungeon(List<DungeonRoom> layout)
+    bool GenerateDungeon(List<DungeonRoom> layout)
     {
-        if (layout == null || layout.Count == 0 || corridorFloorTilemap == null || roomsGO == null) return;
+        if (layout == null || layout.Count == 0 || corridorFloorTilemap == null || roomsGO == null) return false;
 
         int attempts = 0;
-        int maxAttempts = 10;
+        int maxAttempts = Mathf.Max(maxGraphGenerationAttempts, 1);
         while (attempts < maxAttempts)
         {
             if (GraphBasedGeneration.GenerateDungeon(layout, grid, roomsGO, corridorFloorTilemap, corridorWallTilemap, corridorTiles, out roomsDict, maxPlacementFailCount: 3))
             {
                 FillBackground(backgroundTilemap, backgroundTile);
-                return;
+                return true;
             }
 
             attempts++;
-            Debug.Log($"Dungeon Generation Failed Attempt {attempts}/{maxAttempts}");
+            Debug.Log($"Graph Generation Failed Attempt {attempts}/{maxAttempts}");
         }
+
+        return false;
     }
 }
