@@ -37,6 +37,14 @@ public class SoundLibrary: MonoBehaviour
         TELEPORT
     }
 
+    public enum Music
+    {
+        MENU,
+        DUNGEON_1,
+        DUNGEON_2,
+        BOSS
+    }
+
     [Header("Player Clips")]
     [SerializeField] List<AudioClip> playerClips;
 
@@ -45,6 +53,9 @@ public class SoundLibrary: MonoBehaviour
 
     [Header("Spells Clips")]
     [SerializeField] List<AudioClip> spellsClips;
+
+    [Header("Music")]
+    [SerializeField] List<AudioClip> musicClips;
 
     private void Awake()
     {
@@ -84,6 +95,16 @@ public class SoundLibrary: MonoBehaviour
             return spellsClips[index];
 
         Debug.LogWarning($"Spell sound '{sound}' not assigned.");
+        return null;
+    }
+
+    public AudioClip GetAudioClip(Music sound)
+    {
+        int index = (int)sound;
+        if (index >= 0 && index < musicClips.Count)
+            return musicClips[index];
+
+        Debug.LogWarning($"Music sound '{sound}' not assigned.");
         return null;
     }
 }
