@@ -11,6 +11,8 @@ public class DungeonGenerator : MonoBehaviour
 
     private DungeonLayout selectedLayout;
 
+
+
     #region Tiles/Tilemaps
     [Header("Tiles/Tilemaps")]
     [SerializeField] private Tilemap corridorFloorTilemap;
@@ -34,6 +36,7 @@ public class DungeonGenerator : MonoBehaviour
     [Header("Dungeon Generation Parameters")]
     [SerializeField] int maxGenerationAttempts = 5;
     [SerializeField] int maxGraphGenerationAttempts = 5;
+    [SerializeField] bool applyRewrite = false;
 
     private Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict;
     private Dictionary<DungeonRoom, int> roomDepthDict;
@@ -98,7 +101,7 @@ public class DungeonGenerator : MonoBehaviour
             List<DungeonRoom> modifiedGraph;
 
             // APPLY GRAPH REWRITE BEFORE GENERATION
-            if (GraphRewriteRuleList)
+            if (GraphRewriteRuleList && applyRewrite)
             {
                 GraphRewriter graphRewriter = new GraphRewriter(GraphRewriteRuleList);
                 bool rewriteSuccessful = graphRewriter.RewriteGraph(selectedLayout, out modifiedGraph);
