@@ -19,6 +19,38 @@ public class SoundManager : MonoBehaviour
 
         Instance = this;
         DontDestroyOnLoad(this);
+
+        if(musicSource)
+            musicSource.volume = 0.5f;
+
+        if (sfxSource)
+            sfxSource.volume = 0.5f;
+    }
+
+    public float GetMusicVolume()
+    {
+        if (!musicSource)
+            return 0f;
+
+        return musicSource.volume;
+    }
+
+    public float GetSoundEffectsVolume()
+    {
+        if (!sfxSource)
+            return 0f;
+
+        return sfxSource.volume;
+    }
+
+    public void OnMusicVolumeChange(float vol)
+    {
+        musicSource.volume = vol;
+    }
+
+    public void OnSoundEffectsVolumeChange(float vol)
+    {
+        sfxSource.volume = vol;
     }
 
     private void Update()

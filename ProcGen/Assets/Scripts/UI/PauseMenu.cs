@@ -5,12 +5,18 @@ using System.Collections.Generic;
 public class PauseMenu : MonoBehaviour
 {
     [SerializeField] GameObject controlMenu;
+    [SerializeField] GameObject audioMenu;
     private void Start()
     {
         if (controlMenu)
         {
             // controlMenu.SetActive(false);
             ControlsMenu.OnBack += ActivatePauseMenu;
+        }
+
+        if (audioMenu)
+        {
+            AudioMenu.OnBack += ActivatePauseMenu;
         }
 
         if (GameManager.Instance)
@@ -33,8 +39,7 @@ public class PauseMenu : MonoBehaviour
 
     public void OnRestartPress()
     {
-        if(controlMenu)
-            SceneManager.LoadScene("GameScene");
+        SceneManager.LoadScene("GameScene");
     }
 
     public void OnControlMenuPress()
@@ -46,6 +51,15 @@ public class PauseMenu : MonoBehaviour
         }    
     }
 
+    public void OnAudioMenuPress()
+    {
+        if (audioMenu)
+        {
+            audioMenu.gameObject.SetActive(true);
+            gameObject.SetActive(false);
+        }
+    }
+
     public void ActivatePauseMenu()
     {
         gameObject.SetActive(true);
@@ -55,5 +69,10 @@ public class PauseMenu : MonoBehaviour
     {
         if(controlMenu)
             ControlsMenu.OnBack -= ActivatePauseMenu;
+
+        if (audioMenu)
+        {
+            AudioMenu.OnBack -= ActivatePauseMenu;
+        }
     }
 }
