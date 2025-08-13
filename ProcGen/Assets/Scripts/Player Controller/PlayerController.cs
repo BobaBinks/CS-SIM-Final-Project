@@ -74,8 +74,7 @@ public class PlayerController : MonoBehaviour
 
                 if (SoundManager.Instance && SoundLibrary.Instance)
                     SoundManager.Instance.PlaySoundEffect(
-                        SoundLibrary.Instance.GetAudioClip(SoundLibrary.Player.SWORD_SFX),
-                        volumeScale: 1);
+                        SoundLibrary.Instance.GetAudioClip(SoundLibrary.Player.SWORD_SFX));
             }
             else if (player.weaponManager)
             {

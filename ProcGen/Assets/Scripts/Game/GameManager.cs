@@ -102,9 +102,13 @@ public class GameManager : MonoBehaviour
 
     public void TogglePause()
     {
-        Time.timeScale = Time.timeScale == 0f ? 1f : 0f;
         if (UIManager.Instance)
+        {
             UIManager.Instance.TogglePauseMenu();
+
+            Time.timeScale = UIManager.Instance.IsPause() == false ? 1f : 0f;
+        }
+
     }
 
     private bool SpawnPlayer(Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict)

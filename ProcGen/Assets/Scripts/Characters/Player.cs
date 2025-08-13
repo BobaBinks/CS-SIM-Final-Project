@@ -112,8 +112,7 @@ public class Player : CharacterBase, IDamagable, IHealable
 
         if (SoundManager.Instance && SoundLibrary.Instance)
             SoundManager.Instance.PlaySoundEffect(
-                SoundLibrary.Instance.GetAudioClip(SoundLibrary.Player.PLAYER_HIT),
-                volumeScale: 1);
+                SoundLibrary.Instance.GetAudioClip(SoundLibrary.Player.PLAYER_HIT));
 
         if (HealthPoints <= 0)
         {

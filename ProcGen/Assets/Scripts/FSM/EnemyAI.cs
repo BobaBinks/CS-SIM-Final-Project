@@ -264,8 +264,7 @@ public abstract class EnemyAI: CharacterBase, IDamagable
 
         if (SoundManager.Instance && SoundLibrary.Instance)
             SoundManager.Instance.PlaySoundEffect(
-                SoundLibrary.Instance.GetAudioClip(SoundLibrary.Enemy.HIT),
-                volumeScale: 1);
+                SoundLibrary.Instance.GetAudioClip(SoundLibrary.Enemy.HIT));
     }
     public void PlayFootSteps()
     {
@@ -286,7 +285,7 @@ public abstract class EnemyAI: CharacterBase, IDamagable
 
             AudioClip clip = soundLibrary.GetAudioClip((SoundLibrary.Enemy)footStepClip);
 
-            soundManager.PlaySoundEffect(clip, volumeScale: volume);
+            soundManager.PlaySoundEffect(clip);
         }
     }
 

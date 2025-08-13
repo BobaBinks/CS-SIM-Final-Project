@@ -7,8 +7,6 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioSource sfxSource;
     [SerializeField] private AudioSource musicSource;
 
-    int currMusicSource = 0;
-
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -61,14 +59,12 @@ public class SoundManager : MonoBehaviour
         //}
     }
 
-    public void PlaySoundEffect(AudioClip sfx, float volumeScale = 1)
+    public void PlaySoundEffect(AudioClip sfx)
     {
         if (sfx == null)
             return;
 
-        volumeScale = Mathf.Clamp(volumeScale, 0, 1);
-
-        sfxSource.PlayOneShot(sfx, volumeScale);
+        sfxSource.PlayOneShot(sfx);
     }
 
     public void PlayMusic(AudioClip clip, bool loop = true)

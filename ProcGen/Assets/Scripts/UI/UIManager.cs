@@ -13,6 +13,8 @@ public class UIManager: MonoBehaviour
     [SerializeField] TextMeshProUGUI xpText;
     [SerializeField] TextMeshProUGUI levelText;
     [SerializeField] GameObject pauseMenu;
+    [SerializeField] GameObject controlsMenu;
+    [SerializeField] GameObject audioMenu;
 
     private void Awake()
     {
@@ -28,7 +30,20 @@ public class UIManager: MonoBehaviour
     public void TogglePauseMenu()
     {
         if (pauseMenu)
+        {
             pauseMenu.SetActive(!pauseMenu.activeSelf);
+        }
+
+        if (audioMenu)
+            audioMenu.SetActive(false);
+
+        if (controlsMenu)
+            controlsMenu.SetActive(false);
+    }
+
+    public bool IsPause()
+    {
+        return pauseMenu.activeSelf;
     }
 
     public void SetHealth(float hp, float maxHP)

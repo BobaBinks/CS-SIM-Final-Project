@@ -3804,6 +3804,8 @@ MonoBehaviour:
   xpText: {fileID: 421576261}
   levelText: {fileID: 297931890}
   pauseMenu: {fileID: 998897579}
+  controlsMenu: {fileID: 1643399479}
+  audioMenu: {fileID: 827473120}
 --- !u!4 &1752722929
 Transform:
   m_ObjectHideFlags: 0

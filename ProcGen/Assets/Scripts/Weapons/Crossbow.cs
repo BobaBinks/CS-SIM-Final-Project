@@ -28,8 +28,7 @@ public class Crossbow : BaseWeapon
 
             if (SoundManager.Instance && SoundLibrary.Instance)
                 SoundManager.Instance.PlaySoundEffect(
-                    SoundLibrary.Instance.GetAudioClip(SoundLibrary.Player.CROSSBOW_SFX),
-                    volumeScale: 1);
+                    SoundLibrary.Instance.GetAudioClip(SoundLibrary.Player.CROSSBOW_SFX));
 
             if (rb)
             {
