@@ -66,6 +66,7 @@ public class SoundLibrary: MonoBehaviour
         }
 
         Instance = this;
+        // DontDestroyOnLoad(this);
     }
 
     public AudioClip GetAudioClip(Player sound)

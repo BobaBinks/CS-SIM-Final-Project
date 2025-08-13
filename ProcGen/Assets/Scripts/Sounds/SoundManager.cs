@@ -3,30 +3,11 @@ using System.Collections.Generic;
 
 public class SoundManager : MonoBehaviour
 {
-    public enum SoundEffects
-    { 
-        BITE,
-        HIT,
-        PLAYER_HIT,
-        PLAYER_SWORD_SFX,
-        PLAYER_CROSSBOX_SFX,
-        HEAL,
-        XP_GAIN,
-        FIREBALL_1,
-        TELEPORT,
-        ENEMY_PHYSICAL_ATTACK,
-        PLAYER_FOOTSTEP_1,
-        PLAYER_FOOTSTEP_2,
-        PLAYER_FOOTSTEP_3,
-        PLAYER_FOOTSTEP_4,
-        PLAYER_FOOTSTEP_5,
-        SOUND_EFFECT_SIZE,
-    };
-
     public static SoundManager Instance { get; private set; }
     [SerializeField] private AudioSource sfxSource;
     [SerializeField] private AudioSource musicSource;
-    [SerializeField] private List<AudioClip> audioClips;
+
+    int currMusicSource = 0;
 
     private void Awake()
     {
@@ -37,6 +18,15 @@ public class SoundManager : MonoBehaviour
         }
 
         Instance = this;
+        DontDestroyOnLoad(this);
+    }
+
+    private void Update()
+    {
+        //if(musicSource1 && musicSource1.isPlaying)
+        //{
+        //    // check if current music about to end
+        //}
     }
 
     public void PlaySoundEffect(AudioClip sfx, float volumeScale = 1)

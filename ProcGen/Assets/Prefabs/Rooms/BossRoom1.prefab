@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2550412247956844984}
   - component: {fileID: 5422027688580733}
-  - component: {fileID: -6226074646579441178}
+  - component: {fileID: 7875490833747149471}
   m_Layer: 6
   m_Name: BossRoom1
   m_TagString: Untagged
@@ -86,7 +86,7 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 4.160886, y: 4.160886}
   m_EdgeRadius: 0
---- !u!114 &-6226074646579441178
+--- !u!114 &7875490833747149471
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -95,7 +95,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 38285871427953897}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aca3e8b949b17204fa03c73fca1b6244, type: 3}
+  m_Script: {fileID: 11500000, guid: 4d817388a35a3f344be119da4cad1298, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &480534788486338952

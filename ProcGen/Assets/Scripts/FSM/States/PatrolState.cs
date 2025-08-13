@@ -19,7 +19,7 @@ public class PatrolState : BaseState<EnemyAI>
             aStarPathfinder = GameManager.Instance.aStarPathfinder;
 
         owner.animator.Play(owner.MoveAnimationName);
-        Debug.Log("Entering Patrol State");
+        //Debug.Log("Entering Patrol State");
     }
 
     public override void ExitState(EnemyAI owner)

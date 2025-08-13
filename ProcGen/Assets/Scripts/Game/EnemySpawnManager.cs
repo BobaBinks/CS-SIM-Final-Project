@@ -12,11 +12,14 @@ public class EnemySpawnManager : MonoBehaviour
 
     [SerializeField] Transform enemyContainerTransform;
 
-    [SerializeField] private AnimationCurve difficultyCurve;
+    // based off room area size
+    [SerializeField] private AnimationCurve enemiesPerRoomCurve;
 
     #region Stats
     [SerializeField] int enemyLevelDifference = 3;
     [SerializeField] int bossLevelDifference = 5;
+    [SerializeField] int maxNumEnemies = 5;
+    [SerializeField] int minNumEnemies = 1;
     #endregion
 
     private HashSet<DungeonRoom> roomsWithEnemy;
@@ -32,16 +35,44 @@ public class EnemySpawnManager : MonoBehaviour
     private void OnEnable()
     {
         SpawnEnemiesInNextDepth.OnPlayerEnter += OnPlayerEnter;
+        SpawnBoss.OnPlayerEnterBossRoom += OnPlayerEnterBossRoom;
     }
 
     private void OnDisable()
     {
         SpawnEnemiesInNextDepth.OnPlayerEnter -= OnPlayerEnter;
+        SpawnBoss.OnPlayerEnterBossRoom -= OnPlayerEnterBossRoom;
     }
 
     // Update is called once per frame
     void Update()
     {
+    }
+
+    public void OnPlayerEnterBossRoom(GameObject roomGO)
+    {
+        if (!GameManager.Instance || !GameManager.Instance.DungeonGenerator)
+            return;
+        Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict = GameManager.Instance.DungeonGenerator.GetDungeonRooms();
+        if (roomsDict == null || roomsDict.Count == 0)
+            return;
+
+        foreach (var kvp in roomsDict)
+        {
+            DungeonRoom dungeonRoom = kvp.Key;
+            DungeonRoomInstance roomInstance = kvp.Value;
+
+            // find the room that triggered event
+            if(roomInstance != null && roomInstance.instance == roomGO)
+            {
+                // ensure rooms does not already have spawned enemies
+                if (!roomsWithEnemy.Contains(dungeonRoom))
+                {
+                    SpawnBossInRoom(roomInstance);
+                    roomsWithEnemy.Add(dungeonRoom);
+                }
+            }
+        }
     }
 
     public void OnPlayerEnter(GameObject roomGO)
@@ -70,9 +101,6 @@ public class EnemySpawnManager : MonoBehaviour
             }
         }
 
-        // get all rooms in the next depth
-        List<DungeonRoom> roomsToSpawnEnemies = new List<DungeonRoom>();
-
         foreach (var kvp in roomsDict)
         {
             DungeonRoom dungeonRoom = kvp.Key;
@@ -84,65 +112,78 @@ public class EnemySpawnManager : MonoBehaviour
                 roomDepthDict.ContainsKey(dungeonRoom) && 
                 roomDepthDict[dungeonRoom] == roomDepth + 1)
             {
-                if (dungeonRoom.roomType.name == "BossRoomType")
+                if (dungeonRoom.roomType.name != "BossRoomType")
                 {
-                    SpawnBossInRoom(roomInstance);
-                }
-                else
                     SpawnEnemiesInRoom(roomInstance);
 
-                roomsWithEnemy.Add(dungeonRoom);
+                    roomsWithEnemy.Add(dungeonRoom);
+                }
             }
         }
     }
+
     public void SpawnEnemiesInRoom(DungeonRoomInstance roomInstance)
     {
         if (roomInstance == null)
             return;
-
+        // get enemy waypoints if any
         Transform enemyPatrolWayPointContainer = GetEnemyWaypointContainer(roomInstance);
 
-        // pick a cell in the room, convert it to world
-        // convert world to astargrid local position and verify if cell is occupied in its tilemap
-        int failCounter = 0;
-        int maxFailCounter = 5;
-        while(failCounter < maxFailCounter)
+        // get the ground tilemap and compress it
+        Tilemap groundMap = roomInstance.groundMap;
+        groundMap.CompressBounds();
+
+        // get the number of enemies to spawn in this room
+        int enemySpawnCount = GetRoomEnemyCount(groundMap.cellBounds.size.x * groundMap.cellBounds.size.y);
+        Debug.Log($"{roomInstance.instance.name}'s will spawn {enemySpawnCount}.");
+
+
+        for(int enemyIndex = 0; enemyIndex < enemySpawnCount; ++enemyIndex)
         {
-            Tilemap groundMap = roomInstance.groundMap;
-            groundMap.CompressBounds();
-            int xPos = Random.Range(groundMap.cellBounds.xMin, groundMap.cellBounds.xMax);
-            int yPos = Random.Range(groundMap.cellBounds.yMin, groundMap.cellBounds.yMax);
-
-
-            if (GameManager.Instance.aStarPathfinder.AStarGridTilemap)
+            // pick a cell in the room, convert it to world
+            // convert world to astargrid local position and verify if cell is occupied in its tilemap
+            int failCounter = 0;
+            int maxFailCounter = 5;
+            while (failCounter < maxFailCounter)
             {
-                Vector3 positionWorld = groundMap.CellToWorld(new Vector3Int(xPos, yPos));
-                Vector3Int localPosition = GameManager.Instance.aStarPathfinder.AStarGridTilemap.WorldToCell(positionWorld);
 
-                if (GameManager.Instance.aStarPathfinder.AStarGridTilemap.GetTile(localPosition) == null)
+                int xPos = Random.Range(groundMap.cellBounds.xMin, groundMap.cellBounds.xMax);
+                int yPos = Random.Range(groundMap.cellBounds.yMin, groundMap.cellBounds.yMax);
+
+                if (GameManager.Instance.aStarPathfinder.AStarGridTilemap)
                 {
-                    // not a valid position to spawn
-                    failCounter++;
-                    continue;
+                    Vector3 positionWorld = groundMap.CellToWorld(new Vector3Int(xPos, yPos));
+                    Vector3Int localPosition = GameManager.Instance.aStarPathfinder.AStarGridTilemap.WorldToCell(positionWorld);
+
+                    if (GameManager.Instance.aStarPathfinder.AStarGridTilemap.GetTile(localPosition) == null)
+                    {
+                        // not a valid position to spawn
+                        failCounter++;
+                        continue;
+                    }
+                    Vector3 cellCenterPosition = GameManager.Instance.aStarPathfinder.AStarGridTilemap.GetCellCenterLocal(localPosition);
+                    cellCenterPosition = GameManager.Instance.aStarPathfinder.AStarGridTilemap.LocalToWorld(cellCenterPosition);
+                    InstantiateEnemy(enemyPatrolWayPointContainer, cellCenterPosition);
+                    break;
                 }
-                Vector3 cellCenterPosition = GameManager.Instance.aStarPathfinder.AStarGridTilemap.GetCellCenterLocal(localPosition);
-                cellCenterPosition = GameManager.Instance.aStarPathfinder.AStarGridTilemap.LocalToWorld(cellCenterPosition);
-                SpawnEnemies(enemyPatrolWayPointContainer, cellCenterPosition);
-                break;
             }
         }
+    }
 
-        //// get the enemy spawn points and waypoints
-        //Transform enemySpawnPointContainer = GetEnemySpawnPointContainer(roomInstance);
-
-        //if (!enemySpawnPointContainer)
-        //    return;
-
+    private int GetRoomEnemyCount(int roomSize)
+    {
+        if(enemiesPerRoomCurve == null)
+            return 0;
 
 
-        // random select a prefab and spawn on spawnpoint
-        //SpawnEnemies(enemySpawnPointContainer, enemyPatrolWayPointContainer);
+        Keyframe[] keys = enemiesPerRoomCurve.keys;
 
+        if (keys.Length == 0)
+            return 0;
+
+        float time = Mathf.Clamp(roomSize, keys[0].time, keys[keys.Length - 1].time);
+
+        return Mathf.RoundToInt(enemiesPerRoomCurve.Evaluate(time));
     }
 
     private void SpawnBossInRoom(DungeonRoomInstance roomInstance)
@@ -206,7 +247,7 @@ public class EnemySpawnManager : MonoBehaviour
         return Mathf.Clamp(enemyLevel, minLevel, maxLevel);
     }
     
-    private void SpawnEnemies(Transform enemyPatrolWayPointContainer, Vector3 spawnPosition)
+    private void InstantiateEnemy(Transform enemyPatrolWayPointContainer, Vector3 spawnPosition)
     {
         if (!enemyContainerTransform)
             return;
