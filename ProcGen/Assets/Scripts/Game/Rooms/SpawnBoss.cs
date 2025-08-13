@@ -20,8 +20,11 @@ public class SpawnBoss : MonoBehaviour
             // notify enemy spawn manager which room player has entered
             OnPlayerEnterBossRoom?.Invoke(this.gameObject);
             boxCollider2D.enabled = false;
-            // make sure to account which rooms already has spawned enemies
-            // disable the collider
+            
+            if(SoundManager.Instance && SoundLibrary.Instance)
+            {
+                SoundManager.Instance.PlayMusic(SoundLibrary.Instance.GetAudioClip(SoundLibrary.Music.BOSS));
+            }
         }
     }
 }

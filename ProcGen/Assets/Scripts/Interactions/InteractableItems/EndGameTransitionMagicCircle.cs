@@ -16,6 +16,10 @@ public class EndGameTransitionMagicCircle : MonoBehaviour
     private void OnDie()
     {
         collider.enabled = true;
+        if (SoundManager.Instance && SoundLibrary.Instance)
+        {
+            SoundManager.Instance.PlayMusic(SoundLibrary.Instance.GetAudioClip(SoundLibrary.Music.DUNGEON_1), loop: true);
+        }
     }
 
     private void OnDestroy()
