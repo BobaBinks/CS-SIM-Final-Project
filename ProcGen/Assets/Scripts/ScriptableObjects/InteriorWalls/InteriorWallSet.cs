@@ -19,4 +19,6 @@ public class InteriorWallSet : ScriptableObject
 
     public Tile topWall;
     public Tile bottomWall;
+
+    public Tile emptySpace;
 }

@@ -21,3 +21,4 @@ MonoBehaviour:
   rightWall: {fileID: 11400000, guid: 0eda27104677db241bf634f81c9a5e4d, type: 2}
   topWall: {fileID: 11400000, guid: cdd4476423274eb4f8210285384cd01a, type: 2}
   bottomWall: {fileID: 11400000, guid: c62b8c46a6691ee43b2ee865ebc93444, type: 2}
+  emptySpace: {fileID: 11400000, guid: 4b308138de7f21e46aa5acdc3b1b4085, type: 2}
