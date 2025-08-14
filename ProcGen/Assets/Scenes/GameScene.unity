@@ -4739,6 +4739,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 2a5de2c73b17cb5498de4a7383aa46db, type: 2}
     - target: {fileID: 8149777084855191499, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: propSet
+      value: 
+      objectReference: {fileID: 11400000, guid: d676a3b97dfa8e64a9f533059b35a222, type: 2}
+    - target: {fileID: 8149777084855191499, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
       propertyPath: roomsGO
       value: 
       objectReference: {fileID: 337827882}

@@ -13,6 +13,8 @@ TagManager:
   - Enemies
   - InteractableObjects
   - Room
+  - InteriorWallsSpawnTilemap
+  - PropsSpawnTilemap
   layers:
   - Default
   - TransparentFX

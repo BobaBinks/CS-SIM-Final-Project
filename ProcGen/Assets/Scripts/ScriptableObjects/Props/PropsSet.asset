@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64ba2a4af054eb244a6a424b3483ae40, type: 3}
+  m_Name: PropsSet
+  m_EditorClassIdentifier: 
+  propsPrefab:
+  - {fileID: 8616886518087245166, guid: 7dd7b1d8bf5c75e45a782ad4d68620ae, type: 3}
+  - {fileID: 5677799205977266744, guid: 31f1b6b1b0483b241adc4ee784f4029d, type: 3}
+  - {fileID: 4515846154279469632, guid: 4803335bce172bf479f7359c1249d5e8, type: 3}
+  - {fileID: 6086643084356660628, guid: e63c9d3330eb93547bcfd8dd7ea1b7a4, type: 3}
+  - {fileID: 7594084769250839064, guid: baf092215d8192b4493cc99c31449026, type: 3}
+  - {fileID: 3734403780428548622, guid: abd9f0ff84521fc40b7e2ba91ee34e69, type: 3}
+  - {fileID: 2994853031763391627, guid: b997c53f880876042be7f168ba37a2a3, type: 3}

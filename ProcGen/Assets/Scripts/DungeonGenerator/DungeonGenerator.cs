@@ -41,6 +41,12 @@ public class DungeonGenerator : MonoBehaviour
     private Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict;
     private Dictionary<DungeonRoom, int> roomDepthDict;
 
+    #region Props
+    [Header("Props")]
+    [SerializeField] PropsSet propSet;
+    #endregion
+
+
     #region ASTAR
     bool startNodePicked = false;
     Vector3Int startPosition;
@@ -120,12 +126,26 @@ public class DungeonGenerator : MonoBehaviour
 
             // if generation succeeded stop reattempts
             if (generationSuccessful)
-                return true;
+            {
+                break;
+            }
 
             attempts++;
         }
 
-        return false;
+        if (attempts >= maxAttempts)
+            return false;
+
+        // place props
+        if (propSet?.propsPrefab != null && propSet.propsPrefab.Count > 0 && roomsDict != null && roomsDict.Count > 0)
+        {
+            PropPlacement.PlaceProps(roomsDict, propSet.propsPrefab);
+        }
+
+        // place interior walls
+
+
+        return true;
     }
 
     public Dictionary<DungeonRoom, int> GetRoomDepthDict()
