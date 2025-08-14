@@ -143,7 +143,10 @@ public class DungeonGenerator : MonoBehaviour
         }
 
         // place interior walls
-
+        if(roomsDict != null && roomsDict.Count > 0)
+        {
+            InteriorWallPlacement.PlaceInteriorWalls(roomsDict, propSet.propsPrefab);
+        }
 
         return true;
     }

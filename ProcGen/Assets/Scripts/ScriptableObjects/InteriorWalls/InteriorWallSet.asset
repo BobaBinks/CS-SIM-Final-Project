@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6df620f5e6498ca44bb6fab5093e243a, type: 3}
+  m_Name: InteriorWallSet
+  m_EditorClassIdentifier: 
+  interiorWallTiles: []
+  topLeftCornerWall: {fileID: 11400000, guid: 83880ab8eda73984fbb2b6b7639bdcb1, type: 2}
+  topRightCornerWall: {fileID: 11400000, guid: b43cfea76c75b7345bf7d37273c588d6, type: 2}
+  bottomLeftCornerWall: {fileID: 11400000, guid: c6a984f7bd2a8d740a0053bb6cf3fdfe, type: 2}
+  bottomRightCornerWall: {fileID: 11400000, guid: 821d8a5ad85f3e640bd9aa09130a972d, type: 2}
+  leftWall: {fileID: 11400000, guid: 8a9b950e7ec60cf4f9997df0309f2533, type: 2}
+  rightWall: {fileID: 11400000, guid: 0eda27104677db241bf634f81c9a5e4d, type: 2}
+  topWall: {fileID: 11400000, guid: cdd4476423274eb4f8210285384cd01a, type: 2}
+  bottomWall: {fileID: 11400000, guid: c62b8c46a6691ee43b2ee865ebc93444, type: 2}
