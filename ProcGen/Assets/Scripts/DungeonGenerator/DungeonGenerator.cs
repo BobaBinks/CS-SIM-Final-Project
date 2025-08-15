@@ -11,7 +11,20 @@ public class DungeonGenerator : MonoBehaviour
 
     private DungeonLayout selectedLayout;
 
+    #region ASTAR
+    [Header("A Star")]
+    bool startNodePicked = false;
+    Vector3Int startPosition;
+    Vector3Int endPosition;
+    List<Vector3Int> path;
+    #endregion
 
+    #region GraphRewriting
+    [Header("Graph Rewriting")]
+    [SerializeField] GraphRewriteRuleList graphRewriteRuleList;
+    GraphRewriteRuleList GraphRewriteRuleList => graphRewriteRuleList;
+    [SerializeField] bool applyRewrite = false;
+    #endregion
 
     #region Tiles/Tilemaps
     [Header("Tiles/Tilemaps")]
@@ -36,7 +49,7 @@ public class DungeonGenerator : MonoBehaviour
     [Header("Dungeon Generation Parameters")]
     [SerializeField] int maxGenerationAttempts = 5;
     [SerializeField] int maxGraphGenerationAttempts = 5;
-    [SerializeField] bool applyRewrite = false;
+
 
     private Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict;
     private Dictionary<DungeonRoom, int> roomDepthDict;
@@ -46,18 +59,13 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField] PropsSet propSet;
     #endregion
 
-
-    #region ASTAR
-    bool startNodePicked = false;
-    Vector3Int startPosition;
-    Vector3Int endPosition;
-    List<Vector3Int> path;
+    #region InteriorWalls
+    [Header("Interior Walls")]
+    [SerializeField] InteriorWallSet interiorWallSet;
     #endregion
 
-    #region GraphRewriting
-    [SerializeField] GraphRewriteRuleList graphRewriteRuleList;
-    GraphRewriteRuleList GraphRewriteRuleList => graphRewriteRuleList;
-    #endregion
+
+
 
     void FillBackground(Tilemap backgroundTilemap, Tile backgroundTile)
     {
@@ -145,7 +153,7 @@ public class DungeonGenerator : MonoBehaviour
         // place interior walls
         if(roomsDict != null && roomsDict.Count > 0)
         {
-            InteriorWallPlacement.PlaceInteriorWalls(roomsDict, propSet.propsPrefab);
+            InteriorWallPlacement.PlaceInteriorWalls(roomsDict, interiorWallSet);
         }
 
         return true;
