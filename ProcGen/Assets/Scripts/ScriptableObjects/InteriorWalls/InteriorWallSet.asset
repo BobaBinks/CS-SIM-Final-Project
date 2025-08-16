@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6df620f5e6498ca44bb6fab5093e243a, type: 3}
   m_Name: InteriorWallSet
   m_EditorClassIdentifier: 
-  interiorWallTiles: []
   topLeftCornerWall: {fileID: 11400000, guid: 83880ab8eda73984fbb2b6b7639bdcb1, type: 2}
   topRightCornerWall: {fileID: 11400000, guid: b43cfea76c75b7345bf7d37273c588d6, type: 2}
   bottomLeftCornerWall: {fileID: 11400000, guid: c6a984f7bd2a8d740a0053bb6cf3fdfe, type: 2}
@@ -22,3 +21,7 @@ MonoBehaviour:
   topWall: {fileID: 11400000, guid: cdd4476423274eb4f8210285384cd01a, type: 2}
   bottomWall: {fileID: 11400000, guid: c62b8c46a6691ee43b2ee865ebc93444, type: 2}
   emptySpace: {fileID: 11400000, guid: 4b308138de7f21e46aa5acdc3b1b4085, type: 2}
+  topLeftInvertedCornerWall: {fileID: 11400000, guid: 352a5872c18e41d4dbc93b50880ba046, type: 2}
+  topRightInvertedCornerWall: {fileID: 11400000, guid: 5c606323c815a2c4aa1ed57f9d2e7646, type: 2}
+  bottomLeftInvertedCornerWall: {fileID: 11400000, guid: 2651f1e57261b424aaca20aefa5ca448, type: 2}
+  bottomRightInvertedCornerWall: {fileID: 11400000, guid: 0791ea696d03e8a42b6839e42bd69655, type: 2}
