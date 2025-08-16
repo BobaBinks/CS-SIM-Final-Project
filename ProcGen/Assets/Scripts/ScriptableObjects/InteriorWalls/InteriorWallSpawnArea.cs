@@ -33,8 +33,9 @@ public class InteriorWallSpawnArea : MonoBehaviour
         if (spawnCells.Count == 0)
             return;
 
+        int maxAttempts = 5;
         int maxNumOfInteriorWalls = 4;
-        int maxTurns = 1;
+        int maxTurns = 2;
         int minSteps = 2;
         int maxSteps = 5;
 
@@ -58,12 +59,16 @@ public class InteriorWallSpawnArea : MonoBehaviour
             // pick a random cell
             Vector3Int currCell = spawnCells[Random.Range(0, spawnCells.Count)];
 
+            List<Vector3Int> currCellMooresNeighbour = GetMooresNeighbour(currCell);
+
             // verify cell is valid
             if (occupiedCells.Contains(currCell) ||
-                !IsValidWallCell(currCell, GetMooresNeighbour(currCell), spawnCells))
+                !IsValidWallCell(currCell, currCellMooresNeighbour, spawnCells, occupiedCells))
                 continue;
 
+            // add the currCell and its neighbours to wallCell positions
             wallCellPositions.Add(currCell);
+            wallCellPositions.UnionWith(currCellMooresNeighbour);
 
             // do random walk
             int turns = Random.Range(1, maxTurns + 1);
@@ -75,15 +80,17 @@ public class InteriorWallSpawnArea : MonoBehaviour
                 for(int step = 0; step < steps; ++step)
                 {
                     Vector3Int nextCell = currCell + dir;
+                    List<Vector3Int> nextCellMooresNeighbour = GetMooresNeighbour(nextCell);
 
                     // out of bounds check and 
-                    if (!IsValidWallCell(nextCell, GetMooresNeighbour(nextCell), spawnCells))
+                    if (!IsValidWallCell(nextCell, nextCellMooresNeighbour, spawnCells, occupiedCells))
                     {
                         break;
                     }
 
                     currCell += dir;
-                    wallCellPositions.Add(currCell);
+                    wallCellPositions.Add(nextCell);
+                    wallCellPositions.UnionWith(nextCellMooresNeighbour);
                 }
             }
 
@@ -102,18 +109,25 @@ public class InteriorWallSpawnArea : MonoBehaviour
         }
     }
 
-    private bool IsValidWallCell(Vector3Int cell, List<Vector3Int> mooresNeighbours, List<Vector3Int> spawnCells)
+    private bool IsValidWallCell(Vector3Int cell, List<Vector3Int> mooresNeighbours, List<Vector3Int> spawnCells, HashSet<Vector3Int> occupiedCells)
     {
         if (mooresNeighbours == null || mooresNeighbours.Count != 8)
             return false;
 
-        if (!spawnCells.Contains(cell))
+        if (!spawnCells.Contains(cell) || occupiedCells.Contains(cell))
             return false;
 
         foreach(var neighbour in mooresNeighbours)
         {
-            if (!spawnCells.Contains(neighbour))
+            if (!spawnCells.Contains(neighbour) || occupiedCells.Contains(neighbour))
                 return false;
+
+            // check the neighbour's neighbour
+            foreach (var second in GetMooresNeighbour(neighbour))
+            {
+                if (occupiedCells.Contains(second))
+                    return false;
+            }
         }
 
         return true;
