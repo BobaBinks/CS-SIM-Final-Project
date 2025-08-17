@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 202452976160341019}
   - component: {fileID: 6651022818031235780}
   - component: {fileID: 6159840813438023941}
+  - component: {fileID: 7397099048343983593}
   m_Layer: 0
   m_Name: InteriorWallsSpawnArea
   m_TagString: InteriorWallsSpawnTilemap
@@ -871,6 +872,19 @@ TilemapRenderer:
   m_Mode: 0
   m_DetectChunkCullingBounds: 0
   m_MaskInteraction: 0
+--- !u!114 &7397099048343983593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 918165098215221217}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1e9ea8adb0a1af4b8a0dcfcae48dae4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wallMap: {fileID: 1192474816892003874}
 --- !u!1 &2567415401239913821
 GameObject:
   m_ObjectHideFlags: 0

@@ -63,7 +63,6 @@ public class DungeonGenerator : MonoBehaviour
     #region InteriorWalls
     [Header("Interior Walls")]
     [SerializeField] InteriorWallSet interiorWallSet;
-    [SerializeField] int maxNumOfInteriorWalls = 4;
     [SerializeField] int maxTurnsInteriorWalls = 2;
     [SerializeField] int minStepsInteriorWalls = 2;
     [SerializeField] int maxStepsInteriorWalls = 5;
@@ -155,7 +154,6 @@ public class DungeonGenerator : MonoBehaviour
         {
             InteriorWallPlacement.PlaceInteriorWalls(roomsDict,
                                                     interiorWallSet,
-                                                    maxNumOfInteriorWalls,
                                                     maxTurnsInteriorWalls,
                                                     minStepsInteriorWalls,
                                                     maxStepsInteriorWalls,

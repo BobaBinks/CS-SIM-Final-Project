@@ -8,6 +8,8 @@ public class PropSpawnArea : MonoBehaviour
     public Tilemap PropSpawnAreaTilemap { get; private set; }
     [SerializeField] Transform propTransform;
     [SerializeField] Tilemap wallMap;
+    [SerializeField] int maxNumberOfProps = 10;
+    [SerializeField] int minNumberOfProps = 5;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -26,7 +28,14 @@ public class PropSpawnArea : MonoBehaviour
 
         PropSpawnAreaTilemap.CompressBounds();
 
-        int numberOfProps = 10;
+
+        minNumberOfProps = Mathf.Max(minNumberOfProps, 1);
+        maxNumberOfProps = Mathf.Max(maxNumberOfProps, 1);
+
+        if (maxNumberOfProps < minNumberOfProps)
+            maxNumberOfProps = minNumberOfProps;
+
+        int numberOfProps = Random.Range(minNumberOfProps, maxNumberOfProps + 1);
 
         HashSet<Vector3Int> placedPropsCellPosition = new HashSet<Vector3Int>();
 

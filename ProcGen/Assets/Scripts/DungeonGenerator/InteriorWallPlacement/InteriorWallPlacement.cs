@@ -4,7 +4,6 @@ using System.Collections.Generic;
 public class InteriorWallPlacement : MonoBehaviour
 {
     public static bool PlaceInteriorWalls(Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict, InteriorWallSet interiorWallSet,
-                int maxNumOfInteriorWalls = 4,
                 int maxTurns = 2,
                 int minSteps = 2,
                 int maxSteps = 5,
@@ -31,7 +30,6 @@ public class InteriorWallPlacement : MonoBehaviour
             if (interiorWallSpawnArea != null)
             {
                 interiorWallSpawnArea.PlaceInteriorWalls(interiorWallSet,
-                                                        maxNumOfInteriorWalls,
                                                         maxTurns,
                                                         minSteps,
                                                         maxSteps,

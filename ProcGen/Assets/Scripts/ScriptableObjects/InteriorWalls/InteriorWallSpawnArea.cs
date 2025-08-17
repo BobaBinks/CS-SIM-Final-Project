@@ -7,6 +7,7 @@ public class InteriorWallSpawnArea : MonoBehaviour
 {
     public Tilemap InteriorWallSpawnAreaTilemap { get; private set; }
     [SerializeField] Tilemap wallMap;
+    [SerializeField] int maxNumOfInteriorWalls = 4;
 
     private void Awake()
     {
@@ -14,7 +15,6 @@ public class InteriorWallSpawnArea : MonoBehaviour
     }
 
     public void PlaceInteriorWalls(InteriorWallSet wallSet,
-        int maxNumOfInteriorWalls = 4,
         int maxTurns = 2,
         int minSteps = 2,
         int maxSteps = 5,
