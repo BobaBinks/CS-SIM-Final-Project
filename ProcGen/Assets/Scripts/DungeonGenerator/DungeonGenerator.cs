@@ -57,6 +57,7 @@ public class DungeonGenerator : MonoBehaviour
     #region Props
     [Header("Props")]
     [SerializeField] PropsSet propSet;
+    [SerializeField] PropsSet chestSet;
     [SerializeField] int propsMaxAttempts = 5;
     #endregion
 
@@ -161,9 +162,35 @@ public class DungeonGenerator : MonoBehaviour
         }
 
         // place props
-        if (propSet?.propsPrefab != null && propSet.propsPrefab.Count > 0 && roomsDict != null && roomsDict.Count > 0)
+        if ((propSet?.propsPrefab != null && propSet.propsPrefab.Count > 0) &&
+            (chestSet?.propsPrefab != null && chestSet.propsPrefab.Count > 0) &&
+            roomsDict != null && 
+            roomsDict.Count > 0)
         {
-            PropPlacement.PlaceProps(roomsDict, propSet.propsPrefab, propsMaxAttempts);
+            PropPlacement.PlaceProps(roomsDict, propSet.propsPrefab, chestSet.propsPrefab, propsMaxAttempts);
+        }
+
+        // place waypoints
+        if(roomsDict != null &&
+            roomsDict.Count > 0)
+        {
+            // iterate through each room
+            foreach (var kvp in roomsDict)
+            {
+                DungeonRoomInstance dungeonRoomInstance = kvp.Value;
+
+                if (dungeonRoomInstance == null || dungeonRoomInstance.instance == null)
+                    continue;
+
+                GameObject room = dungeonRoomInstance.instance;
+
+                // get the propspawn tilemap
+                Waypointplacement wayPointPlacement = room.GetComponentInChildren<Waypointplacement>();
+                if (wayPointPlacement != null)
+                {
+                    wayPointPlacement.PlaceWaypoints();
+                }
+            }
         }
 
 

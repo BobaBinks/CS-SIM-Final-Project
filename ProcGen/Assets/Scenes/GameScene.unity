@@ -4747,6 +4747,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 337827882}
     - target: {fileID: 8149777084855191499, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: chestSet
+      value: 
+      objectReference: {fileID: 11400000, guid: 6261afa24b9a0594ab2d88a40ac34e07, type: 2}
+    - target: {fileID: 8149777084855191499, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
       propertyPath: applyRewrite
       value: 0
       objectReference: {fileID: 0}
