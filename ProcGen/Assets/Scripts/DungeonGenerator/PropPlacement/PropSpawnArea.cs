@@ -7,6 +7,7 @@ public class PropSpawnArea : MonoBehaviour
 {
     public Tilemap PropSpawnAreaTilemap { get; private set; }
     [SerializeField] Transform propTransform;
+    [SerializeField] Tilemap wallMap;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -14,7 +15,7 @@ public class PropSpawnArea : MonoBehaviour
         PropSpawnAreaTilemap = GetComponent<Tilemap>();
     }
 
-    public void SpawnProps(List<GameObject> propPrefabs)
+    public void SpawnProps(List<GameObject> propPrefabs, int maxAttempts = 5)
     {
         if (propPrefabs == null || propPrefabs.Count == 0 || !PropSpawnAreaTilemap)
         {
@@ -27,7 +28,7 @@ public class PropSpawnArea : MonoBehaviour
 
         int numberOfProps = 10;
 
-        List<Vector3Int> placedPropsCellPosition = new List<Vector3Int>();
+        HashSet<Vector3Int> placedPropsCellPosition = new HashSet<Vector3Int>();
 
         List<Vector3Int> spawnCells = new List<Vector3Int>();
 
@@ -42,37 +43,48 @@ public class PropSpawnArea : MonoBehaviour
         if (spawnCells.Count < numberOfProps)
             numberOfProps = spawnCells.Count;
 
+        maxAttempts = Mathf.Max(maxAttempts, 1);
+
         for (int i = 0; i < numberOfProps; ++i)
         {
-            int randomCellIndex = Random.Range(0, spawnCells.Count);
+            int attempts = 0;
 
-            // identify cells to spawn props on
-            Vector3Int cell = spawnCells[randomCellIndex];
-
-            if (placedPropsCellPosition.Contains(cell))
-                continue;
-
-            // spawn the props in the world or in the tilemap
-            Vector3 worldPosition = PropSpawnAreaTilemap.GetCellCenterWorld(cell);
-
-            // get random prefab
-            int propPrefabIndex = Random.Range(0, propPrefabs.Count);
-
-            GameObject propGO;
-
-            if (propTransform)
+            while(attempts < maxAttempts)
             {
-                propGO = Instantiate(propPrefabs[propPrefabIndex], worldPosition, Quaternion.identity, propTransform);
-            }
-            else
-            {
-                propGO = Instantiate(propPrefabs[propPrefabIndex], worldPosition, Quaternion.identity);
-            }
+                int randomCellIndex = Random.Range(0, spawnCells.Count);
+
+                // identify cells to spawn props on
+                Vector3Int cell = spawnCells[randomCellIndex];
+
+                if (placedPropsCellPosition.Contains(cell) || (wallMap && wallMap.GetTile(cell) != null))
+                {
+                    attempts++;
+                    continue;
+                }
 
 
-            // once spawn, can optionally clear the tilemap.
-            spawnCells.Remove(cell);
-            placedPropsCellPosition.Add(cell);
+                // spawn the props in the world or in the tilemap
+                Vector3 worldPosition = PropSpawnAreaTilemap.GetCellCenterWorld(cell);
+
+                // get random prefab
+                int propPrefabIndex = Random.Range(0, propPrefabs.Count);
+
+                GameObject propGO;
+
+                if (propTransform)
+                {
+                    propGO = Instantiate(propPrefabs[propPrefabIndex], worldPosition, Quaternion.identity, propTransform);
+                }
+                else
+                {
+                    propGO = Instantiate(propPrefabs[propPrefabIndex], worldPosition, Quaternion.identity);
+                }
+
+                // once spawn, can optionally clear the tilemap.
+                spawnCells.Remove(cell);
+                placedPropsCellPosition.Add(cell);
+                break;
+            }
         }
 
 

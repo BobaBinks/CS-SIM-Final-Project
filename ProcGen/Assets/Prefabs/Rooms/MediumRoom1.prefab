@@ -6193,6 +6193,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   propTransform: {fileID: 2096426441002441217}
+  wallMap: {fileID: 7664482402221428431}
 --- !u!1 &3260569816133851613
 GameObject:
   m_ObjectHideFlags: 0

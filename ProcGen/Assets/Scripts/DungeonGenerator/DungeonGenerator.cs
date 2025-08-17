@@ -57,11 +57,17 @@ public class DungeonGenerator : MonoBehaviour
     #region Props
     [Header("Props")]
     [SerializeField] PropsSet propSet;
+    [SerializeField] int propsMaxAttempts = 5;
     #endregion
 
     #region InteriorWalls
     [Header("Interior Walls")]
     [SerializeField] InteriorWallSet interiorWallSet;
+    [SerializeField] int maxNumOfInteriorWalls = 4;
+    [SerializeField] int maxTurnsInteriorWalls = 2;
+    [SerializeField] int minStepsInteriorWalls = 2;
+    [SerializeField] int maxStepsInteriorWalls = 5;
+    [SerializeField] int maxAttemptsInteriorWalls = 5;
     #endregion
 
 
@@ -144,17 +150,25 @@ public class DungeonGenerator : MonoBehaviour
         if (attempts >= maxAttempts)
             return false;
 
+        // place interior walls
+        if (roomsDict != null && roomsDict.Count > 0)
+        {
+            InteriorWallPlacement.PlaceInteriorWalls(roomsDict,
+                                                    interiorWallSet,
+                                                    maxNumOfInteriorWalls,
+                                                    maxTurnsInteriorWalls,
+                                                    minStepsInteriorWalls,
+                                                    maxStepsInteriorWalls,
+                                                    maxAttemptsInteriorWalls);
+        }
+
         // place props
         if (propSet?.propsPrefab != null && propSet.propsPrefab.Count > 0 && roomsDict != null && roomsDict.Count > 0)
         {
-            PropPlacement.PlaceProps(roomsDict, propSet.propsPrefab);
+            PropPlacement.PlaceProps(roomsDict, propSet.propsPrefab, propsMaxAttempts);
         }
 
-        // place interior walls
-        if(roomsDict != null && roomsDict.Count > 0)
-        {
-            InteriorWallPlacement.PlaceInteriorWalls(roomsDict, interiorWallSet);
-        }
+
 
         return true;
     }

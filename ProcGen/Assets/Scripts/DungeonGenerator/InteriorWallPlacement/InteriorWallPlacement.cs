@@ -3,7 +3,12 @@ using System.Collections.Generic;
 
 public class InteriorWallPlacement : MonoBehaviour
 {
-    public static bool PlaceInteriorWalls(Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict, InteriorWallSet interiorWallSet)
+    public static bool PlaceInteriorWalls(Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict, InteriorWallSet interiorWallSet,
+                int maxNumOfInteriorWalls = 4,
+                int maxTurns = 2,
+                int minSteps = 2,
+                int maxSteps = 5,
+                int maxAttempts = 5)
     {
         if (roomsDict == null || roomsDict.Count == 0 || interiorWallSet == null)
         {
@@ -25,7 +30,12 @@ public class InteriorWallPlacement : MonoBehaviour
             InteriorWallSpawnArea interiorWallSpawnArea = room.GetComponentInChildren<InteriorWallSpawnArea>();
             if (interiorWallSpawnArea != null)
             {
-                interiorWallSpawnArea.PlaceInteriorWalls(interiorWallSet);
+                interiorWallSpawnArea.PlaceInteriorWalls(interiorWallSet,
+                                                        maxNumOfInteriorWalls,
+                                                        maxTurns,
+                                                        minSteps,
+                                                        maxSteps,
+                                                        maxAttempts);
             }
         }
 

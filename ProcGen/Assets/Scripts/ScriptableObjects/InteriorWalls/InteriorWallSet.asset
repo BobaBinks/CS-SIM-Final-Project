@@ -21,7 +21,7 @@ MonoBehaviour:
   topWall: {fileID: 11400000, guid: cdd4476423274eb4f8210285384cd01a, type: 2}
   bottomWall: {fileID: 11400000, guid: c62b8c46a6691ee43b2ee865ebc93444, type: 2}
   emptySpace: {fileID: 11400000, guid: 4b308138de7f21e46aa5acdc3b1b4085, type: 2}
-  topLeftInvertedCornerWall: {fileID: 11400000, guid: 352a5872c18e41d4dbc93b50880ba046, type: 2}
-  topRightInvertedCornerWall: {fileID: 11400000, guid: 5c606323c815a2c4aa1ed57f9d2e7646, type: 2}
+  topLeftInvertedCornerWall: {fileID: 11400000, guid: f4cced859a5409940a6da2ae8593a9b9, type: 2}
+  topRightInvertedCornerWall: {fileID: 11400000, guid: ae41a9de275eb7e468e6cd75bac4b70d, type: 2}
   bottomLeftInvertedCornerWall: {fileID: 11400000, guid: 2651f1e57261b424aaca20aefa5ca448, type: 2}
   bottomRightInvertedCornerWall: {fileID: 11400000, guid: 0791ea696d03e8a42b6839e42bd69655, type: 2}
