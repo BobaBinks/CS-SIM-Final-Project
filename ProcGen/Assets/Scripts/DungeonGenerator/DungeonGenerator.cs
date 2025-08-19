@@ -58,6 +58,7 @@ public class DungeonGenerator : MonoBehaviour
     [Header("Props")]
     [SerializeField] PropsSet propSet;
     [SerializeField] PropsSet chestSet;
+    [SerializeField] PropsSet trapSet;
     [SerializeField] int propsMaxAttempts = 5;
     #endregion
 
@@ -164,10 +165,15 @@ public class DungeonGenerator : MonoBehaviour
         // place props
         if ((propSet?.propsPrefab != null && propSet.propsPrefab.Count > 0) &&
             (chestSet?.propsPrefab != null && chestSet.propsPrefab.Count > 0) &&
+            (trapSet?.propsPrefab != null && trapSet.propsPrefab.Count > 0) &&
             roomsDict != null && 
             roomsDict.Count > 0)
         {
-            PropPlacement.PlaceProps(roomsDict, propSet.propsPrefab, chestSet.propsPrefab, propsMaxAttempts);
+            PropPlacement.PlaceProps(roomsDict,
+                                    propSet.propsPrefab,
+                                    chestSet.propsPrefab,
+                                    trapSet.propsPrefab,
+                                    propsMaxAttempts);
         }
 
         // place waypoints
@@ -192,8 +198,6 @@ public class DungeonGenerator : MonoBehaviour
                 }
             }
         }
-
-
 
         return true;
     }

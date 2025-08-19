@@ -6,14 +6,20 @@ using System.Collections.Generic;
 public class PropSpawnArea : MonoBehaviour
 {
     public Tilemap PropSpawnAreaTilemap { get; private set; }
-    [SerializeField] Transform propTransform;
     [SerializeField] Tilemap wallMap;
+    [SerializeField] Transform propTransform;
+
+    [Header("Props")]
     [SerializeField] int maxNumberOfProps = 10;
     [SerializeField] int minNumberOfProps = 5;
 
+    [Header("Chests")]
     [SerializeField] int maxNumberOfChests = 2;
     [SerializeField] int minNumberOfChests = 1;
 
+    [Header("Traps")]
+    [SerializeField] int maxNumberOfTraps = 2;
+    [SerializeField] int minNumberOfTraps = 1;
 
     HashSet<Vector3Int> placedPropsCellPosition;
     List<Vector3Int> spawnCells;
@@ -109,6 +115,76 @@ public class PropSpawnArea : MonoBehaviour
 
     }
 
+    public void SpawnTraps(List<GameObject> propPrefabs, int maxAttempts = 5)
+    {
+        if (propPrefabs == null ||
+            propPrefabs.Count == 0 ||
+            !PropSpawnAreaTilemap ||
+            spawnCells == null ||
+            spawnCells.Count == 0 ||
+            placedPropsCellPosition == null)
+        {
+            Debug.Log("Failed to spawn props");
+            return;
+        }
+
+
+        PropSpawnAreaTilemap.CompressBounds();
+
+        minNumberOfTraps = Mathf.Max(minNumberOfTraps, 1);
+        maxNumberOfTraps = Mathf.Max(maxNumberOfTraps, 1);
+
+        if (maxNumberOfTraps < minNumberOfTraps)
+            maxNumberOfTraps = minNumberOfTraps;
+
+        int numberOfChests = Random.Range(minNumberOfTraps, maxNumberOfTraps + 1);
+
+        if (spawnCells.Count < numberOfChests)
+            numberOfChests = spawnCells.Count;
+
+        maxAttempts = Mathf.Max(maxAttempts, 1);
+
+        for (int i = 0; i < numberOfChests; ++i)
+        {
+            int attempts = 0;
+
+            while (attempts < maxAttempts)
+            {
+                int randomCellIndex = Random.Range(0, spawnCells.Count);
+
+                // identify cells to spawn props on
+                Vector3Int cell = spawnCells[randomCellIndex];
+
+                if (placedPropsCellPosition.Contains(cell) || (wallMap && wallMap.GetTile(cell) != null))
+                {
+                    attempts++;
+                    continue;
+                }
+
+                // spawn the props in the world or in the tilemap
+                Vector3 worldPosition = PropSpawnAreaTilemap.GetCellCenterWorld(cell);
+
+                // get random prefab
+                int propPrefabIndex = Random.Range(0, propPrefabs.Count);
+
+                GameObject propGO;
+
+                if (propTransform)
+                {
+                    propGO = Instantiate(propPrefabs[propPrefabIndex], worldPosition, Quaternion.identity, propTransform);
+                }
+                else
+                {
+                    propGO = Instantiate(propPrefabs[propPrefabIndex], worldPosition, Quaternion.identity);
+                }
+
+                // once spawn, can optionally clear the tilemap.
+                spawnCells.Remove(cell);
+                placedPropsCellPosition.Add(cell);
+                break;
+            }
+        }
+    }
 
     public void SpawnChests(List<GameObject> propPrefabs, int maxAttempts = 5)
     {

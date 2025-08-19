@@ -12036,9 +12036,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2febd968ffda5ba45a8044b248f3fe71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  propTransform: {fileID: 2192595124030773629}
   wallMap: {fileID: 4626749397644425607}
+  propTransform: {fileID: 2192595124030773629}
   maxNumberOfProps: 20
   minNumberOfProps: 10
   maxNumberOfChests: 2
   minNumberOfChests: 1
+  maxNumberOfTraps: 2
+  minNumberOfTraps: 1

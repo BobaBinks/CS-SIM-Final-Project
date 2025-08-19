@@ -4685,12 +4685,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2febd968ffda5ba45a8044b248f3fe71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  propTransform: {fileID: 8438998303360988345}
   wallMap: {fileID: 6173420831860606844}
+  propTransform: {fileID: 8438998303360988345}
   maxNumberOfProps: 10
   minNumberOfProps: 5
   maxNumberOfChests: 2
   minNumberOfChests: 1
+  maxNumberOfTraps: 2
+  minNumberOfTraps: 1
 --- !u!1 &8261049039594281088
 GameObject:
   m_ObjectHideFlags: 0
