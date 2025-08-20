@@ -2,12 +2,8 @@ using UnityEngine;
 using System.Collections.Generic;
 public class RangedAttackState : AttackState
 {
-    //public GameObject projectilePrefab;
-    //public Transform projectileSpawnPoint;
-    public RangedAttackState(string stateId, GameObject projectilePrefab, Transform projectileSpawnPoint) : base(stateId)
+    public RangedAttackState(string stateId) : base(stateId)
     {
-        //this.projectilePrefab = projectilePrefab;
-        //this.projectileSpawnPoint = projectileSpawnPoint;
     }
 
     public override void EnterState(EnemyAI owner)
@@ -42,15 +38,11 @@ public class RangedAttackState : AttackState
         }
         else
         {
-            owner.AttackTimer -= (float)deltaTime;
+            FlyingSkull skull = owner as FlyingSkull;
 
-            if (owner.AttackTimer < 0)
-            {
-                owner.AttackTimer = owner.AttackCooldown;
-                owner.animator.Play(owner.AttackAnimationName);
+            if (skull != null)
+                skull.Shoot();
 
-                // get skull to shoot projectile in animation event instead
-            }
         }
     }
 }

@@ -125,7 +125,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -2055103623
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 0
   m_Sprite: {fileID: 4011105186309441619, guid: f634159c416818d4cbaf0e2d7171fc09, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -221,7 +221,7 @@ MonoBehaviour:
     m_Bits: 2039
   maxHearingDistance: 2
   attackAnimationName: Skull_Hit
-  moveAnimationName: Skull_Run
+  moveAnimationName: Skull_Idle
   idleAnimationName: Skull_Idle
   deathAnimationName: Skull_Death
   takeDamageAnimationName: Skull_Take_Damage
@@ -331,6 +331,12 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   projectilePrefab: {fileID: 3805697623382337080, guid: f03915bb3dc44414fb6865c9ec56d88f, type: 3}
+  timeBetweenBursts: 0.3
+  burstCount: 5
+  projectilePerBurst: 6
+  angleSpread: 167
+  coolDown: 0.5
+  randomnizeShootingParams: 1
   aimDirection: {x: 0, y: 0, z: 0}
   leadDistance: 0.3
 --- !u!50 &7290258137597811008

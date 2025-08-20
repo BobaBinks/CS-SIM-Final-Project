@@ -47,11 +47,11 @@ public abstract class EnemyAI: CharacterBase, IDamagable
 
     #region Additional Stats
     [Header("Additional Stats")]
-    [SerializeField] float attackRange = 2f;
-    [SerializeField] float chaseRange = 2f;
-    [SerializeField] float attackSpeed = 1f;
-    [SerializeField] float attackCooldown = 1f;
-    [SerializeField] float attackDamage = 1f;
+    [SerializeField] protected float attackRange = 2f;
+    [SerializeField] protected float chaseRange = 2f;
+    [SerializeField] protected float attackSpeed = 1f;
+    [SerializeField] protected float attackCooldown = 1f;
+    [SerializeField] protected float attackDamage = 1f;
     public float AttackTimer { get; set; }
 
     public float AttackRange
@@ -123,7 +123,7 @@ public abstract class EnemyAI: CharacterBase, IDamagable
     [SerializeField] protected AnimationCurve xpRewardCurve;
     #endregion
 
-    public Player player { get; private set; }
+    public Player player { get; protected set; }
 
     public virtual void Start()
     {

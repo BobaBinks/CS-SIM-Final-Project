@@ -22,7 +22,7 @@ public class Player : CharacterBase, IDamagable, IHealable
 
     #region Additional Stats
     public float currentXp;
-
+    [SerializeField] bool godMode = false;
     [SerializeField]
     float attackCooldownTime = 1f;
     public float AttackCooldownTime
@@ -104,6 +104,8 @@ public class Player : CharacterBase, IDamagable, IHealable
 
     public override void TakeDamage(float damage)
     {
+        if (godMode)
+            return;
         base.TakeDamage(damage);
 
         UpdateHealthBar();
