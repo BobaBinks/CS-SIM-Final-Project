@@ -69,6 +69,8 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField] int minStepsInteriorWalls = 2;
     [SerializeField] int maxStepsInteriorWalls = 5;
     [SerializeField] int maxAttemptsInteriorWalls = 5;
+    [SerializeField] int maxWallSetsPlacementAttempt = 20;
+    [SerializeField] int offsetWallSetsThreshold = 1;
     #endregion
 
 
@@ -159,7 +161,9 @@ public class DungeonGenerator : MonoBehaviour
                                                     maxTurnsInteriorWalls,
                                                     minStepsInteriorWalls,
                                                     maxStepsInteriorWalls,
-                                                    maxAttemptsInteriorWalls);
+                                                    maxAttemptsInteriorWalls,
+                                                    maxWallSetsPlacementAttempt = 20,
+                                                    offsetWallSetsThreshold = 1);
         }
 
         // place props

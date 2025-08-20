@@ -7,7 +7,9 @@ public class InteriorWallPlacement : MonoBehaviour
                 int maxTurns = 2,
                 int minSteps = 2,
                 int maxSteps = 5,
-                int maxAttempts = 5)
+                int maxAttempts = 5,
+                int maxWallSetsPlacementAttempt = 20,
+                int offsetWallSetsThreshold = 1)
     {
         if (roomsDict == null || roomsDict.Count == 0 || interiorWallSet == null)
         {
@@ -33,7 +35,9 @@ public class InteriorWallPlacement : MonoBehaviour
                                                         maxTurns,
                                                         minSteps,
                                                         maxSteps,
-                                                        maxAttempts);
+                                                        maxAttempts,
+                                                        maxWallSetsPlacementAttempt = 20,
+                                                        offsetWallSetsThreshold = 1);
             }
         }
 
