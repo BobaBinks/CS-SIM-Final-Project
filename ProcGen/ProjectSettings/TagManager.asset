@@ -52,6 +52,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: SpawnArea
+    uniqueID: 592312139
+    locked: 0
   - name: Floor
     uniqueID: 3748358297
     locked: 0

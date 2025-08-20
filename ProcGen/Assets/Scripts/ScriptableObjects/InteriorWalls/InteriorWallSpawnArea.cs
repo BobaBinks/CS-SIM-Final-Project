@@ -8,6 +8,7 @@ public class InteriorWallSpawnArea : MonoBehaviour
     public Tilemap InteriorWallSpawnAreaTilemap { get; private set; }
     [SerializeField] Tilemap wallMap;
     [SerializeField] int maxNumOfInteriorWalls = 4;
+    [SerializeField] int minNumOfInteriorWalls = 2;
 
     private void Awake()
     {
@@ -18,7 +19,9 @@ public class InteriorWallSpawnArea : MonoBehaviour
         int maxTurns = 2,
         int minSteps = 2,
         int maxSteps = 5,
-        int maxAttempts = 5)
+        int maxAttempts = 5,
+        int maxWallSetsPlacementAttempt = 20,
+        int offsetWallSetsThreshold = 1)
     {
         if (wallSet == null ||
             InteriorWallSpawnAreaTilemap == null
@@ -47,32 +50,56 @@ public class InteriorWallSpawnArea : MonoBehaviour
 
         // make sure maxAttempts is at least 1
         maxAttempts = Mathf.Max(maxAttempts, 1);
+        maxWallSetsPlacementAttempt = Mathf.Max(maxWallSetsPlacementAttempt, 1);
+
+        // make sure offsetWallSetsThreshold is not less than 0
+        offsetWallSetsThreshold = Mathf.Max(0, offsetWallSetsThreshold);
 
         // make sure maxTurns is at least 1
         maxTurns = Mathf.Max(maxTurns, 1);
 
         // make sure maxNumOfInteriorWalls is at least 1
         maxNumOfInteriorWalls = Mathf.Max(maxNumOfInteriorWalls, 1);
+
+        // make sure minNumOfInteriorWalls is at least 1
+        minNumOfInteriorWalls = Mathf.Max(minNumOfInteriorWalls, 1);
+
+        // make sure maxNumOfInteriorWalls not less than minNumOfInteriorWalls
+        if (maxNumOfInteriorWalls < minNumOfInteriorWalls)
+            maxNumOfInteriorWalls = minNumOfInteriorWalls;
         #endregion
 
-        int numOfInteriorWalls = Random.Range(1, maxNumOfInteriorWalls + 1);
+        int numOfInteriorWalls = Random.Range(minNumOfInteriorWalls, maxNumOfInteriorWalls + 1);
+        int numOfWallsPlaced;
+        int acceptableNumberOfWallsThreshold = Mathf.Max(1, numOfInteriorWalls - offsetWallSetsThreshold);
+        int wallSetsPlacementAttempt = 0;
 
-        HashSet<Vector3Int> occupiedCells = new HashSet<Vector3Int>();
-
-        for(int i = 0; i < numOfInteriorWalls; ++i)
+        while(wallSetsPlacementAttempt < maxWallSetsPlacementAttempt)
         {
-            int attempts = 0;
-
-            while(attempts < maxAttempts)
+            HashSet<Vector3Int> occupiedCells = new HashSet<Vector3Int>();
+            numOfWallsPlaced = 0;
+            for (int i = 0; i < numOfInteriorWalls; ++i)
             {
-                if (PlaceInteriorWall(spawnCells, occupiedCells, maxTurns, minSteps, maxSteps))
-                    break;
-                attempts++;
+                int attempts = 0;
+
+                while (attempts < maxAttempts)
+                {
+                    if (PlaceInteriorWall(spawnCells, occupiedCells, maxTurns, minSteps, maxSteps))
+                    {
+                        numOfWallsPlaced++;
+                        break;
+                    }
+                    attempts++;
+                }
             }
 
+            if(numOfWallsPlaced >= acceptableNumberOfWallsThreshold)
+            {
+                PaintWallTiles(wallMap, wallSet, occupiedCells);
+                break;
+            }
+            wallSetsPlacementAttempt++;
         }
-
-        PaintWallTiles(wallMap, wallSet, occupiedCells);
     }
 
     private bool IsEmptySpace(Vector3Int position, HashSet<Vector3Int> occupiedCells)

@@ -135,7 +135,7 @@ public class EnemySpawnManager : MonoBehaviour
 
         // get the number of enemies to spawn in this room
         int enemySpawnCount = GetRoomEnemyCount(groundMap.cellBounds.size.x * groundMap.cellBounds.size.y);
-        Debug.Log($"{roomInstance.instance.name}'s will spawn {enemySpawnCount}.");
+        // Debug.Log($"{roomInstance.instance.name}'s will spawn {enemySpawnCount}.");
 
 
         for(int enemyIndex = 0; enemyIndex < enemySpawnCount; ++enemyIndex)
