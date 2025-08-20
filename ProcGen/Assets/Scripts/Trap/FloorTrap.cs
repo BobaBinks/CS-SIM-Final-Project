@@ -9,6 +9,8 @@ public class FloorTrap : MonoBehaviour
     Collider2D collider;
     List<IDamagable> damagables;
 
+    [SerializeField] bool playerOnly = true;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
@@ -32,6 +34,9 @@ public class FloorTrap : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (playerOnly && !collision.CompareTag("Player"))
+            return;
+
         if(collision.TryGetComponent<IDamagable>(out IDamagable damagable))
         {
             damagables.Add(damagable);
@@ -40,6 +45,9 @@ public class FloorTrap : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
+        if (playerOnly && !collision.CompareTag("Player"))
+            return;
+
         if (collision.TryGetComponent<IDamagable>(out IDamagable damagable))
         {
             damagables.Remove(damagable);

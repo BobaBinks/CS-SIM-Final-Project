@@ -12042,5 +12042,5 @@ MonoBehaviour:
   minNumberOfProps: 10
   maxNumberOfChests: 2
   minNumberOfChests: 1
-  maxNumberOfTraps: 2
-  minNumberOfTraps: 1
+  maxNumberOfTraps: 8
+  minNumberOfTraps: 4

@@ -4691,8 +4691,8 @@ MonoBehaviour:
   minNumberOfProps: 5
   maxNumberOfChests: 2
   minNumberOfChests: 1
-  maxNumberOfTraps: 2
-  minNumberOfTraps: 1
+  maxNumberOfTraps: 4
+  minNumberOfTraps: 2
 --- !u!1 &8261049039594281088
 GameObject:
   m_ObjectHideFlags: 0
