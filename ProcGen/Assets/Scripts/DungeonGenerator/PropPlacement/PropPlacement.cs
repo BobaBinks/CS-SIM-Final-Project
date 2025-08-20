@@ -32,6 +32,8 @@ public class PropPlacement
             PropSpawnArea propSpawnArea = room.GetComponentInChildren<PropSpawnArea>();
             if (propSpawnArea != null)
             {
+                propSpawnArea.InitPropSpawn();
+
                 propSpawnArea.SpawnProps(propPrefabs, maxAttempts: maxAttempts);
                 propSpawnArea.SpawnChests(chestPrefabs, maxAttempts: maxAttempts);
                 propSpawnArea.SpawnTraps(trapPrefabs, maxAttempts: maxAttempts);

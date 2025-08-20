@@ -6,6 +6,7 @@ public class Waypointplacement : MonoBehaviour
 {
     [SerializeField] Tilemap wallMap;
     [SerializeField] Tilemap groundMap;
+    [SerializeField] Transform objectsWithColliderTransform;
     [SerializeField] int numWaypoints;
     [SerializeField] int maxAttempts = 5;
     [SerializeField] float minGap;
@@ -30,7 +31,7 @@ public class Waypointplacement : MonoBehaviour
         groundMap.CompressBounds();
         wallMap.CompressBounds();
 
-        HashSet<Vector3Int> spawnCellsHashSet = GetSpawnableCells(groundMap, wallMap);
+        HashSet<Vector3Int> spawnCellsHashSet = GetSpawnableCells(groundMap, wallMap, objectsWithColliderTransform);
 
         List<Vector3Int> spawnCells = new List<Vector3Int>(spawnCellsHashSet);
 
@@ -50,16 +51,37 @@ public class Waypointplacement : MonoBehaviour
 
     }
 
-    private HashSet<Vector3Int> GetSpawnableCells(Tilemap groundMap, Tilemap wallMap)
+    private HashSet<Vector3Int> GetSpawnableCells(Tilemap groundMap, Tilemap wallMap, Transform objectsWithColliderTransform)
     {
+        HashSet<Vector3Int> spawnCells = new HashSet<Vector3Int>();
+
+        // return empty set
+        if (groundMap == null || wallMap == null || objectsWithColliderTransform == null)
+            return spawnCells;
+
         groundMap.CompressBounds();
         wallMap.CompressBounds();
 
-        HashSet<Vector3Int> spawnCells = new HashSet<Vector3Int>();
+
+        HashSet<Vector3Int> objectsWithColliderCells = new HashSet<Vector3Int>();
+        // get children of objects with collider
+        if (objectsWithColliderTransform)
+        {
+            for (int i = 0; i < objectsWithColliderTransform.childCount; ++i)
+            {
+                Vector3 worldPos = objectsWithColliderTransform.GetChild(i).transform.position;
+                Vector3Int cellPos = groundMap.WorldToCell(worldPos);
+
+                objectsWithColliderCells.Add(cellPos);
+            }
+        }
+
         foreach (var cell in groundMap.cellBounds.allPositionsWithin)
         {
-            if (groundMap.GetTile(cell) != null && wallMap.GetTile(cell) == null)
-                spawnCells.Add(cell);
+            if (groundMap.GetTile(cell) != null &&
+                wallMap.GetTile(cell) == null &&
+                !objectsWithColliderCells.Contains(cell))
+                    spawnCells.Add(cell);
         }
 
         return spawnCells;
