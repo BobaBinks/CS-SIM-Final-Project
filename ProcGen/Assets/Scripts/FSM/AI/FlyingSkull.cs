@@ -11,6 +11,8 @@ public class FlyingSkull : EnemyAI
     [SerializeField] int projectilePerBurst = 3;
     [SerializeField][Range(0,359)] int angleSpread = 3;
     [SerializeField] float coolDown = 3f;
+    [SerializeField] bool stagger = false;
+    [SerializeField] bool oscillate = false;
     [SerializeField] bool randomnizeShootingParams = false;
 
     private bool isShooting = false;
@@ -20,9 +22,10 @@ public class FlyingSkull : EnemyAI
     private void RandomnizeShootingParameters()
     {
         timeBetweenBursts = Random.Range(.3f, .7f);
-        burstCount = Random.Range(1, 5);
-        projectilePerBurst = Random.Range(1, 6);
-        angleSpread = Random.Range(0, 360);
+        burstCount = Random.Range(2, 5);
+        projectilePerBurst = Random.Range(4, 10);
+
+        angleSpread = Random.Range(0, 180);
         coolDown = Random.Range(1f, 3f);
     }
 
@@ -105,12 +108,24 @@ public class FlyingSkull : EnemyAI
 
         isShooting = true;
 
+        float timeBetweenProjectiles = 0f;
+        if(stagger){ timeBetweenProjectiles = timeBetweenBursts / projectilePerBurst; }
+
         // initialize something
-        float startAngle, currAngle, angleStep;
+        float startAngle, currAngle, angleStep, endAngle;
+        SetTargetCone(out startAngle, out currAngle, out angleStep, out endAngle);
 
         for (int burst = 0; burst < burstCount; ++burst)
         {
-            SetTargetCone(out startAngle, out currAngle, out angleStep);
+            if(!oscillate)
+                SetTargetCone(out startAngle, out currAngle, out angleStep, out endAngle);
+            else
+            {
+                currAngle = endAngle;
+                endAngle = startAngle;
+                startAngle = currAngle;
+                angleStep *= -1;
+            }
 
             for (int projectile = 0; projectile < projectilePerBurst; projectile++)
             {
@@ -130,6 +145,8 @@ public class FlyingSkull : EnemyAI
 
                 // update angle for next projectile
                 currAngle += angleStep;
+
+                if (stagger) yield return new WaitForSeconds(timeBetweenProjectiles);
             }
 
             // reset current angle to start angle in between bursts
@@ -148,13 +165,12 @@ public class FlyingSkull : EnemyAI
         isShooting = false;
     }
 
-    private void SetTargetCone(out float startAngle, out float currAngle, out float angleStep)
+    private void SetTargetCone(out float startAngle, out float currAngle, out float angleStep, out float endAngle)
     {
         Vector3 dir = player.transform.position - transform.position;
         dir.Normalize();
 
         float targetAngle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        float endAngle;
         startAngle = endAngle = currAngle = targetAngle;
         angleStep = 0f;
         if (angleSpread != 0)

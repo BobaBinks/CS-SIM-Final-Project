@@ -81,7 +81,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -2055103623
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 8
   m_Sprite: {fileID: 7628897034881489312, guid: 3ad48853dcf3ac24fbf90a4bf7998c69, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -233,6 +233,10 @@ MonoBehaviour:
   collider: {fileID: 2799431286504632228}
   animator: {fileID: 5562144630815470002}
   wayPoints: []
+  requireLOS: 0
+  losLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
   maxHearingDistance: 2
   attackAnimationName: SkeletonScytheAttack
   moveAnimationName: SkeletonScytheMovement
@@ -301,9 +305,9 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0.25
-      inSlope: 0.0025
-      outSlope: 0.0025
+      value: 0.3
+      inSlope: 0.0019999999
+      outSlope: 0.0019999999
       tangentMode: 34
       weightedMode: 0
       inWeight: 0
@@ -311,8 +315,8 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 100
       value: 0.5
-      inSlope: 0.0025
-      outSlope: 0.0025
+      inSlope: 0.0019999999
+      outSlope: 0.0019999999
       tangentMode: 34
       weightedMode: 0
       inWeight: 0.33333334

@@ -4600,7 +4600,7 @@ PrefabInstance:
       objectReference: {fileID: 285634607}
     - target: {fileID: 5614104904988341736, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
       propertyPath: enemyPrefabs.Array.size
-      value: 1
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 5614104904988341736, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
       propertyPath: 'bossPrefabs.Array.data[0]'
@@ -4613,11 +4613,11 @@ PrefabInstance:
     - target: {fileID: 5614104904988341736, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
       propertyPath: 'enemyPrefabs.Array.data[1]'
       value: 
-      objectReference: {fileID: 1542944116789048575, guid: 7847e8e57de49f64fb4b0461025ca355, type: 3}
+      objectReference: {fileID: 1101100757501871219, guid: afa1b356b2f43c14f802f83ccfdb7e4c, type: 3}
     - target: {fileID: 5614104904988341736, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
       propertyPath: 'enemyPrefabs.Array.data[2]'
       value: 
-      objectReference: {fileID: 1101100757501871219, guid: afa1b356b2f43c14f802f83ccfdb7e4c, type: 3}
+      objectReference: {fileID: 1542944116789048575, guid: 7847e8e57de49f64fb4b0461025ca355, type: 3}
     - target: {fileID: 5614104904988341736, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
       propertyPath: enemiesPerRoomCurve.m_Curve.Array.size
       value: 2

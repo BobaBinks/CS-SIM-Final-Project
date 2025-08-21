@@ -328,7 +328,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -2055103623
-  m_SortingLayer: 4
+  m_SortingLayer: 5
   m_SortingOrder: 8
   m_Sprite: {fileID: -371990891160990251, guid: 6b753806bd28a3f449fe64c542d54a61, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -482,7 +482,7 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 50
+      value: 150
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -491,7 +491,7 @@ MonoBehaviour:
       outWeight: 0
     - serializedVersion: 3
       time: 100
-      value: 100
+      value: 300
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -530,7 +530,7 @@ MonoBehaviour:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 10
+      value: 50
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -539,7 +539,7 @@ MonoBehaviour:
       outWeight: 0
     - serializedVersion: 3
       time: 100
-      value: 100
+      value: 150
       inSlope: 2
       outSlope: 2
       tangentMode: 0
