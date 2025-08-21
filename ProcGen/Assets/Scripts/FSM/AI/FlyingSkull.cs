@@ -1,11 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
+
 
 public class FlyingSkull : EnemyAI
 {
     [Header("Shooting Parameters")]
-    [SerializeField] GameObject projectilePrefab;
+    [SerializeField] EnemyProjectile projectilePrefab;
     [SerializeField] float timeBetweenBursts = 2f;
     [SerializeField] int burstCount = 2;
     [SerializeField] int projectilePerBurst = 3;
@@ -15,9 +17,13 @@ public class FlyingSkull : EnemyAI
     [SerializeField] bool oscillate = false;
     [SerializeField] bool randomnizeShootingParams = false;
 
+    bool collectionCheck = false;
+    IObjectPool<EnemyProjectile> enemyProjectilePool;
+    int defaultPoolCapacity  = 10;
+    int maxPoolCapacity = 100;
+
     private bool isShooting = false;
     Vector3 aimDirection;
-
 
     private void RandomnizeShootingParameters()
     {
@@ -25,12 +31,23 @@ public class FlyingSkull : EnemyAI
         burstCount = Random.Range(2, 5);
         projectilePerBurst = Random.Range(4, 10);
 
-        angleSpread = Random.Range(0, 180);
-        coolDown = Random.Range(1f, 3f);
+        angleSpread = Random.Range(0, 150);
+        coolDown = Random.Range(2f, 3f);
+
+        stagger = Random.Range(0, 2) == 1 ? true : false;
+        oscillate = Random.Range(0, 2) == 1 ? true : false;
     }
 
     public override void Initialize(int level = 0)
     {
+        enemyProjectilePool = new ObjectPool<EnemyProjectile>(CreateProjectile,
+            OnGetFromPool,
+            OnReleaseToPool,
+            OnDestroyPooledObject,
+            collectionCheck,
+            defaultPoolCapacity,
+            maxPoolCapacity);
+
         HealthPoints = maxHealthPoints;
         this.level = level;
         if (levelText)
@@ -57,6 +74,28 @@ public class FlyingSkull : EnemyAI
 
         if (randomnizeShootingParams)
             RandomnizeShootingParameters();
+    }
+
+    private EnemyProjectile CreateProjectile()
+    {
+        EnemyProjectile projectileInstance = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
+        projectileInstance.EnemyProjectilePool = enemyProjectilePool;
+        return projectileInstance;
+    }
+
+    private void OnGetFromPool(EnemyProjectile projectile)
+    {
+        projectile.gameObject.SetActive(true);
+    }
+
+    private void OnReleaseToPool(EnemyProjectile projectile)
+    {
+        projectile.gameObject.SetActive(false);
+    }
+
+    private void OnDestroyPooledObject(EnemyProjectile projectile)
+    {
+        Destroy(projectile.gameObject);
     }
 
     public float GetProjectileRadius()
@@ -117,8 +156,10 @@ public class FlyingSkull : EnemyAI
 
         for (int burst = 0; burst < burstCount; ++burst)
         {
-            if(!oscillate)
+            if (!oscillate)
+            {
                 SetTargetCone(out startAngle, out currAngle, out angleStep, out endAngle);
+            }
             else
             {
                 currAngle = endAngle;
@@ -127,24 +168,39 @@ public class FlyingSkull : EnemyAI
                 angleStep *= -1;
             }
 
+            if (!stagger)
+            {
+                PlayProjectileSound();
+            }
+
             for (int projectile = 0; projectile < projectilePerBurst; projectile++)
             {
-                GameObject projectileGO = Instantiate(projectilePrefab, transform.position, Quaternion.identity);
-
-                EnemyProjectile enemyProjectile = projectileGO.GetComponent<EnemyProjectile>();
+                EnemyProjectile enemyProjectile = enemyProjectilePool.Get();
 
                 if (enemyProjectile)
                 {
+                    enemyProjectile.transform.SetPositionAndRotation(transform.position, Quaternion.identity);
                     enemyProjectile.InitializeProjectile(damage: damageCurve.Evaluate(Level));
+                    enemyProjectile.Deactivate();
+
+                    if (stagger)
+                    {
+                        PlayProjectileSound();
+                    }
                 }
 
                 // convert angle to vector2 direction
                 float rad = currAngle * Mathf.Deg2Rad;
                 Vector2 currDir = new Vector2(Mathf.Cos(rad), Mathf.Sin(rad));
-                projectileGO.GetComponent<Rigidbody2D>().linearVelocity = currDir * 1f; // Example speed
+
+                if(enemyProjectile.TryGetComponent<Rigidbody2D>(out Rigidbody2D projectileRB))
+                {
+                    projectileRB.linearVelocity = currDir * 1f;
+                }
 
                 // update angle for next projectile
                 currAngle += angleStep;
+
 
                 if (stagger) yield return new WaitForSeconds(timeBetweenProjectiles);
             }
@@ -154,12 +210,7 @@ public class FlyingSkull : EnemyAI
             yield return new WaitForSeconds(timeBetweenBursts);
         }
 
-        if (SoundManager.Instance && SoundLibrary.Instance)
-        {
-            SoundManager.Instance.PlaySoundEffect(
-                    SoundLibrary.Instance.GetAudioClip(SoundLibrary.Spells.FIREBALL_1)
-                );
-        }
+
 
         yield return new WaitForSeconds(coolDown);
         isShooting = false;
@@ -185,6 +236,18 @@ public class FlyingSkull : EnemyAI
 
         // for debug
         aimDirection = dir;
+    }
+
+
+    private void PlayProjectileSound()
+    {
+
+        if (SoundManager.Instance && SoundLibrary.Instance)
+        {
+            SoundManager.Instance.PlaySoundEffect(
+                    SoundLibrary.Instance.GetAudioClip(SoundLibrary.Spells.FIREBALL_1)
+                );
+        }
     }
 
     private void OnDrawGizmos()
