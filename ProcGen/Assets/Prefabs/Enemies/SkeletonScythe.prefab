@@ -247,7 +247,8 @@ MonoBehaviour:
   levelText: {fileID: 6291294085031701449}
   canvas: {fileID: 1381197645624753162}
   floatingTextContainer: {fileID: 8123693648898152114}
-  attackRange: 0.1
+  attackRange: 0.2
+  maxAttackRange: 0.3
   chaseRange: 1
   attackSpeed: 1
   attackCooldown: 4.83

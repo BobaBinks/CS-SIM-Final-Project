@@ -49,7 +49,7 @@ public class GraphBasedGeneration
         DungeonRoomInstance entranceRoomInstance = GetOrCreateDungeonRoomInstance(entranceRoom, placedRooms);
         placedRooms.Add(entranceRoom, entranceRoomInstance);
 
-        // defualt to 10 if set input widht and height is negative
+        // default to 10 if set input widht and height is negative
         width = Mathf.Max(width, 10);
         height = Mathf.Max(height, 10);
 
@@ -281,11 +281,7 @@ public class GraphBasedGeneration
             occupiedCells == null ||
             roomsGO == null || corridorWidth == 0) return false;
 
-
-
-
         // identify direction of corridor end
-
         // gets the last 2 corridor strips
         List<List<Vector3Int>> last2CorridorStrips = corridor.GetRange(corridor.Count - 2, 2);
 
@@ -339,11 +335,9 @@ public class GraphBasedGeneration
         Vector3Int room2EdgeCellPosition;
         bool edgeCellPicked = TilemapHelper.PickEdgeCell(room2.wallMap, room2Edge, out room2EdgeCellPosition);
 
-
         if (!edgeCellPicked) return false;
 
         // "place" room2 on the last corridorCell
-
         // calculate the corridor's final cell position in the global grid space,
         // by adding the room's grid offset to the last corridor cell (local to room)
         Vector3Int corridorEndPositionInGrid = last2CenterCells.Last() + currRoom.GetPositionInCell(grid);
@@ -359,7 +353,6 @@ public class GraphBasedGeneration
             InsertCorridorFloorTileEntranceToRoom(corridorTiles, room2EdgeCellPosition, room2Edge, room2);
             return true;
         }
-
 
         return false;
     }

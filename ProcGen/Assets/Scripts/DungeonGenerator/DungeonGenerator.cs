@@ -73,9 +73,11 @@ public class DungeonGenerator : MonoBehaviour
     [SerializeField] int offsetWallSetsThreshold = 1;
     #endregion
 
-
-
-
+    /// <summary>
+    /// Fills the background tilemap with a background tile based on dungeon bounds.
+    /// </summary>
+    /// <param name="backgroundTilemap"></param>
+    /// <param name="backgroundTile"></param>
     void FillBackground(Tilemap backgroundTilemap, Tile backgroundTile)
     {
         if (backgroundTile == null || backgroundTilemap == null) return;
@@ -107,11 +109,17 @@ public class DungeonGenerator : MonoBehaviour
         // DebugAStarPath();
     }
 
+    /// <summary>
+    /// Main dungeon generation pipeline.
+    /// Handles graph rewriting, dungeon gemeration and placement of interior walls, props, and waypoints.
+    /// </summary>
+    /// <returns> True if generation succeeded, else false </returns>
     public bool GenerateGameEnvironment()
     {
         int attempts = 0;
         int maxAttempts = Mathf.Max(maxGenerationAttempts, 1);
 
+        // apply graph rewrite and generate dungeon
         while(attempts < maxAttempts)
         {
             bool generationSuccessful = false;
@@ -211,6 +219,10 @@ public class DungeonGenerator : MonoBehaviour
         return roomDepthDict;
     }
 
+    /// <summary>
+    /// Initializes the A* grid for pathfinding and minimap display.
+    /// </summary>
+    /// <returns></returns>
     public AStarPathfinder InitializeAStarGrid()
     {
         if (roomsDict == null || grid == null)
@@ -289,6 +301,11 @@ public class DungeonGenerator : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Builds a BFS graph of rooms and assigns depth values (depth from entrance).
+    /// </summary>
+    /// <param name="layout"></param>
+    /// <returns></returns>
     public bool CreateRoomGraph(List<DungeonRoom> layout)
     {
         roomDepthDict = new Dictionary<DungeonRoom, int>();
@@ -339,6 +356,11 @@ public class DungeonGenerator : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// Attempts to generate dungeon from graph layout.
+    /// </summary>
+    /// <param name="layout"></param>
+    /// <returns></returns>
     bool GenerateDungeon(List<DungeonRoom> layout)
     {
         if (layout == null || layout.Count == 0 || corridorFloorTilemap == null || roomsGO == null) return false;

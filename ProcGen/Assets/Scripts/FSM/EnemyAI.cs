@@ -47,8 +47,9 @@ public abstract class EnemyAI: CharacterBase, IDamagable
 
     #region Additional Stats
     [Header("Additional Stats")]
-    [SerializeField] protected float attackRange = 2f;
-    [SerializeField] protected float chaseRange = 2f;
+    [SerializeField] protected float attackRange = .1f;
+    [SerializeField] protected float maxAttackRange = .2f;
+    [SerializeField] protected float chaseRange = 1f;
     [SerializeField] protected float attackSpeed = 1f;
     [SerializeField] protected float attackCooldown = 1f;
     [SerializeField] protected float attackDamage = 1f;
@@ -149,7 +150,16 @@ public abstract class EnemyAI: CharacterBase, IDamagable
             return false;
 
         float distanceSquared = (player.transform.position - transform.position).sqrMagnitude;
-        return distanceSquared < AttackRange * AttackRange;
+        return distanceSquared < attackRange * attackRange;
+    }
+
+    public virtual bool PlayerInMaxAttackRange()
+    {
+        if (player == null)
+            return false;
+
+        float distanceSquared = (player.transform.position - transform.position).sqrMagnitude;
+        return distanceSquared < maxAttackRange * maxAttackRange;
     }
 
     public virtual bool PlayerInChaseRange()

@@ -168,14 +168,18 @@ public class RandomWalk
             return;
         }
 
+        // determine axis for building corridor strips
+        // if moving vertically, need horizontal strips (side by side tiles).
+        // if moving horizontally, need vertical strips.
         TilemapHelper.Axis axis = TilemapHelper.Axis.VERTICAL;
 
         if (dir == Vector2Int.up || dir == Vector2Int.down)
             axis = TilemapHelper.Axis.HORIZONTAL;
 
+        // convert direction vector into step size for grid movement
         Vector3Int step = new Vector3Int(dir.x, dir.y);
 
-
+        // handle corners when turning from previous direction
         // go in reverse direction to set walls for corner
         if (corridorFloorCells.Count > 0)
         {
@@ -199,29 +203,26 @@ public class RandomWalk
 
         }
 
+        // main corridor expansion
         for (int i = 0; i < steps; ++i)
         {
+            // move forward one cell
             currCell += step;
 
+            // create corridor strip at this position
             List<Vector3Int> corridorStrip = TilemapHelper.GetAdjacentCells(currCell, axis, corridorWidth);
+
+            // insert cell center to the strip
             corridorStrip.Insert(corridorWidth / 2, currCell);
 
+            // save strip into corridor
             corridorFloorCells.Add(corridorStrip);
         }
 
-
-
+        // final strip
         List<Vector3Int> finalCorridorStrip = TilemapHelper.GetAdjacentCells(currCell + step, axis, corridorWidth);
         finalCorridorStrip.Insert(corridorWidth / 2, currCell + step);
         corridorFloorCells.Add(finalCorridorStrip);
-
-        // fill missing pieces of the corridor at the corner 
-        //for (int i = 1; i <= corridorWidth / 2; ++i)
-        //{
-        //    List<Vector3Int> finalCorridorStrip = TilemapHelper.GetAdjacentCells(currCell + step * i, axis, corridorWidth);
-        //    finalCorridorStrip.Insert(corridorWidth / 2, currCell + step * i);
-        //    corridorFloorCells.Add(finalCorridorStrip);
-        //}
     }
 
 

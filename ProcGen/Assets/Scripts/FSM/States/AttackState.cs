@@ -33,14 +33,13 @@ public class AttackState : BaseState<EnemyAI>
             return;
         }
 
-        if (!owner.PlayerInAttackRange())
+        if (!owner.PlayerInMaxAttackRange())
         {
             // change to chase state
             owner.Sm.SetNextState("chase");
         }
         else
         {
-
             if (owner.requireLOS)
             {
                 Vector2 ownerPosition = new Vector2(owner.transform.position.x, owner.transform.position.y);
