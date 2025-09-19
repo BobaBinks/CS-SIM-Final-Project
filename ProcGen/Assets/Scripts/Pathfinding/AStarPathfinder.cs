@@ -52,7 +52,6 @@ public class AStarPathfinder
             List<Vector3Int> interactableObjectCellPositions;
             bool interactableObjectsObtained = GetInteractbleObjectsPositions(roomInstance, out interactableObjectCellPositions);
 
-
             // mark traversible cells
             foreach (var cell in roomInstance.groundMap.cellBounds.allPositionsWithin)
             {
@@ -82,6 +81,7 @@ public class AStarPathfinder
         }
 
         corridorFloorTilemap.CompressBounds();
+
         // getting traversible tiles in corridors
         foreach (var cell in corridorFloorTilemap.cellBounds.allPositionsWithin)
         {
@@ -101,6 +101,13 @@ public class AStarPathfinder
         return true;
     }
 
+    /// <summary>
+    /// Mark traversable cells on the minimap.
+    /// </summary>
+    /// <param name="roomsDict"></param>
+    /// <param name="corridorFloorTilemap"></param>
+    /// <param name="grid"></param>
+    /// <returns></returns>
     public bool MarkMinimapCells(Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict, Tilemap corridorFloorTilemap, Grid grid)
     {
         if (roomsDict == null || roomsDict.Count < 1 || MiniMapTilemap == null)
@@ -188,6 +195,12 @@ public class AStarPathfinder
         return interactableObjects.Count > 0;
     }
 
+    /// <summary>
+    /// Initialize grid dimensions and create A* nodes for each cell in the grid.
+    /// </summary>
+    /// <param name="roomsDict"></param>
+    /// <param name="grid"></param>
+    /// <returns></returns>
     public bool InitializeGridDimensions(Dictionary<DungeonRoom, DungeonRoomInstance> roomsDict, Grid grid)
     {
         if (roomsDict == null || roomsDict.Count < 1)
@@ -208,6 +221,7 @@ public class AStarPathfinder
         // init grid
         nodes = new List<AStarNode>(arraySize);
 
+        // create A* node for each cell
         for (int y = combinedBounds.yMin; y < combinedBounds.yMax; y++)
         {
             for (int x = combinedBounds.xMin; x < combinedBounds.xMax; x++)
@@ -217,11 +231,15 @@ public class AStarPathfinder
             }
         }
 
-
         this.combinedBounds = combinedBounds;
         return true;
     }
 
+    /// <summary>
+    /// Convert cell coordinate into corresponding node index.
+    /// </summary>
+    /// <param name="cell"></param>
+    /// <returns></returns>
     public int ConvertCellToIndex(Vector3Int cell)
     {
         if (width <= 0 || height <= 0 || combinedBounds == null) return -1;
@@ -238,6 +256,11 @@ public class AStarPathfinder
             return y * width + x;
     }
 
+    /// <summary>
+    /// Converts a node index back to cell coordinate.
+    /// </summary>
+    /// <param name="index"></param>
+    /// <returns></returns>
     public Vector3Int ConvertIndexToCell(int index)
     {
         if (index < 0 || index >= width * height)
@@ -249,6 +272,7 @@ public class AStarPathfinder
         return new Vector3Int(x + combinedBounds.min.x, y + combinedBounds.min.y);
     }
 
+
     public void SetAStarGridTilemap(Tilemap tilemap)
     {
         AStarGridTilemap = tilemap;
@@ -259,6 +283,12 @@ public class AStarPathfinder
         MiniMapTilemap = tilemap;
     }
 
+    /// <summary>
+    /// Returns shortest path in the world coordinates between two positions.
+    /// </summary>
+    /// <param name="startPos"></param>
+    /// <param name="endPos"></param>
+    /// <returns></returns>
     public List<Vector3> GetShortestWorldPath(Vector3 startPos, Vector3 endPos)
     {
         // get current position in cell
@@ -270,11 +300,18 @@ public class AStarPathfinder
         return pathCells == null ? null : ConvertPathToWorldPositions(pathCells);
     }
 
+    /// <summary>
+    /// Returns shortest cell path between two cells.
+    /// </summary>
+    /// <param name="startCell"></param>
+    /// <param name="destinationCell"></param>
+    /// <returns></returns>
     public List<Vector3Int> GetShortestCellPath(Vector3Int startCell, Vector3Int destinationCell)
     {
         if (nodes == null || nodes.Count < 1)
             return null;
 
+        // convert start and destination cells to index in the nodes list
         int startIndex = ConvertCellToIndex(startCell);
         int endIndex = ConvertCellToIndex(destinationCell);
 
@@ -282,23 +319,37 @@ public class AStarPathfinder
         if (startIndex < 0 || startIndex >= nodes.Count || endIndex < 0 || endIndex >= nodes.Count)
             return null;
 
+        // open list: nodes to be explored 
         AStarMinHeap openList = new AStarMinHeap();
+
+        // closed list: list of nodes already explored
         HashSet<Vector3Int> closedList = new HashSet<Vector3Int>();
 
+        // initialize start and end nodes
         AStarNode startNode = nodes[startIndex];
         AStarNode endNode = nodes[endIndex];
+
+        // cost from start to current = 0 at start
         startNode.g = 0;
+
+        // estimated distance to destination using Manhatten Distance
         startNode.h = GetManhattenbDistance(startCell, destinationCell);
+
         startNode.f = startNode.h + startNode.g;
         startNode.prevNode = null;
 
         openList.Insert(startNode);
 
+        // main pathfinding loop
         while (!openList.IsEmpty())
         {
+            // get node with lowest f-cost
             AStarNode currNode = openList.ExtractMin();
+
+            // mark node as visited
             closedList.Add(currNode.position);
 
+            // if destination reach, stop
             if (currNode == endNode)
                 break;
 
@@ -308,6 +359,7 @@ public class AStarPathfinder
             if (neighbours == null)
                 continue;
 
+            // evaluate neighbours
             foreach(var neighbour in neighbours)
             {
                 if (neighbour.occupied || closedList.Contains(neighbour.position))
@@ -319,11 +371,15 @@ public class AStarPathfinder
                 bool notInOpen = !openList.Contains(neighbour.position);
                 if (notInOpen || newG < neighbour.g)
                 {
+                    // update neighbour's costs
                     neighbour.h = GetManhattenbDistance(neighbour.position, destinationCell);
                     neighbour.g = newG;
                     neighbour.f = neighbour.g + neighbour.h;
+
+                    // track path
                     neighbour.prevNode = currNode;
 
+                    // add neighbour to open list if new, otherwise update position
                     if (notInOpen)
                         openList.Insert(neighbour);
                     else
@@ -331,16 +387,30 @@ public class AStarPathfinder
                 }
             }
         }
+
+        // reconstruct the path by backtracking from the end node
         return ReconstructPath(endNode);
     }
+
     // iterate through corridor floor tiles
     // do same as room
 
+    /// <summary>
+    /// Calculate Manhatten Distance between two cells.
+    /// </summary>
+    /// <param name="startCell"></param>
+    /// <param name="destinationCell"></param>
+    /// <returns></returns>
     private int GetManhattenbDistance(Vector3Int startCell, Vector3Int destinationCell) 
     {
         return Mathf.Abs(destinationCell.x - startCell.x) + Mathf.Abs(destinationCell.y - startCell.y);
     }
 
+    /// <summary>
+    /// Reconstruct the path from end node by following prevNode links.
+    /// </summary>
+    /// <param name="endNode"></param>
+    /// <returns></returns>
     public List<Vector3Int> ReconstructPath(AStarNode endNode)
     {
         List<Vector3Int> path = new List<Vector3Int>();
@@ -354,6 +424,11 @@ public class AStarPathfinder
         return path;
     }
 
+    /// <summary>
+    /// Convert a cell path to world positions for movement.
+    /// </summary>
+    /// <param name="path"></param>
+    /// <returns></returns>
     public List<Vector3> ConvertPathToWorldPositions(List<Vector3Int> path)
     {
         if (path == null || AStarGridTilemap == null)
@@ -369,6 +444,11 @@ public class AStarPathfinder
         return convertedPath;
     }
 
+    /// <summary>
+    /// Returns all valid neighbours, ignores diagonal neighbours blocked by walls.
+    /// </summary>
+    /// <param name="centerCell"></param>
+    /// <returns></returns>
     private List<AStarNode> GetNeighbours(Vector3Int centerCell)
     {
         if (nodes == null || nodes.Count < 1)
@@ -398,29 +478,16 @@ public class AStarPathfinder
             }
         }
 
-        // get the top down left right neighbours
-        //Vector3Int[] directions = new Vector3Int[]
-        //{
-        //    new Vector3Int(-1, 0, 0), // Left
-        //    new Vector3Int(1, 0, 0),  // Right
-        //    new Vector3Int(0, 1, 0),  // Up
-        //    new Vector3Int(0, -1, 0)  // Down
-        //};
-
-        //foreach (var dir in directions)
-        //{
-        //    Vector3Int neighbourPos = centerCell + dir;
-        //    int index = ConvertCellToIndex(neighbourPos);
-
-        //    if (index >= 0 && index < nodes.Count)
-        //    {
-        //        neighbours.Add(nodes[index]);
-        //    }
-        //}
-
         return neighbours;
     }
 
+    /// <summary>
+    /// Return true if diagonal movement is blocked.
+    /// </summary>
+    /// <param name="center"></param>
+    /// <param name="xOffset"></param>
+    /// <param name="yOffset"></param>
+    /// <returns></returns>
     bool IsDiagonalMoveBlocked(Vector3Int center, int xOffset, int yOffset)
     {
         // not diagonal

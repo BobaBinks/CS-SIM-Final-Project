@@ -100,7 +100,8 @@ public class EnemySpawnManager : MonoBehaviour
                     return;
             }
         }
-
+        
+        // iterate over all rooms to spawn enemies in the next depth level
         foreach (var kvp in roomsDict)
         {
             DungeonRoom dungeonRoom = kvp.Key;

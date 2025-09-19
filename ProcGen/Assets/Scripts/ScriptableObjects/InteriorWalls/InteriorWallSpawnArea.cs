@@ -377,10 +377,6 @@ public class InteriorWallSpawnArea : MonoBehaviour
 
     }
 
-
-
-
-
     private bool PlaceInteriorWall(List<Vector3Int> spawnCells, HashSet<Vector3Int> occupiedCells, int maxTurns = 2, int minSteps = 2, int maxSteps = 5)
     {
         // keep track of all the cells belonging to this wall
@@ -413,7 +409,7 @@ public class InteriorWallSpawnArea : MonoBehaviour
                 Vector3Int nextCell = currCell + dir;
                 List<Vector3Int> nextCellMooresNeighbour = GetMooresNeighbour(nextCell);
 
-                // out of bounds check and 
+                // check if out of bounds and if cell is occupied
                 if (!IsValidWallCell(nextCell, nextCellMooresNeighbour, spawnCells, occupiedCells))
                 {
                     break;

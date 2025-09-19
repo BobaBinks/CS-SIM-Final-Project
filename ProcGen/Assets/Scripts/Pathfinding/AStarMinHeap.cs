@@ -15,29 +15,41 @@ public class AStarMinHeap
         currSize = 0;
     }
 
+    /// <summary>
+    /// Insert a new noode into heap and restore heap.
+    /// </summary>
+    /// <param name="node"></param>
     public void Insert(AStarNode node)
     {
         if (heapArray == null || node == null)
             return;
 
-        if(currSize >= capacity)
+        // resize array if capacity exceeded
+        if (currSize >= capacity)
         {
-            // resize array
             capacity *= 2;
             Array.Resize(ref heapArray, capacity);
         }
 
+        // place node at end
         heapArray[currSize] = node;
         positionToIndex[node.position] = currSize;
         currSize++;
+
+        // Restore heap
         HeapifyUp(currSize - 1);
     }
 
+    /// <summary>
+    /// Remove and return node with smallest f-cost (root)
+    /// </summary>
+    /// <returns></returns>
     public AStarNode ExtractMin()
     {
         if (currSize == 0)
             return null;
 
+        // store smallest node to return
         AStarNode smallestNode = heapArray[0];
         positionToIndex.Remove(smallestNode.position);
 
@@ -51,7 +63,10 @@ public class AStarMinHeap
         return smallestNode;
     }
 
-    // for when inserting
+    /// <summary>
+    /// Move node at index upwards until heap property restored.
+    /// </summary>
+    /// <param name="index"></param>
     public void HeapifyUp(int index)
     {
         while(index > 0)
@@ -71,7 +86,10 @@ public class AStarMinHeap
         }
     }
 
-    // for when extracting
+    /// <summary>
+    /// Move node at given index downward until heap property is restored.
+    /// </summary>
+    /// <param name="index"></param>
     public void HeapifyDown(int index)
     {
         while (index < currSize)
@@ -112,6 +130,11 @@ public class AStarMinHeap
         }
     }
 
+    /// <summary>
+    /// Swap two nodes in the heap and update indices in dictionary.
+    /// </summary>
+    /// <param name="indexA"></param>
+    /// <param name="indexB"></param>
     public void SwapNodes(int indexA, int indexB)
     {
         if (indexA < 0 || indexB < 0 || indexA > currSize || indexB > currSize)
@@ -126,27 +149,48 @@ public class AStarMinHeap
         positionToIndex[heapArray[indexB].position] = indexB;
     }
 
+    /// <summary>
+    /// Return smallest node without removing it.
+    /// </summary>
+    /// <returns></returns>
     public AStarNode Peek()
     {
         if (currSize == 0) return null;
         return heapArray[0];
     }
 
+    /// <summary>
+    /// Check if heap is empty.
+    /// </summary>
+    /// <returns>Returns true if empty.</returns>
     public bool IsEmpty()
     {
         return currSize == 0;
     }
 
+    /// <summary>
+    /// Return number of nodes in heap.
+    /// </summary>
+    /// <returns></returns>
     public int Count()
     {
         return currSize;
     }
 
+    /// <summary>
+    /// Check if a node is at a given position.
+    /// </summary>
+    /// <param name="position"></param>
+    /// <returns></returns>
     public bool Contains(Vector3Int position)
     {
         return positionToIndex.ContainsKey(position);
     }
 
+    /// <summary>
+    /// Update a node in heap (when f/h cost change).
+    /// </summary>
+    /// <param name="updatedNode"></param>
     public void Update(AStarNode updatedNode)
     {
         int index;
@@ -155,7 +199,7 @@ public class AStarMinHeap
 
         heapArray[index] = updatedNode;
 
-        // update dictionary entry (in case reference changed)
+        // update dictionary entry
         positionToIndex[updatedNode.position] = index;
 
         HeapifyUp(index);

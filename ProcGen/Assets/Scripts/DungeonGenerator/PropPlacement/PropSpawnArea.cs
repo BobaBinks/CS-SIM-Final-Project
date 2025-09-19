@@ -27,6 +27,9 @@ public class PropSpawnArea : MonoBehaviour
     HashSet<Vector3Int> placedPropsCellPosition;
     Dictionary<Tilemap, List<Vector3Int>> areaSpawnCells;
 
+    /// <summary>
+    /// Initializes spawn system by populating valid spawn cells from each tilemap.
+    /// </summary>
     public void InitPropSpawn()
     {
         placedPropsCellPosition = new HashSet<Vector3Int>();
@@ -43,6 +46,13 @@ public class PropSpawnArea : MonoBehaviour
         );
     }
 
+    /// <summary>
+    /// Populates a dictionary mapping tilemaps to lists of valid spawn cells.
+    /// Excludes cells that overlap with walls.
+    /// </summary>
+    /// <param name="tileMaps"></param>
+    /// <param name="wallMap"></param>
+    /// <returns></returns>
     private Dictionary<Tilemap, List<Vector3Int>> PopulateAreaSpawnCellsDict(List<Tilemap> tileMaps, Tilemap wallMap)
     {
         Dictionary<Tilemap, List<Vector3Int>> areaSpawnCells = new Dictionary<Tilemap, List<Vector3Int>>();
@@ -69,7 +79,9 @@ public class PropSpawnArea : MonoBehaviour
         return areaSpawnCells;
     }
 
-
+    /// <summary>
+    /// Randomly spawns props (decoration items).
+    /// </summary>
     public void SpawnProps(List<GameObject> propPrefabs, int maxAttempts = 5)
     {
         if (propPrefabs == null ||
@@ -87,36 +99,41 @@ public class PropSpawnArea : MonoBehaviour
 
         List<Vector3Int> spawnCells = areaSpawnCells[propSpawnAreaTilemap];
 
+        // ensure valid min/max counts
         minNumberOfProps = Mathf.Max(minNumberOfProps, 1);
         maxNumberOfProps = Mathf.Max(maxNumberOfProps, 1);
 
         if (maxNumberOfProps < minNumberOfProps)
             maxNumberOfProps = minNumberOfProps;
 
+        // randomize number of props to spawn
         int numberOfProps = Random.Range(minNumberOfProps, maxNumberOfProps + 1);
 
+        // clamp to available spawn cells
         if (spawnCells.Count < numberOfProps)
             numberOfProps = spawnCells.Count;
 
         maxAttempts = Mathf.Max(maxAttempts, 1);
 
+        // spawn each prop
         for (int i = 0; i < numberOfProps; ++i)
         {
             int attempts = 0;
 
             while(attempts < maxAttempts)
             {
+                // pick random cell
                 int randomCellIndex = Random.Range(0, spawnCells.Count);
 
                 // identify cells to spawn props on
                 Vector3Int cell = spawnCells[randomCellIndex];
 
+                // skip if already occupied
                 if (placedPropsCellPosition.Contains(cell))
                 {
                     attempts++;
                     continue;
                 }
-
 
                 // spawn the props in the world or in the tilemap
                 Vector3 worldPosition = propSpawnAreaTilemap.GetCellCenterWorld(cell);
@@ -153,13 +170,18 @@ public class PropSpawnArea : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Checks if prefab has a Collider2D.
+    /// </summary>
     private bool CheckColliderPresent(GameObject gameObject)
     {
         if (gameObject == null) return false;
         return gameObject.TryGetComponent<Collider2D>(out Collider2D collider);
     }
 
-
+    /// <summary>
+    /// Randomly spawns traps in the trap tilemap.
+    /// </summary>
     public void SpawnTraps(List<GameObject> propPrefabs, int maxAttempts = 5)
     {
         if (propPrefabs == null ||
@@ -227,7 +249,10 @@ public class PropSpawnArea : MonoBehaviour
             }
         }
     }
-
+    
+    /// <summary>
+    /// Randomly spawns chests in the chest tilemap.
+    /// </summary>
     public void SpawnChests(List<GameObject> propPrefabs, int maxAttempts = 5)
     {
         if (propPrefabs == null ||
