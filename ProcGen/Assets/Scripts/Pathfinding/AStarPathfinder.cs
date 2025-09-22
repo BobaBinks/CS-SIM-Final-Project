@@ -300,6 +300,8 @@ public class AStarPathfinder
         return pathCells == null ? null : ConvertPathToWorldPositions(pathCells);
     }
 
+
+
     /// <summary>
     /// Returns shortest cell path between two cells.
     /// </summary>
@@ -308,6 +310,9 @@ public class AStarPathfinder
     /// <returns></returns>
     public List<Vector3Int> GetShortestCellPath(Vector3Int startCell, Vector3Int destinationCell)
     {
+        //Wikipedia contributors. 2025. A* search algorithm. In *Wikipedia, The Free Encyclopedia*.
+        //Retrieved September 22, 2025 from https://en.wikipedia.org/w/index.php?title=A*_search_algorithm&oldid=1306597393
+
         if (nodes == null || nodes.Count < 1)
             return null;
 

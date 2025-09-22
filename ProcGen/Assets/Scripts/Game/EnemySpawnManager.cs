@@ -136,9 +136,8 @@ public class EnemySpawnManager : MonoBehaviour
 
         // get the number of enemies to spawn in this room
         int enemySpawnCount = GetRoomEnemyCount(groundMap.cellBounds.size.x * groundMap.cellBounds.size.y);
-        // Debug.Log($"{roomInstance.instance.name}'s will spawn {enemySpawnCount}.");
 
-
+        // spawn enemies
         for(int enemyIndex = 0; enemyIndex < enemySpawnCount; ++enemyIndex)
         {
             // pick a cell in the room, convert it to world
@@ -147,23 +146,29 @@ public class EnemySpawnManager : MonoBehaviour
             int maxFailCounter = 5;
             while (failCounter < maxFailCounter)
             {
-
+                // get random position
                 int xPos = Random.Range(groundMap.cellBounds.xMin, groundMap.cellBounds.xMax);
                 int yPos = Random.Range(groundMap.cellBounds.yMin, groundMap.cellBounds.yMax);
 
+                // 
                 if (GameManager.Instance.aStarPathfinder.AStarGridTilemap)
                 {
+                    // convert position to match A* grid
                     Vector3 positionWorld = groundMap.CellToWorld(new Vector3Int(xPos, yPos));
                     Vector3Int localPosition = GameManager.Instance.aStarPathfinder.AStarGridTilemap.WorldToCell(positionWorld);
 
+                    // check if tile is valid
                     if (GameManager.Instance.aStarPathfinder.AStarGridTilemap.GetTile(localPosition) == null)
                     {
                         // not a valid position to spawn
                         failCounter++;
                         continue;
                     }
+
+                    // find center point of cell in world position
                     Vector3 cellCenterPosition = GameManager.Instance.aStarPathfinder.AStarGridTilemap.GetCellCenterLocal(localPosition);
                     cellCenterPosition = GameManager.Instance.aStarPathfinder.AStarGridTilemap.LocalToWorld(cellCenterPosition);
+
                     InstantiateEnemy(enemyPatrolWayPointContainer, cellCenterPosition);
                     break;
                 }

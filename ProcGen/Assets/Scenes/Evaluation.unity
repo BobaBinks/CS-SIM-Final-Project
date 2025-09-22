@@ -4579,6 +4579,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2415091088102212771, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2415091088102212771, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
       propertyPath: enemiesTransform
       value: 
       objectReference: {fileID: 285634607}
@@ -4589,6 +4593,10 @@ PrefabInstance:
     - target: {fileID: 3912003942156759255, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
       propertyPath: m_Name
       value: GameManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 5614104904988341736, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5614104904988341736, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
       propertyPath: bossPrefabs.Array.size
@@ -4776,7 +4784,7 @@ PrefabInstance:
       objectReference: {fileID: 206238012}
     - target: {fileID: 8149777084855191499, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
       propertyPath: layouts.Array.size
-      value: 1
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8149777084855191499, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
       propertyPath: corridorWallTilemap
@@ -4793,11 +4801,11 @@ PrefabInstance:
     - target: {fileID: 8149777084855191499, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
       propertyPath: 'layouts.Array.data[0]'
       value: 
-      objectReference: {fileID: 11400000, guid: 1aad6c1c425618448bec086286aea0ec, type: 2}
+      objectReference: {fileID: 11400000, guid: 98fac352ccb103b4e9c70aa734d28ae3, type: 2}
     - target: {fileID: 8149777084855191499, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
       propertyPath: 'layouts.Array.data[1]'
       value: 
-      objectReference: {fileID: 11400000, guid: 1aad6c1c425618448bec086286aea0ec, type: 2}
+      objectReference: {fileID: 11400000, guid: 6878af50254a68741a6d1deb2ff77316, type: 2}
     - target: {fileID: 8149777084855191499, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
       propertyPath: 'layouts.Array.data[2]'
       value: 
@@ -4813,8 +4821,28 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3912003942156759255, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 3821192875130482400}
   m_SourcePrefab: {fileID: 100100000, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+--- !u!1 &3821192875130482399 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3912003942156759255, guid: a80b305eb09c752459f564d1ec6ba9b3, type: 3}
+  m_PrefabInstance: {fileID: 3821192875130482398}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &3821192875130482400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3821192875130482399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23bba50602d204d4ba1d4dbd7593c18a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4598785230761738074
 GameObject:
   m_ObjectHideFlags: 0

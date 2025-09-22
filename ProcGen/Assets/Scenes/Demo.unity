@@ -131,6 +131,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: SmallRoom1
       objectReference: {fileID: 0}
+    - target: {fileID: 5700840401221419603, guid: 5fe4839c1d311ff43b7c2464932c2465, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6954096310998355392, guid: 5fe4839c1d311ff43b7c2464932c2465, type: 3}
+      propertyPath: m_ColliderPaths.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6954096310998355392, guid: 5fe4839c1d311ff43b7c2464932c2465, type: 3}
       propertyPath: m_CompositePaths.m_Paths.Array.size
       value: 2
@@ -665,9 +673,29 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8154566089540507197}
     m_Modifications:
+    - target: {fileID: 140683595715194980, guid: 9ca68259a7bcbff42a9807f7e98c7c45, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 188334869562500898, guid: 9ca68259a7bcbff42a9807f7e98c7c45, type: 3}
+      propertyPath: m_ColliderPaths.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1571851198102107654, guid: 9ca68259a7bcbff42a9807f7e98c7c45, type: 3}
       propertyPath: m_Name
       value: MediumRoom3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1571851198102107654, guid: 9ca68259a7bcbff42a9807f7e98c7c45, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3784332216248591177, guid: 9ca68259a7bcbff42a9807f7e98c7c45, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4008805825245061915, guid: 9ca68259a7bcbff42a9807f7e98c7c45, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5915194804373894871, guid: 9ca68259a7bcbff42a9807f7e98c7c45, type: 3}
       propertyPath: m_LocalPosition.x
@@ -708,6 +736,14 @@ PrefabInstance:
     - target: {fileID: 5915194804373894871, guid: 9ca68259a7bcbff42a9807f7e98c7c45, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8684909609387260031, guid: 9ca68259a7bcbff42a9807f7e98c7c45, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9183649440382522651, guid: 9ca68259a7bcbff42a9807f7e98c7c45, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -818,6 +854,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: BossRoom1
       objectReference: {fileID: 0}
+    - target: {fileID: 38285871427953897, guid: 1def50ee8a394ce40bd0b2c486016b20, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2058989604965441403, guid: 1def50ee8a394ce40bd0b2c486016b20, type: 3}
+      propertyPath: m_ColliderPaths.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2550412247956844984, guid: 1def50ee8a394ce40bd0b2c486016b20, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -876,9 +920,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 8154566089540507197}
     m_Modifications:
+    - target: {fileID: 2662982336132093668, guid: c768599035c7a8440814bc4400f90735, type: 3}
+      propertyPath: m_ColliderPaths.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2676160786299312215, guid: c768599035c7a8440814bc4400f90735, type: 3}
       propertyPath: m_Name
       value: EntranceRoom1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2676160786299312215, guid: c768599035c7a8440814bc4400f90735, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4332997720770285178, guid: c768599035c7a8440814bc4400f90735, type: 3}
       propertyPath: m_LocalPosition.x

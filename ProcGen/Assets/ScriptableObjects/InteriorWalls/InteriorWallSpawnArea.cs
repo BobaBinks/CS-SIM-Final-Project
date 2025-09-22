@@ -78,10 +78,13 @@ public class InteriorWallSpawnArea : MonoBehaviour
         {
             HashSet<Vector3Int> occupiedCells = new HashSet<Vector3Int>();
             numOfWallsPlaced = 0;
+
+            // place walls
             for (int i = 0; i < numOfInteriorWalls; ++i)
             {
                 int attempts = 0;
 
+                // attempt to place wall
                 while (attempts < maxAttempts)
                 {
                     if (PlaceInteriorWall(spawnCells, occupiedCells, maxTurns, minSteps, maxSteps))
